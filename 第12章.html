@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>第12章</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+/* Modern monospace stack — avoids the ugly Courier New fallback on Windows. */
+:root {
+  --mono: "Cascadia Code", "JetBrains Mono", "Fira Code", "Source Code Pro",
+          Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+}
+code {
+  font-family: var(--mono);
+  background: #eee8d8; color: #8a4b1e;
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+pre {
+  font-family: var(--mono);
+  background: #2d2a26; color: #ece6da;
+  padding: 14px 16px; border-radius: var(--radius);
+  overflow-x: auto; line-height: 1.6; font-size: 0.9em;
+  border: 1px solid #3d3934; tab-size: 2;
+}
+pre code {
+  background: none; color: inherit; padding: 0; font-size: 1em; border-radius: 0;
+}
+
+/* ── Long display formulas: scroll inside their column, never overflow ── */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* ── Checkpoint self-test ── */
+.checkpoint {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius);
+  padding: 10px 16px; margin: 18px 0;
+  font-size: 0.95em;
+}
+.checkpoint::before {
+  content: '🧠 自测：';
+  font-weight: 700; color: #1e40af;
+}
+.checkpoint .cp-answer { margin-top: 10px; border-top: 1px dashed #bfdbfe; padding-top: 8px; }
+.checkpoint .cp-answer summary {
+  cursor: pointer; color: #1e40af; font-weight: 600; user-select: none;
+  list-style: none;
+}
+.checkpoint .cp-answer summary::before { content: '💡 '; }
+.checkpoint .cp-answer summary::-webkit-details-marker { display: none; }
+.checkpoint .cp-answer[open] summary { margin-bottom: 6px; }
+.checkpoint .cp-answer ol, .checkpoint .cp-answer p { font-weight: 400; color: var(--ink); }
+
+/* ── TL;DR summary ── */
+.tldr {
+  background: #fefce8; border-left: 3px solid #eab308;
+  padding: 8px 14px; margin: 10px 0;
+  font-weight: 600; font-size: 0.95em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  body { max-width: 100%; padding: 12px 10px 40px; font-size: 11pt; }
+  h1 { font-size: 1.3em; }
+  h2 { font-size: 1.12em; }
+  table { font-size: 0.85em; }
+  td, th { padding: 4px 6px; }
+  pre { font-size: 0.85em; padding: 6px; }
+}
+@media (max-width: 400px) {
+  body { padding: 8px 6px 32px; font-size: 10.5pt; }
+}
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+
+/* ── Notion-style slide cross-reference layout ── */
+/* Override base.css body max-width (860px); fill the viewport edge-to-edge,
+   capped only on ultra-wide screens for readability. */
+body { max-width: 2400px; width: 96vw; padding-left: 2vw; padding-right: 2vw; }
+.kn-layout { display: flex; gap: 36px; align-items: flex-start; width: 100%; margin: 0 auto; }
+.kn-main { flex: 1 1 auto; min-width: 0; overflow-x: clip; }
+.kn-main mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.kn-rail { flex: 0 0 32%; max-width: 520px; min-width: 300px; position: sticky; top: 12px;
+  align-self: flex-start; max-height: calc(100vh - 30px); overflow-y: auto; padding-right: 4px; }
+.kn-rail-title { font-weight: 700; color: var(--ink-light); font-size: 0.9em; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--divider); }
+.slide-card { border: 1px solid var(--card-border); border-radius: var(--radius);
+  background: var(--card-bg); padding: 8px; margin-bottom: 14px; }
+.slide-card-label { font-size: 0.78em; color: var(--ink-light); margin-bottom: 6px; }
+.slide-img { width: 100%; height: auto; border-radius: 4px; cursor: zoom-in; display: block;
+  border: 1px solid var(--divider); background: #fff; }
+.slide-text-only { font-size: 0.78em; line-height: 1.5; color: var(--ink-light);
+  padding: 8px 10px; background: #fff; border-radius: 4px; border: 1px solid var(--divider);
+  max-height: 200px; overflow-y: auto; }
+.slide-text { margin-top: 6px; font-size: 0.85em; }
+.slide-text summary { cursor: pointer; color: var(--accent); user-select: none; }
+.slide-text-body { margin-top: 6px; color: var(--ink-light); line-height: 1.6;
+  max-height: 220px; overflow-y: auto; padding: 6px 8px; background: #fff;
+  border-radius: 4px; border: 1px solid var(--divider); }
+/* heading-side page chips */
+.pg-chip { display: inline-block; font-size: 0.72em; font-weight: 600; color: var(--accent);
+  background: #eff4ff; border: 1px solid #cfe0ff; border-radius: 10px; padding: 0 7px;
+  margin-left: 6px; cursor: pointer; vertical-align: middle; }
+.pg-chip:hover { background: #dbe8ff; }
+.slide-card.flash { animation: slideflash 1.2s ease; }
+@keyframes slideflash { 0%,100%{box-shadow:none;} 30%{box-shadow:0 0 0 3px var(--accent);} }
+/* lightbox */
+#epa-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.82); display: none;
+  align-items: center; justify-content: center; z-index: 9999; cursor: zoom-out; }
+#epa-lightbox img { max-width: 94vw; max-height: 94vh; border-radius: 6px; }
+/* Tablet / narrow desktop: keep two columns but rebalance + tighten margins */
+@media (max-width: 1280px) {
+  body { width: 98vw; padding-left: 1vw; padding-right: 1vw; }
+  .kn-layout { gap: 24px; }
+  .kn-main { flex: 1 1 54%; }
+  .kn-rail { flex: 1 1 46%; }
+}
+/* Mobile: stack the rail below the notes */
+@media (max-width: 900px) {
+  body { width: 100%; padding-left: 12px; padding-right: 12px; }
+  /* align-items:stretch is critical — in a COLUMN flex, flex-start would size
+     children to max-content (overflowing the viewport). */
+  .kn-layout { flex-direction: column; align-items: stretch; gap: 16px; }
+  .kn-main { flex: none; width: 100%; }
+  .kn-rail { position: static; flex: none; max-width: 100%; width: 100%; min-width: 0; max-height: none; }
+}
+
+
+/* ── Combined page: top tab bar (清单 | 题目) ── */
+#epa-tabs { display: flex; gap: 0; justify-content: center; margin: 6px auto 22px;
+  max-width: 520px; border: 1px solid var(--divider); border-radius: 10px; overflow: hidden; }
+#epa-tabs .tab-btn { flex: 1; padding: 10px 18px; cursor: pointer; border: none;
+  background: var(--paper-dark); color: var(--ink-light); font-size: 1.02em; font-weight: 600;
+  font-family: inherit; transition: background .15s, color .15s; }
+#epa-tabs .tab-btn + .tab-btn { border-left: 1px solid var(--divider); }
+#epa-tabs .tab-btn.active { background: var(--accent); color: #fff; }
+#epa-tabs .tab-btn:not(.active):hover { background: #efe7d3; color: var(--ink); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+/* keep the test readable/centered even though the body is wide for the rail */
+#panel-test { max-width: 980px; margin: 0 auto; }
+@media print { #epa-tabs { display: none; } .tab-panel { display: block !important; } }
+
+
+.chapter-nav { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 8px; }
+.chapter-nav .nav-home { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.95em; }
+.chapter-nav .nav-select { padding: 6px 12px; border: 1px solid var(--divider); border-radius: 6px;
+  background: var(--card-bg); font-size: 0.92em; font-family: inherit; color: var(--ink); cursor: pointer; max-width: 320px; }
+
+
+/* Collapsible H3 sections */
+.kn-collapse-toggle { display: inline-block; cursor: pointer; font-size: 0.85em; margin-left: 8px;
+  color: var(--accent); user-select: none; vertical-align: middle; }
+.kn-collapse-toggle:hover { color: var(--accent-hover); }
+.kn-collapse-body { overflow: hidden; transition: max-height 0.3s ease; }
+.kn-collapse-body.collapsed { max-height: 0 !important; }
+.kn-collapse-global { display: inline-block; margin: 0 4px; padding: 2px 10px; border: 1px solid var(--divider);
+  border-radius: 12px; font-size: 0.78em; cursor: pointer; background: var(--card-bg); color: var(--ink-light); }
+.kn-collapse-global:hover { background: var(--divider); }
+/* Dark mode */
+body.dark { --paper: #1a1a2e; --ink: #e0e0e0; --ink-light: #aaa; --card-bg: #222244;
+  --card-border: #3a3a5c; --divider: #3a3a5c; --paper-dark: #16162a; --accent: #64b5f6;
+  --tag-bg: #3d3520; --tag-text: #f0c060; background: var(--paper); color: var(--ink); }
+body.dark .kp { color: #ffd700; background: #3d3520; }
+body.dark blockquote { background: #2a1a1a; border-left-color: #ff6b6b; }
+body.dark .checkpoint { background: #1a2a1a; border-color: #4caf50; }
+body.dark th { background: #222244; }
+body.dark .slide-card { background: #222244; border-color: #3a3a5c; }
+body.dark .slide-text-body { background: #1a1a2e; }
+body.dark .pg-chip { background: #1a3a5c; border-color: #2a5a8c; }
+body.dark .chapter-nav .nav-select { background: #222244; color: #e0e0e0; border-color: #3a3a5c; }
+body.dark #epa-tabs .tab-btn { background: #222244; color: #aaa; }
+body.dark #epa-tabs .tab-btn:not(.active):hover { background: #2a2a4a; }
+body.dark .toc { background: #222244; }
+body.dark .tldr { background: #3d3520; }
+#dark-toggle { position: fixed; top: 12px; right: 16px; z-index: 9999; border: 1px solid var(--divider);
+  border-radius: 50%; width: 36px; height: 36px; font-size: 1.1em; cursor: pointer;
+  background: var(--card-bg); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+@media print { #dark-toggle { display: none; } }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<div class="chapter-nav no-print"><a href="index.html" class="nav-home">🏠 首页</a><select class="nav-select" onchange="if(this.value)window.location.href=this.value"><option value="第10章.html">第10章</option><option value="第11章.html">第11章</option><option value="第12章.html" selected>第12章</option><option value="第14章.html">第14章</option><option value="第15章.html">第15章</option><option value="第17章.html">第17章</option><option value="第8章.html">第8章</option><option value="第9章.html">第9章</option></select></div><h1>第12章</h1><div id="epa-tabs" class="no-print"><button class="tab-btn active" data-tab="kn">📖 知识清单</button><button class="tab-btn" data-tab="test">📝 章节测试</button></div><div id="panel-kn" class="tab-panel active"><div class="kn-layout"><div class="kn-main"><h1></h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s40137456">12.1 三维坐标系</a></li>
+  <li><a href="#s65959793">▼两点距离</a></li>
+  <li><a href="#s81352777">▼球面方程</a></li>
+<li><a href="#s62859838">12.2 向量</a></li>
+  <li><a href="#s69545362">▼基本运算</a></li>
+  <li><a href="#s63604796">▼分量、模、单位向量</a></li>
+<li><a href="#s46593967">12.3 点积 (Dot Product)</a></li>
+  <li><a href="#s76274489">▼分量公式</a></li>
+  <li><a href="#s40201551">▼核心推论</a></li>
+  <li><a href="#s90552904">▼物理应用：功</a></li>
+  <li><a href="#s43356457">▼运算律</a></li>
+<li><a href="#s36380994">12.4 叉积 (Cross Product)</a></li>
+  <li><a href="#s34544542">▼行列式公式</a></li>
+  <li><a href="#s12983197">▼几何与物理意义</a></li>
+  <li><a href="#s74269496">▼正交性验证</a></li>
+  <li><a href="#s43356457">▼运算律</a></li>
+<li><a href="#s59240372">点积 vs 叉积 对比</a></li>
+<li><a href="#s38792801">12.5 空间直线与平面</a></li>
+  <li><a href="#s86632699">▼直线 三种表示形式</a></li>
+  <li><a href="#s83249418">▼直线间关系</a></li>
+  <li><a href="#s90703514">▼平面 四种表示形式</a></li>
+  <li><a href="#s47417316">▼平面间夹角</a></li>
+  <li><a href="#s52277800">▼点到平面距离</a></li>
+  <li><a href="#s72068141">▼直线与平面的关系</a></li>
+<li><a href="#s22994163">几何对象快速对照</a></li>
+</ul>
+</div>
+<h1>第12章 向量与空间几何</h1>
+<p class="subtitle">12.1 三维坐标系 &middot; 12.2 向量 &middot; 12.3 点积 &middot; 12.4 叉积 &middot; 12.5 空间直线与平面</p>
+
+<!-- ====== 叙事弧 ====== -->
+<div class="arc">
+  三句话叙事弧：从数轴到空间 —— 定位点；从点到向量 —— 刻画方向与大小；
+  从向量运算到几何对象 —— 直线、平面、距离，一以贯之。
+</div>
+
+<!-- ====== 12.1 ====== -->
+<h2 id="s40137456">12.1 三维坐标系</h2>
+<div class="card">
+  <p><span class="definition">三维直角坐标系</span>：从原点 <i>O</i> 出发，三条互相垂直的轴：<i>x</i> 轴、<i>y</i> 轴、<i>z</i> 轴，满足<span class="highlight">右手定则</span>。</p>
+
+  <h3 id="s65959793"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>两点距离</h3><div class="kn-collapse-body">
+  <div class="formula"><span class="formula-block">
+|P₁P₂| = √[(x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²]
+  </span></div>
+  <p>本质是勾股定理在三维的直接推广。</p>
+
+  </div><h3 id="s81352777"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>球面方程</h3><div class="kn-collapse-body">
+  <p>以 <i>C</i>(<i>h</i>, <i>k</i>, <i>l</i>) 为球心、半径为 <i>r</i>：</p>
+  <div class="formula">(x − h)² + (y − k)² + (z − l)² = r²</div>
+  <p>展开后形如 <i>x</i>²+<i>y</i>²+<i>z</i>² + <i>Ax</i>+<i>By</i>+<i>Cz</i>+<i>D</i>=0，配方后半径²为正才是真球面。</p>
+</div>
+
+<!-- ====== 12.2 ====== --></div>
+<h2 id="s62859838">12.2 向量</h2>
+<div class="card">
+  <p><span class="definition">向量</span> = 大小 + 方向。记作 <b>a</b> 或 AB⃗。零向量 <b>0</b> 长度为 0，方向不定。</p>
+
+  <h3 id="s69545362"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>基本运算</h3><div class="kn-collapse-body">
+  <table>
+    <tr><th>运算</th><th>定义</th><th>几何意义</th></tr>
+    <tr><td>加法 <b>a</b>+<b>b</b></td><td>分量相加：⟨a₁+b₁, a₂+b₂, a₃+b₃⟩</td><td>平行四边形法则 / 三角形法则</td></tr>
+    <tr><td>减法 <b>a</b>−<b>b</b></td><td>分量相减</td><td><b>a</b>+(−<b>b</b>)，差向量从 <b>b</b> 末端指向 <b>a</b> 末端</td></tr>
+    <tr><td>数乘 <i>c</i><b>a</b></td><td>每分量乘 <i>c</i></td><td>缩放：|<i>c</i>| 倍长，<i>c</i>&lt;0 反向</td></tr>
+  </table>
+
+  </div><h3 id="s63604796"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>分量、模、单位向量</h3><div class="kn-collapse-body">
+  <p>向量 <b>a</b> = ⟨a₁, a₂, a₃⟩ → 标准基展开：<b>a</b> = a₁<b>i</b> + a₂<b>j</b> + a₃<b>k</b></p>
+  <div class="formula">|<b>a</b>| = √(a₁² + a₂² + a₃²)</div>
+  <div class="formula"><b>u</b> = <b>a</b> / |<b>a</b>|　（单位向量，方向同 <b>a</b>，长度为 1）</div>
+</div>
+
+<div class="warn">区分"向量"与"标量"：向量有方向。长度 / 面积 / 体积是标量，位移 / 速度 / 力是向量。</div>
+
+<!-- ====== 12.3 ====== --></div>
+<h2 id="s46593967">12.3 点积 (Dot Product)</h2>
+<div class="card">
+  <p><span class="definition">点积</span>（数量积、内积）：<b>a</b>·<b>b</b> = |<b>a</b>||<b>b</b>| cos θ</p>
+
+  <h3 id="s76274489"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>分量公式</h3><div class="kn-collapse-body">
+  <div class="formula"><b>a</b>·<b>b</b> = a₁b₁ + a₂b₂ + a₃b₃</div>
+
+  </div><h3 id="s40201551"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>核心推论</h3><div class="kn-collapse-body">
+  <table>
+    <tr><th>用途</th><th>公式</th></tr>
+    <tr><td>夹角</td><td>cos θ = <b>a</b>·<b>b</b> / (|<b>a</b>||<b>b</b>|)</td></tr>
+    <tr><td>正交判定</td><td><b>a</b>·<b>b</b> = 0 ⇔ <b>a</b> ⟂ <b>b</b></td></tr>
+    <tr><td>标量投影</td><td>comp<sub><b>a</b></sub> <b>b</b> = <b>a</b>·<b>b</b> / |<b>a</b>|</td></tr>
+    <tr><td>向量投影</td><td>proj<sub><b>a</b></sub> <b>b</b> = (<b>a</b>·<b>b</b> / |<b>a</b>|²) <b>a</b></td></tr>
+    <tr><td>方向余弦</td><td>cos α = a₁/|<b>a</b>|, cos β = a₂/|<b>a</b>|, cos γ = a₃/|<b>a</b>|;　cos²α+cos²β+cos²γ = 1</td></tr>
+  </table>
+
+  </div><h3 id="s90552904"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>物理应用：功</h3><div class="kn-collapse-body">
+  <div class="formula">W = <b>F</b>·<b>d</b> = |<b>F</b>||<b>d</b>| cos θ</div>
+  <p>只有沿位移方向的分力才做功。</p>
+
+  </div><h3 id="s43356457"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>运算律</h3><div class="kn-collapse-body">
+  <p><b>a</b>·<b>b</b> = <b>b</b>·<b>a</b>（交换律）&emsp; <b>a</b>·(<b>b</b>+<b>c</b>) = <b>a</b>·<b>b</b> + <b>a</b>·<b>c</b>（分配律）&emsp; (<i>c</i><b>a</b>)·<b>b</b> = <i>c</i>(<b>a</b>·<b>b</b>)</p>
+</div>
+
+<div class="warn">投影 comp<sub>a</sub> b 是<span class="highlight">标量</span>，可正可负；proj<sub>a</sub> b 是<span class="highlight">向量</span>，与 a 同向或反向。切勿混淆两者。</div>
+
+<!-- ====== 12.4 ====== --></div>
+<h2 id="s36380994">12.4 叉积 (Cross Product)</h2>
+<div class="card">
+  <p><span class="definition">叉积</span>（向量积、外积）：<b>a</b>×<b>b</b> 是一个与 <b>a</b>、<b>b</b> 都正交的向量，方向由<span class="highlight">右手定则</span>确定。| <b>a</b>×<b>b</b> | = |<b>a</b>||<b>b</b>| sin θ。</p>
+
+  <h3 id="s34544542"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>行列式公式</h3><div class="kn-collapse-body">
+  <div class="formula" style="font-size:1.1rem;">
+          | <b>i</b>  <b>j</b>  <b>k</b>  |<br>
+<b>a</b>×<b>b</b> =  | a₁  a₂  a₃ |<br>
+          | b₁  b₂  b₃ |
+  </div>
+  <p>= ⟨ a₂b₃−a₃b₂ , a₃b₁−a₁b₃ , a₁b₂−a₂b₁ ⟩</p>
+
+  </div><h3 id="s12983197"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>几何与物理意义</h3><div class="kn-collapse-body">
+  <table>
+    <tr><th>量</th><th>公式</th><th>说明</th></tr>
+    <tr><td>平行四边形面积</td><td>Area = |<b>a</b>×<b>b</b>|</td><td>三角形面积 = ½|<b>a</b>×<b>b</b>|</td></tr>
+    <tr><td>平行六面体体积</td><td>V = |<b>a</b>·(<b>b</b>×<b>c</b>)|</td><td>三向量为棱，取其绝对值</td></tr>
+    <tr><td>扭矩</td><td><b>τ</b> = <b>r</b>×<b>F</b></td><td>r 为力臂，F 为力</td></tr>
+  </table>
+
+  </div><h3 id="s74269496"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>正交性验证</h3><div class="kn-collapse-body">
+  <p>叉积结果与两个原向量都正交：<b>(a</b>×<b>b</b><b>)</b>·<b>a</b> = 0 且 <b>(a</b>×<b>b</b><b>)</b>·<b>b</b> = 0</p>
+
+  </div><h3 id="s43356457"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>运算律</h3><div class="kn-collapse-body">
+  <p><b>a</b>×<b>b</b> = −(<b>b</b>×<b>a</b>)　<span class="paren-note">（反交换律 — 这一点与点积截然不同）</span></p>
+  <p>(<i>c</i><b>a</b>)×<b>b</b> = <i>c</i>(<b>a</b>×<b>b</b>)　&emsp;　<b>a</b>×(<b>b</b>+<b>c</b>) = <b>a</b>×<b>b</b> + <b>a</b>×<b>c</b></p>
+</div>
+
+<div class="warn">叉积不满足交换律：<b>a</b>×<b>b</b> = −<b>b</b>×<b>a</b>。右手定则记法：食指 <b>a</b> → 中指 <b>b</b> → 拇指方向即 <b>a</b>×<b>b</b>。</div>
+
+<!-- ====== 点积 vs 叉积 对比表 ====== --></div>
+<h2 id="s59240372">点积 vs 叉积 对比</h2>
+<div class="card">
+  <table>
+    <tr><th></th><th>点积 <b>a</b>·<b>b</b></th><th>叉积 <b>a</b>×<b>b</b></th></tr>
+    <tr><td>结果类型</td><td>标量</td><td>向量</td></tr>
+    <tr><td>几何含义</td><td>投影长度 × 模；衡量"同向度"</td><td>平行四边形的有向面积；衡量"正交度"</td></tr>
+    <tr><td>交换律</td><td>✓ 满足</td><td>✗ 反交换：<b>a</b>×<b>b</b> = −<b>b</b>×<b>a</b></td></tr>
+    <tr><td>平行时</td><td>|<b>a</b>||<b>b</b>| (cos 0=1)</td><td><b>0</b> (sin 0=0)</td></tr>
+    <tr><td>正交时</td><td>0 (cos 90°=0)</td><td>|<b>a</b>||<b>b</b>| (sin 90°=1)</td></tr>
+    <tr><td>典型应用</td><td>夹角、投影、功</td><td>面积、体积、扭矩、法向量</td></tr>
+  </table>
+</div>
+
+<!-- ====== 12.5 ====== -->
+<h2 id="s38792801">12.5 空间直线与平面</h2>
+
+<!-- 直线 -->
+<h3 id="s86632699"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span><span class="tag">直线</span> 三种表示形式</h3><div class="kn-collapse-body">
+<div class="card">
+  <p>过点 P₀(x₀,y₀,z₀)，方向向量 <b>v</b> = ⟨a, b, c⟩。</p>
+
+  <table>
+    <tr><th>形式</th><th>表达式</th></tr>
+    <tr><td>向量式</td><td><b>r</b> = <b>r</b>₀ + t<b>v</b>　(<i>t</i> ∈ ℝ)</td></tr>
+    <tr><td>参数式</td><td><i>x</i>=x₀+<i>a</i>t, <i>y</i>=y₀+<i>b</i>t, <i>z</i>=z₀+<i>c</i>t</td></tr>
+    <tr><td>对称式</td><td>(x−x₀)/<i>a</i> = (y−y₀)/<i>b</i> = (z−z₀)/<i>c</i></td></tr>
+  </table>
+  <p class="paren-note">若某个方向分量为 0（如 a=0），则对称式中该项写为 x=x₀，参数式中该坐标恒为常数。</p>
+
+  </div><h3 id="s83249418"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>直线间关系</h3><div class="kn-collapse-body">
+  <div class="cols2">
+    <div>
+      <p><b>平行</b>：方向向量成比例　<b>v₁</b> ∥ <b>v₂</b></p>
+      <p><b>垂直</b>：方向向量点积为 0　<b>v₁</b>·<b>v₂</b> = 0</p>
+    </div>
+    <div>
+      <p><b>共面</b>：(<b>r₂</b>−<b>r₁</b>)·(<b>v₁</b>×<b>v₂</b>) = 0</p>
+      <p><b>异面</b>：(<b>r₂</b>−<b>r₁</b>)·(<b>v₁</b>×<b>v₂</b>) ≠ 0</p>
+    </div>
+  </div>
+  <p>异面时最短距离：<span class="formula">d = |(<b>r₂</b>−<b>r₁</b>)·(<b>v₁</b>×<b>v₂</b>)| / |<b>v₁</b>×<b>v₂</b>|</span></p>
+</div>
+
+<!-- 平面 --></div>
+<h3 id="s90703514"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span><span class="tag">平面</span> 四种表示形式</h3><div class="kn-collapse-body">
+<div class="card">
+  <table>
+    <tr><th>形式</th><th>表达式</th><th>说明</th></tr>
+    <tr><td>点法式</td><td><i>A</i>(x−x₀) + <i>B</i>(y−y₀) + <i>C</i>(z−z₀) = 0</td><td>过 P₀，法向量 <b>n</b> = ⟨A,B,C⟩</td></tr>
+    <tr><td>一般式</td><td><i>Ax</i> + <i>By</i> + <i>Cz</i> + <i>D</i> = 0</td><td>法向量即 ⟨A,B,C⟩</td></tr>
+    <tr><td>截距式</td><td>x/<i>p</i> + y/<i>q</i> + z/<i>r</i> = 1</td><td>截距 p,q,r 均 ≠ 0</td></tr>
+  </table>
+
+  </div><h3 id="s47417316"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>平面间夹角</h3><div class="kn-collapse-body">
+  <p>即两法向量的夹角（取锐角）：</p>
+  <div class="formula">cos θ = |<b>n₁</b>·<b>n₂</b>| / (|<b>n₁</b>||<b>n₂</b>|)</div>
+
+  </div><h3 id="s52277800"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>点到平面距离<span class="pg-chip" data-page="12.1-5">页5</span></h3><div class="kn-collapse-body">
+  <div class="formula">d = |Ax₀ + By₀ + Cz₀ + D| / √(A² + B² + C²)</div>
+  <p>点 P₀(x₀,y₀,z₀) 到平面 Ax+By+Cz+D=0 的距离。</p>
+</div>
+
+<!-- 直线与平面关系 --></div>
+<h3 id="s72068141"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>直线与平面的关系</h3><div class="kn-collapse-body">
+<div class="card">
+  <table>
+    <tr><th>关系</th><th>条件</th></tr>
+    <tr><td>直线 ⟂ 平面</td><td>方向向量 <b>v</b> 与法向量 <b>n</b> 平行：<b>v</b> ∥ <b>n</b></td></tr>
+    <tr><td>直线 ∥ 平面</td><td><b>v</b>·<b>n</b> = 0 且直线上某点不在平面内</td></tr>
+    <tr><td>直线在平面内</td><td><b>v</b>·<b>n</b> = 0 且直线上一点满足平面方程</td></tr>
+    <tr><td>直线与平面斜交</td><td><b>v</b>·<b>n</b> ≠ 0</td></tr>
+  </table>
+  <p>直线与平面夹角（锐角）：<span class="formula">sin φ = |<b>v</b>·<b>n</b>| / (|<b>v</b>||<b>n</b>|)</span></p>
+</div>
+
+<div class="warn">平面一般式 Ax+By+Cz+D=0 中，⟨A,B,C⟩ 是<span class="highlight">法向量</span>，不是方向向量。直线对称式中的 a,b,c 是<span class="highlight">方向向量</span>的分量。方向向量与法向量是两种完全不同的角色，切勿张冠李戴。</div>
+
+<div class="warn">对称式中若某分母为 0，不可直接写分式。例如 a=0 时应理解为 x=x₀且 (y−y₀)/b = (z−z₀)/c。考试中若机械地"除以零"会丢分。</div>
+
+<!-- ====== 综合对比 ====== --></div>
+<h2 id="s22994163">几何对象快速对照</h2>
+<div class="card">
+  <table>
+    <tr><th>对象</th><th>决定要素</th><th>关键向量</th><th>核心公式</th></tr>
+    <tr><td>直线</td><td>一点 + 一方向</td><td>方向向量 <b>v</b></td><td><b>r</b>=<b>r</b>₀+t<b>v</b></td></tr>
+    <tr><td>平面</td><td>一点 + 一法向</td><td>法向量 <b>n</b></td><td><b>n</b>·(<b>r</b>−<b>r</b>₀)=0</td></tr>
+    <tr><td>球面</td><td>球心 + 半径</td><td>—</td><td>(x−h)²+(y−k)²+(z−l)²=r²</td></tr>
+  </table>
+</div>
+
+<!-- ====== 自测 ====== -->
+<div class="self-test">
+  <h4>自测清单（合上书回答）</h4>
+  <ol>
+    <li>给出两点 (1,2,3) 与 (4,0,8) 的距离公式并算出值。</li>
+    <li>写出球面 (x−2)²+(y+1)²+(z−3)²=16 的球心与半径。</li>
+    <li>a = ⟨3,−1,2⟩, b = ⟨1,4,−2⟩，求 a·b、a×b、以及 a 与 b 的夹角（精确到 0.1°）。</li>
+    <li>验证 a×b 确实与 a 和 b 都正交（用点积）。</li>
+    <li>求 a = ⟨2,3,−1⟩ 在 b = ⟨1,−1,2⟩ 上的标量投影与向量投影。</li>
+    <li>平面过点 (1,0,−2)，法向量 ⟨3,−1,4⟩，写出点法式和一般式。</li>
+    <li>直线过 (2,−1,3)，方向 ⟨1,2,−2⟩，写出参数式与对称式。</li>
+    <li>判断直线 (x−1)/2 = (y+2)/3 = (z−3)/−1 与平面 4x−y+5z+1=0 的关系（平行/垂直/斜交）。</li>
+    <li>计算点 (2,1,1) 到平面 2x−y+2z−3=0 的距离。</li>
+    <li>给定三向量 a,b,c，写出平行六面体体积公式。</li>
+  </ol>
+</div>
+
+<p style="text-align:center;color:var(--muted);margin-top:40px;font-size:.85rem;">
+  第12章知识清单 &middot; 不含12.6二次曲面 &middot; 2026-06-17
+</p></div><aside class="kn-rail"><div class="kn-rail-title">📑 原始幻灯片对照</div><div class="slide-card" id="slide-p12.1-1" data-page="12.1-1"><div class="slide-card-label">12.1 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p001.jpg" alt="12.1 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">CH12 Vectors and the Geometry of Space<br>12.1 Three dimensional  coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-2" data-page="12.1-2"><div class="slide-card-label">12.1 · 第2页</div><img class="slide-img" width="900" height="829" src="slides/ch12_p002.jpg" alt="12.1 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-3" data-page="12.1-3"><div class="slide-card-label">12.1 · 第3页</div><img class="slide-img" width="900" height="835" src="slides/ch12_p003.jpg" alt="12.1 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems<br>8 octants (卦限)<br>4 quadrants (象限)<br>https://en.wikipedia.org/wiki/Cartesian_coordinate_system</div></details></div>
+<div class="slide-card" id="slide-p12.1-4" data-page="12.1-4"><div class="slide-card-label">12.1 · 第4页</div><img class="slide-img" width="900" height="740" src="slides/ch12_p004.jpg" alt="12.1 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems<br>https://en.wikipedia.org/wiki/Cartesian_coordinate_system</div></details></div>
+<div class="slide-card" id="slide-p12.1-5" data-page="12.1-5"><div class="slide-card-label">12.1 · 第5页</div><img class="slide-img" width="900" height="858" src="slides/ch12_p005.jpg" alt="12.1 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-7" data-page="12.1-7"><div class="slide-card-label">12.1 · 第7页</div><img class="slide-img" width="900" height="87" src="slides/ch12_p006.jpg" alt="12.1 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-9" data-page="12.1-9"><div class="slide-card-label">12.1 · 第9页</div><img class="slide-img" width="900" height="201" src="slides/ch12_p007.jpg" alt="12.1 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-10" data-page="12.1-10"><div class="slide-card-label">12.1 · 第10页</div><img class="slide-img" width="900" height="201" src="slides/ch12_p007.jpg" alt="12.1 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-12" data-page="12.1-12"><div class="slide-card-label">12.1 · 第12页</div><img class="slide-img" width="900" height="143" src="slides/ch12_p009.jpg" alt="12.1 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-14" data-page="12.1-14"><div class="slide-card-label">12.1 · 第14页</div><img class="slide-img" width="900" height="108" src="slides/ch12_p010.jpg" alt="12.1 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-15" data-page="12.1-15"><div class="slide-card-label">12.1 · 第15页</div><img class="slide-img" width="900" height="210" src="slides/ch12_p011.jpg" alt="12.1 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-17" data-page="12.1-17"><div class="slide-card-label">12.1 · 第17页</div><img class="slide-img" width="900" height="77" src="slides/ch12_p012.jpg" alt="12.1 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.1-18" data-page="12.1-18"><div class="slide-card-label">12.1 · 第18页</div><img class="slide-img" width="900" height="106" src="slides/ch12_p013.jpg" alt="12.1 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">3D Coordinate systems</div></details></div>
+<div class="slide-card" id="slide-p12.2-1" data-page="12.2-1"><div class="slide-card-label">12.2 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p001.jpg" alt="12.2 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">12.2 Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-2" data-page="12.2-2"><div class="slide-card-label">12.2 · 第2页</div><img class="slide-img" width="900" height="698" src="slides/ch12_p015.jpg" alt="12.2 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-3" data-page="12.2-3"><div class="slide-card-label">12.2 · 第3页</div><img class="slide-img" width="900" height="106" src="slides/ch12_p016.jpg" alt="12.2 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-4" data-page="12.2-4"><div class="slide-card-label">12.2 · 第4页</div><img class="slide-img" width="900" height="106" src="slides/ch12_p016.jpg" alt="12.2 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-5" data-page="12.2-5"><div class="slide-card-label">12.2 · 第5页</div><img class="slide-img" width="900" height="106" src="slides/ch12_p016.jpg" alt="12.2 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-7" data-page="12.2-7"><div class="slide-card-label">12.2 · 第7页</div><img class="slide-img" width="896" height="1048" src="slides/ch12_p019.jpg" alt="12.2 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-9" data-page="12.2-9"><div class="slide-card-label">12.2 · 第9页</div><img class="slide-img" width="900" height="806" src="slides/ch12_p020.jpg" alt="12.2 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Components (分量)<br>These coordinates are called the components of a.</div></details></div>
+<div class="slide-card" id="slide-p12.2-10" data-page="12.2-10"><div class="slide-card-label">12.2 · 第10页</div><img class="slide-img" width="900" height="841" src="slides/ch12_p021.jpg" alt="12.2 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Components (分量)</div></details></div>
+<div class="slide-card" id="slide-p12.2-12" data-page="12.2-12"><div class="slide-card-label">12.2 · 第12页</div><img class="slide-img" width="900" height="504" src="slides/ch12_p022.jpg" alt="12.2 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Components (分量)</div></details></div>
+<div class="slide-card" id="slide-p12.2-14" data-page="12.2-14"><div class="slide-card-label">12.2 · 第14页</div><img class="slide-img" width="900" height="403" src="slides/ch12_p023.jpg" alt="12.2 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Components (分量)</div></details></div>
+<div class="slide-card" id="slide-p12.2-15" data-page="12.2-15"><div class="slide-card-label">12.2 · 第15页</div><img class="slide-img" width="900" height="379" src="slides/ch12_p024.jpg" alt="12.2 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p12.2-17" data-page="12.2-17"><div class="slide-card-label">12.2 · 第17页</div><img class="slide-img" width="900" height="379" src="slides/ch12_p024.jpg" alt="12.2 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p12.2-18" data-page="12.2-18"><div class="slide-card-label">12.2 · 第18页</div><img class="slide-img" width="900" height="82" src="slides/ch12_p026.jpg" alt="12.2 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p12.2-19" data-page="12.2-19"><div class="slide-card-label">12.2 · 第19页</div><img class="slide-img" width="900" height="228" src="slides/ch12_p027.jpg" alt="12.2 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Properties of Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-20" data-page="12.2-20"><div class="slide-card-label">12.2 · 第20页</div><img class="slide-img" width="900" height="228" src="slides/ch12_p027.jpg" alt="12.2 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Properties of Vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-21" data-page="12.2-21"><div class="slide-card-label">12.2 · 第21页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p029.jpg" alt="12.2 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Standard basis vectors<br>基向量</div></details></div>
+<div class="slide-card" id="slide-p12.2-22" data-page="12.2-22"><div class="slide-card-label">12.2 · 第22页</div><img class="slide-img" width="900" height="731" src="slides/ch12_p030.jpg" alt="12.2 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Standard basis vectors</div></details></div>
+<div class="slide-card" id="slide-p12.2-25" data-page="12.2-25"><div class="slide-card-label">12.2 · 第25页</div><img class="slide-img" width="900" height="313" src="slides/ch12_p031.jpg" alt="12.2 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Unit vector</div></details></div>
+<div class="slide-card" id="slide-p12.2-26" data-page="12.2-26"><div class="slide-card-label">12.2 · 第26页</div><img class="slide-img" width="900" height="281" src="slides/ch12_p032.jpg" alt="12.2 · 第26页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Unit vector</div></details></div>
+<div class="slide-card" id="slide-p12.3-1" data-page="12.3-1"><div class="slide-card-label">12.3 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p001.jpg" alt="12.3 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">12.3 The Dot Product<br>点积(内积)</div></details></div>
+<div class="slide-card" id="slide-p12.3-2" data-page="12.3-2"><div class="slide-card-label">12.3 · 第2页</div><img class="slide-img" width="900" height="134" src="slides/ch12_p034.jpg" alt="12.3 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The dot product</div></details></div>
+<div class="slide-card" id="slide-p12.3-3" data-page="12.3-3"><div class="slide-card-label">12.3 · 第3页</div><img class="slide-img" width="900" height="214" src="slides/ch12_p035.jpg" alt="12.3 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The dot product</div></details></div>
+<div class="slide-card" id="slide-p12.3-4" data-page="12.3-4"><div class="slide-card-label">12.3 · 第4页</div><img class="slide-img" width="900" height="214" src="slides/ch12_p035.jpg" alt="12.3 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The dot product</div></details></div>
+<div class="slide-card" id="slide-p12.3-5" data-page="12.3-5"><div class="slide-card-label">12.3 · 第5页</div><img class="slide-img" width="900" height="214" src="slides/ch12_p035.jpg" alt="12.3 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The dot product</div></details></div>
+<div class="slide-card" id="slide-p12.3-7" data-page="12.3-7"><div class="slide-card-label">12.3 · 第7页</div><img class="slide-img" width="900" height="126" src="slides/ch12_p038.jpg" alt="12.3 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The dot product</div></details></div>
+<div class="slide-card" id="slide-p12.3-9" data-page="12.3-9"><div class="slide-card-label">12.3 · 第9页</div><img class="slide-img" width="900" height="52" src="slides/ch12_p039.jpg" alt="12.3 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p12.3-10" data-page="12.3-10"><div class="slide-card-label">12.3 · 第10页</div><img class="slide-img" width="900" height="69" src="slides/ch12_p040.jpg" alt="12.3 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Direction angles, direction cosines (方向角、方向余弦)</div></details></div>
+<div class="slide-card" id="slide-p12.3-12" data-page="12.3-12"><div class="slide-card-label">12.3 · 第12页</div><img class="slide-img" width="900" height="141" src="slides/ch12_p041.jpg" alt="12.3 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Direction angles, direction cosines (方向角、方向余弦)<br>Unit vector</div></details></div>
+<div class="slide-card" id="slide-p12.3-14" data-page="12.3-14"><div class="slide-card-label">12.3 · 第14页</div><img class="slide-img" width="900" height="125" src="slides/ch12_p042.jpg" alt="12.3 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Projection: component<br>b在a上的标量投影:</div></details></div>
+<div class="slide-card" id="slide-p12.3-15" data-page="12.3-15"><div class="slide-card-label">12.3 · 第15页</div><img class="slide-img" width="869" height="924" src="slides/ch12_p043.jpg" alt="12.3 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Projection: vector<br>b在a上的向量投影:</div></details></div>
+<div class="slide-card" id="slide-p12.3-17" data-page="12.3-17"><div class="slide-card-label">12.3 · 第17页</div><img class="slide-img" width="900" height="802" src="slides/ch12_p044.jpg" alt="12.3 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Work</div></details></div>
+<div class="slide-card" id="slide-p12.3-18" data-page="12.3-18"><div class="slide-card-label">12.3 · 第18页</div><img class="slide-img" width="900" height="288" src="slides/ch12_p045.jpg" alt="12.3 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Work</div></details></div>
+<div class="slide-card" id="slide-p12.4-1" data-page="12.4-1"><div class="slide-card-label">12.4 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p001.jpg" alt="12.4 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">12.4 The Cross Product<br>叉积(外积)</div></details></div>
+<div class="slide-card" id="slide-p12.4-2" data-page="12.4-2"><div class="slide-card-label">12.4 · 第2页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p047.jpg" alt="12.4 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-3" data-page="12.4-3"><div class="slide-card-label">12.4 · 第3页</div><img class="slide-img" width="900" height="128" src="slides/ch12_p048.jpg" alt="12.4 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-4" data-page="12.4-4"><div class="slide-card-label">12.4 · 第4页</div><img class="slide-img" width="900" height="133" src="slides/ch12_p049.jpg" alt="12.4 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-5" data-page="12.4-5"><div class="slide-card-label">12.4 · 第5页</div><img class="slide-img" width="900" height="291" src="slides/ch12_p050.jpg" alt="12.4 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-7" data-page="12.4-7"><div class="slide-card-label">12.4 · 第7页</div><img class="slide-img" width="900" height="67" src="slides/ch12_p051.jpg" alt="12.4 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-9" data-page="12.4-9"><div class="slide-card-label">12.4 · 第9页</div><img class="slide-img" width="900" height="132" src="slides/ch12_p052.jpg" alt="12.4 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product<br>Zero vector!!<br>平行</div></details></div>
+<div class="slide-card" id="slide-p12.4-10" data-page="12.4-10"><div class="slide-card-label">12.4 · 第10页</div><img class="slide-img" width="900" height="577" src="slides/ch12_p053.jpg" alt="12.4 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-12" data-page="12.4-12"><div class="slide-card-label">12.4 · 第12页</div><img class="slide-img" width="900" height="86" src="slides/ch12_p054.jpg" alt="12.4 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-14" data-page="12.4-14"><div class="slide-card-label">12.4 · 第14页</div><img class="slide-img" width="900" height="382" src="slides/ch12_p055.jpg" alt="12.4 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The properties of cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-15" data-page="12.4-15"><div class="slide-card-label">12.4 · 第15页</div><img class="slide-img" width="900" height="382" src="slides/ch12_p055.jpg" alt="12.4 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The properties of cross product</div></details></div>
+<div class="slide-card" id="slide-p12.4-17" data-page="12.4-17"><div class="slide-card-label">12.4 · 第17页</div><img class="slide-img" width="900" height="637" src="slides/ch12_p057.jpg" alt="12.4 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Torque (扭力)</div></details></div>
+<div class="slide-card" id="slide-p12.4-18" data-page="12.4-18"><div class="slide-card-label">12.4 · 第18页</div><img class="slide-img" width="900" height="366" src="slides/ch12_p058.jpg" alt="12.4 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Torque (扭力)</div></details></div>
+<div class="slide-card" id="slide-p12.5-1" data-page="12.5-1"><div class="slide-card-label">12.5 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p001.jpg" alt="12.5 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">12.5 Equations of lines and planes</div></details></div>
+<div class="slide-card" id="slide-p12.5-2" data-page="12.5-2"><div class="slide-card-label">12.5 · 第2页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p047.jpg" alt="12.5 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Lines</div></details></div>
+<div class="slide-card" id="slide-p12.5-3" data-page="12.5-3"><div class="slide-card-label">12.5 · 第3页</div><img class="slide-img" width="900" height="741" src="slides/ch12_p061.jpg" alt="12.5 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vector equation of a line</div></details></div>
+<div class="slide-card" id="slide-p12.5-4" data-page="12.5-4"><div class="slide-card-label">12.5 · 第4页</div><img class="slide-img" width="900" height="764" src="slides/ch12_p062.jpg" alt="12.5 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations of a line</div></details></div>
+<div class="slide-card" id="slide-p12.5-5" data-page="12.5-5"><div class="slide-card-label">12.5 · 第5页</div><img class="slide-img" width="900" height="764" src="slides/ch12_p062.jpg" alt="12.5 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations of a line</div></details></div>
+<div class="slide-card" id="slide-p12.5-7" data-page="12.5-7"><div class="slide-card-label">12.5 · 第7页</div><img class="slide-img" width="900" height="125" src="slides/ch12_p064.jpg" alt="12.5 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vector and Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p12.5-9" data-page="12.5-9"><div class="slide-card-label">12.5 · 第9页</div><img class="slide-img" width="900" height="175" src="slides/ch12_p065.jpg" alt="12.5 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vector and Parametric equations<br>Not unique representation</div></details></div>
+<div class="slide-card" id="slide-p12.5-10" data-page="12.5-10"><div class="slide-card-label">12.5 · 第10页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p066.jpg" alt="12.5 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Symmetric equations(点向式)</div></details></div>
+<div class="slide-card" id="slide-p12.5-12" data-page="12.5-12"><div class="slide-card-label">12.5 · 第12页</div><img class="slide-img" width="900" height="130" src="slides/ch12_p067.jpg" alt="12.5 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Symmetric equations</div></details></div>
+<div class="slide-card" id="slide-p12.5-14" data-page="12.5-14"><div class="slide-card-label">12.5 · 第14页</div><img class="slide-img" width="900" height="119" src="slides/ch12_p068.jpg" alt="12.5 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Line segment (线段)</div></details></div>
+<div class="slide-card" id="slide-p12.5-15" data-page="12.5-15"><div class="slide-card-label">12.5 · 第15页</div><img class="slide-img" width="900" height="213" src="slides/ch12_p069.jpg" alt="12.5 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Skew lines</div></details></div>
+<div class="slide-card" id="slide-p12.5-17" data-page="12.5-17"><div class="slide-card-label">12.5 · 第17页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p070.jpg" alt="12.5 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Planes</div></details></div>
+<div class="slide-card" id="slide-p12.5-18" data-page="12.5-18"><div class="slide-card-label">12.5 · 第18页</div><img class="slide-img" width="900" height="675" src="slides/ch12_p071.jpg" alt="12.5 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Plane (平面)</div></details></div>
+<div class="slide-card" id="slide-p12.5-19" data-page="12.5-19"><div class="slide-card-label">12.5 · 第19页</div><img class="slide-img" width="900" height="800" src="slides/ch12_p072.jpg" alt="12.5 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Vector equation of the plane<br>Vector equation</div></details></div>
+<div class="slide-card" id="slide-p12.5-20" data-page="12.5-20"><div class="slide-card-label">12.5 · 第20页</div><img class="slide-img" width="900" height="239" src="slides/ch12_p073.jpg" alt="12.5 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">点法式</div></details></div>
+<div class="slide-card" id="slide-p12.5-21" data-page="12.5-21"><div class="slide-card-label">12.5 · 第21页</div><img class="slide-img" width="900" height="58" src="slides/ch12_p074.jpg" alt="12.5 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Linear equation</div></details></div>
+<div class="slide-card" id="slide-p12.5-22" data-page="12.5-22"><div class="slide-card-label">12.5 · 第22页</div><img class="slide-img" width="900" height="74" src="slides/ch12_p075.jpg" alt="12.5 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Equation of a plane<br>截距式</div></details></div>
+<div class="slide-card" id="slide-p12.5-25" data-page="12.5-25"><div class="slide-card-label">12.5 · 第25页</div><img class="slide-img" width="900" height="71" src="slides/ch12_p076.jpg" alt="12.5 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Equation of a plane</div></details></div>
+<div class="slide-card" id="slide-p12.5-26" data-page="12.5-26"><div class="slide-card-label">12.5 · 第26页</div><img class="slide-img" width="900" height="524" src="slides/ch12_p077.jpg" alt="12.5 · 第26页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The angle between two planes</div></details></div>
+<div class="slide-card" id="slide-p12.5-29" data-page="12.5-29"><div class="slide-card-label">12.5 · 第29页</div><img class="slide-img" width="900" height="270" src="slides/ch12_p078.jpg" alt="12.5 · 第29页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Line intersection of two planes<br>Study the NOTE in p.822</div></details></div>
+<div class="slide-card" id="slide-p12.5-30" data-page="12.5-30"><div class="slide-card-label">12.5 · 第30页</div><img class="slide-img" width="900" height="679" src="slides/ch12_p079.jpg" alt="12.5 · 第30页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Distance from a point to a plane</div></details></div></aside></div></div><div id="panel-test" class="tab-panel"><h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">共 8 题</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div></div>
+
+<script>
+window.__epaLightbox = function(src){
+  var lb = document.getElementById('epa-lightbox');
+  if(!lb){ lb = document.createElement('div'); lb.id='epa-lightbox';
+    lb.innerHTML='<img>'; document.body.appendChild(lb);
+    lb.addEventListener('click', function(){ lb.style.display='none'; }); }
+  lb.querySelector('img').src = src; lb.style.display='flex';
+};
+document.addEventListener('click', function(e){
+  var chip = e.target.closest('.pg-chip'); if(!chip) return;
+  var pg = chip.getAttribute('data-page');
+  var card = document.getElementById('slide-p'+pg);
+  if(card){ card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); }
+});
+// Shrink any display formula too wide for its column so it stays fully visible.
+window.__epaFitFormulas = function __epaFitFormulas(){
+  var list = document.querySelectorAll('.kn-main mjx-container[display="true"]');
+  for(var i=0;i<list.length;i++){
+    var m = list[i], parent = m.parentElement; if(!parent) continue;
+    m.style.fontSize=''; // reset to measure natural width
+    var avail = parent.clientWidth, w = m.scrollWidth;
+    if(avail>0 && w>avail){ m.style.fontSize=(avail/w*0.97*100).toFixed(1)+'%'; }
+  }
+}
+function __epaScheduleFit(){
+  if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(__epaFitFormulas);
+  } else { setTimeout(__epaFitFormulas, 900); }
+}
+if(document.readyState!=='loading'){ __epaScheduleFit(); }
+else { document.addEventListener('DOMContentLoaded', __epaScheduleFit); }
+var __epaFitT=null;
+window.addEventListener('resize', function(){ clearTimeout(__epaFitT); __epaFitT=setTimeout(__epaFitFormulas,200); });
+</script>
+<script>
+var Q = [{"id": 1, "kc_id": "kc12.3", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "已知 a = &lt;2, -3, 1&gt;, b = &lt;-1, 2, 4&gt;。求 (1) a·b；(2) a 与 b 的夹角（精确到 0.1°）；(3) b 在 a 上的标量投影。", "answer": -1, "explanation": "(1) a·b = 2(-1)+(-3)(2)+1(4) = -4。(2) |a|=√14, |b|=√21, cosθ = -4/√294 ≈ -0.2333, θ ≈ 103.5°。(3) comp_a b = (a·b)/|a| = -4/√14 ≈ -1.069。评分：点积 2 分，模 1 分，夹角 3 分，投影 2 分。"}, {"id": 2, "kc_id": "kc12.4", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "已知 a = &lt;1, 2, -1&gt;, b = &lt;3, 0, 2&gt;。求 (1) a×b；(2) 验证结果与 a 和 b 都正交；(3) 以 a, b 为邻边的平行四边形面积。", "answer": -1, "explanation": "(1) a×b = |i j k; 1 2 -1; 3 0 2| = &lt;4, -5, -6&gt;。(2) (a×b)·a = 4-10+6 = 0, (a×b)·b = 12+0-12 = 0。(3) 面积 = |a×b| = √77。评分：叉积 4 分，正交验证 2 分，面积 2 分。"}, {"id": 3, "kc_id": "kc12.5", "type": "choice", "points": 3, "cognitive_level": "understand", "difficulty": "basic", "question": "过点 (3,-1,2) 且方向向量为 v=&lt;2,1,-4&gt; 的直线的对称方程为？", "options": ["(x-3)/2 = (y+1)/1 = (z-2)/(-4)", "(x-3)/2 = (y-1)/1 = (z+2)/(-4)", "(x+3)/2 = (y-1)/1 = (z+2)/(-4)", "2(x-3) + (y+1) - 4(z-2) = 0"], "answer": 0, "explanation": "对称式：(x-x0)/a = (y-y0)/b = (z-z0)/c。B 符号错（y+1 写成 y-1），C 分子符号反，D 是平面方程不是直线方程。"}, {"id": 4, "kc_id": "kc12.6", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "求通过三点 A(1,2,3)、B(3,-1,2)、C(0,4,1) 的平面方程。", "answer": -1, "explanation": "AB = &lt;2,-3,-1&gt;, AC = &lt;-1,2,-2&gt;。法向量 n = AB×AC = &lt;8,5,1&gt;。点法式：8(x-1)+5(y-2)+1(z-3)=0 → 8x+5y+z = 21。评分：求两方向向量 2 分，叉积得法向量 3 分，点法式 2 分，化简 1 分。"}, {"id": 5, "kc_id": "kc12.6", "type": "choice", "points": 3, "cognitive_level": "understand", "difficulty": "basic", "question": "平面 x+2y-2z=5 和 2x-y+3z=1 的位置关系是？", "options": ["相交（夹角不为 0 也不为 90°）", "平行", "垂直", "重合"], "answer": 0, "explanation": "n1=&lt;1,2,-2&gt;, n2=&lt;2,-1,3&gt;。n1·n2=2-2-6=-6≠0，不垂直。n1 与 n2 不成比例，不平行。故两平面相交于一条线。"}, {"id": 6, "kc_id": "kc12.7", "type": "calc", "points": 6, "cognitive_level": "apply", "difficulty": "medium", "question": "求点 P(2,-1,3) 到平面 3x+4y-12z=7 的距离。", "answer": -1, "explanation": "d = |3(2)+4(-1)-12(3)-7| / √(9+16+144) = |6-4-36-7|/13 = 41/13。评分：公式 2 分，代入 2 分，计算 2 分。"}, {"id": 7, "kc_id": "kc12.5", "type": "choice", "points": 3, "cognitive_level": "apply", "difficulty": "medium", "question": "直线 L1: x=1+t, y=-2+3t, z=4-t 和 L2: x=2s, y=3+s, z=-3+4s 的关系是？", "options": ["异面（skew）", "平行", "相交", "垂直"], "answer": 0, "explanation": "v1=&lt;1,3,-1&gt;, v2=&lt;2,1,4&gt;，不成比例 → 不平行。(r₂-r₁)·(v₁×v₂)=-8≠0，不共面 → 异面（skew）。选项A正确。"}, {"id": 8, "kc_id": "kc12.4", "type": "choice", "points": 3, "cognitive_level": "understand", "difficulty": "basic", "question": "以 a=&lt;3,-1,2&gt; 和 b=&lt;1,2,-4&gt; 为邻边的三角形面积是？", "options": ["√245 / 2", "√245", "|a×b| / 2", "A 和 C 都对"], "answer": 3, "explanation": "|a×b| = √245。平行四边形面积 = |a×b| = √245，三角形面积 = |a×b|/2 = √245/2。A 是数值，C 是公式，两者都正确。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+function tfAnswerIndex(ans) {
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', 'vrai', 'vero', 'san', 'pravda'];
+  var falsy = ['1', 'f', 'false', 'faux', 'falso', 'nepravda'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return -1;
+}
+
+function fillBlankCount(text) {
+  return (text.match(/(_{2,})/g) || []).length;
+}
+
+function fillBlankAnswers(answer, count) {
+  if (Array.isArray(answer)) return answer;
+  if (count <= 1) return [answer];
+  var arr = [];
+  for (var i = 0; i < count; i++) arr.push(answer);
+  return arr;
+}
+
+function roundScore(score) {
+  var r = Math.round(score * 10) / 10;
+  return r === Math.floor(r) ? Math.floor(r) : r.toFixed(1);
+}
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('questions-container not found'); return; }
+
+  var order = LABELS.section_order || [];
+  Q.forEach(function(q, i) { q._i = i; });
+  Q.sort(function(a, b) {
+    var oa = order.indexOf(a.type);
+    if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type);
+    if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + (LABELS.points_suffix || '分') + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + (q.question || q.stem || '') + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + (LABELS.true_label || '正确') + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + (LABELS.false_label || '错误') + '</label>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + (LABELS.placeholder || '请输入答案') + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + (LABELS.pitfall_prefix || '⚠ ') + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function(err) { console.error(err); });
+  }
+}
+
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var k = 0;
+  var html = ('' + (q.question || q.stem)).replace(/(_{2,})/g, function() {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') { build(); }
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i], qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+    result.style.display = 'block';
+    if (q.type === 'choice' || q.type === 'tf') { score += gradeSingle(q, qid, card, badge, correctEl); }
+    else if (q.type === 'multi') { score += gradeMulti(q, qid, card, badge, correctEl); }
+    else if (q.type === 'fill') { score += gradeFill(q, qid, card, badge, correctEl); }
+    else { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = (LABELS.reference_label || '参考'); }
+  }
+  var sb = document.getElementById('score-box');
+  if (sb) { sb.style.display = 'block'; document.getElementById('score-num').textContent = roundScore(score); sb.scrollIntoView({behavior:'smooth'}); }
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].readOnly = true;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  if (ansIdx < 0) { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = '参考'; return 0; }
+  if (radio && parseInt(radio.value) === ansIdx) {
+    card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); return q.points || 0;
+  }
+  card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误');
+  correctEl.textContent = ' ' + (LABELS.correct_answer_label || '正确答案') + ': ' + String.fromCharCode(65 + ansIdx);
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var boxes = document.querySelectorAll('input[name="' + qid + '"]');
+  var ansIdxs = q.answer;
+  if (!Array.isArray(ansIdxs)) { try { ansIdxs = JSON.parse(ansIdxs); } catch(e) { ansIdxs = [ansIdxs]; } }
+  var hit = 0, total = ansIdxs.length;
+  for (var k = 0; k < boxes.length; k++) {
+    var checked = boxes[k].checked;
+    var isAns = ansIdxs.indexOf(k) !== -1;
+    if (checked === isAns) hit++;
+  }
+  var earned = (hit === boxes.length) ? (q.points || 0) : Math.round((q.points || 0) * hit / boxes.length);
+  if (hit === boxes.length) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+  else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+  else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+  return earned;
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var answers = fillBlankAnswers(q.answer, Math.max(nBlanks, 1));
+  var hit = 0;
+  if (nBlanks > 0) {
+    for (var b = 0; b < nBlanks; b++) {
+      var inp = document.getElementById('fill-' + qid + '-' + b);
+      if (!inp) continue;
+      var expect = answers[b] || answers[answers.length - 1] || '';
+      var expList = Array.isArray(expect) ? expect : [expect];
+      var val = inp.value.trim().replace(/\s+/g, '');
+      if (expList.some(function(e) { return ('' + e).replace(/\s+/g, '') === val; })) hit++;
+    }
+    var n = nBlanks;
+    if (hit === n) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+    else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+    else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+    return Math.round((q.points || 0) * hit / n * 10) / 10;
+  }
+  return 0;
+}
+
+// ─── Timer ──────────────────────────────────────────────────────────
+window.__epaStartTime = Date.now();
+function __epaElapsed(){ var s=Math.floor((Date.now()-window.__epaStartTime)/1000),m=Math.floor(s/60); return (m>0?m+'分':'')+(s%60)+'秒'; }
+(function(){ var d=document.createElement('div'); d.id='epa-timer'; d.style.cssText='text-align:center;color:var(--ink-light);font-size:0.85em;margin:4px 0 12px'; d.textContent='用时: '+__epaElapsed(); setInterval(function(){ d.textContent='用时: '+__epaElapsed(); },30000); var t=document.getElementById('epa-tabs'); if(t)t.insertAdjacentElement('afterend',d); })();
+
+// ─── Wrong-book ─────────────────────────────────────────────────────
+window.__epaSaveWrong = function(){
+  var ids=[]; for(var i=0;i<Q.length;i++){ var c=document.getElementById('card-q'+i); if(c&&(c.classList.contains('wrong')||c.classList.contains('partial'))) ids.push(Q[i].id||i); }
+  try{ var k='epa-wrong-'+document.title, ex=JSON.parse(localStorage.getItem(k)||'[]'); ids.forEach(function(id){if(ex.indexOf(id)===-1)ex.push(id);}); localStorage.setItem(k,JSON.stringify(ex)); alert('已保存 '+ids.length+' 道错题'); }catch(e){alert('保存失败');}
+};
+
+// ─── Score detail ────────────────────────────────────────────────────
+window.__epaDetail = function(){
+  var h='<div style=\"max-width:700px;margin:20px auto\"><h3>成绩单</h3><table style=\"width:100%;font-size:0.9em\"><tr><th>#</th><th>知识点</th><th>题型</th><th>得分</th><th>状态</th></tr>';
+  for(var i=0;i<Q.length;i++){ var q=Q[i],c=document.getElementById('card-q'+i),st='未批改'; if(c&&c.classList.contains('correct'))st='OK'; else if(c&&c.classList.contains('wrong'))st='X'; else if(c&&c.classList.contains('partial'))st='~'; h+='<tr><td>'+(i+1)+'</td><td>'+(q.kc_id||'-')+'</td><td>'+q.type+'</td><td>'+(st==='OK'?q.points:st==='~'?Math.floor(q.points/2):st==='X'?0:'-')+'/'+q.points+'</td><td>'+st+'</td></tr>'; }
+  h+='</table></div>'; var o=document.getElementById('epa-detail'); if(o)o.remove(); var d=document.createElement('div'); d.id='epa-detail'; d.innerHTML=h; document.getElementById('panel-test').appendChild(d);
+};
+
+// ─── Shuffle ──────────────────────────────────────────────────────────
+window.__epaShuffle = function(){
+  var cont=document.getElementById('questions-container'); if(!cont)return;
+  var cards=Array.from(cont.querySelectorAll('.q-card'));
+  for(var i=cards.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); cont.insertBefore(cards[j],cards[i]); }
+};
+
+// ─── Toolbar inject ──────────────────────────────────────────────────
+(function(){
+  var to=setInterval(function(){
+    var cont=document.getElementById('questions-container'); if(!cont)return;
+    clearInterval(to);
+    var bar=document.createElement('div'); bar.className='no-print';
+    bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px';
+    bar.innerHTML='<button onclick=\"__epaSaveWrong()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">保存错题</button>'
+      +'<button onclick=\"__epaDetail()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">成绩单</button>'
+      +'<button onclick=\"__epaShuffle()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">乱序题目</button>';
+    cont.insertBefore(bar, cont.firstChild);
+  }, 300);
+})();
+
+</script>
+<script>
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('#epa-tabs .tab-btn'); if(!btn) return;
+  var tab = btn.getAttribute('data-tab');
+  document.querySelectorAll('#epa-tabs .tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + tab); });
+  // The test panel is display:none on load, so build()'s MathJax typeset ran
+  // on hidden content (collapsing formula question cards to 0 height). Re-run
+  // build() the first time the panel is visible so it renders + typesets at the
+  // real size. Guarded so user answers aren't wiped on later switches.
+  if(tab === 'test' && !window.__epaTestBuilt){
+    window.__epaTestBuilt = true;
+    if(typeof build === 'function'){ try { build(); } catch(err){} }
+  }
+  if(window.__epaFitFormulas) setTimeout(window.__epaFitFormulas, 50);
+  window.scrollTo(0, 0);
+});
+</script>
+
+<script>
+(function(){
+  var btn = document.createElement('button');
+  btn.id = 'dark-toggle';
+  btn.textContent = '🌙';
+  btn.title = '切换暗色模式';
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    try { localStorage.setItem('epa-dark', document.body.classList.contains('dark') ? '1' : '0'); } catch(e){}
+  });
+  document.body.appendChild(btn);
+  if(localStorage.getItem('epa-dark') === '1') { document.body.classList.add('dark'); btn.textContent = '☀️'; }
+})();
+</script>
+
+</body>
+</html>

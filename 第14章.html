@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>第14章</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+/* Modern monospace stack — avoids the ugly Courier New fallback on Windows. */
+:root {
+  --mono: "Cascadia Code", "JetBrains Mono", "Fira Code", "Source Code Pro",
+          Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+}
+code {
+  font-family: var(--mono);
+  background: #eee8d8; color: #8a4b1e;
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+pre {
+  font-family: var(--mono);
+  background: #2d2a26; color: #ece6da;
+  padding: 14px 16px; border-radius: var(--radius);
+  overflow-x: auto; line-height: 1.6; font-size: 0.9em;
+  border: 1px solid #3d3934; tab-size: 2;
+}
+pre code {
+  background: none; color: inherit; padding: 0; font-size: 1em; border-radius: 0;
+}
+
+/* ── Long display formulas: scroll inside their column, never overflow ── */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* ── Checkpoint self-test ── */
+.checkpoint {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius);
+  padding: 10px 16px; margin: 18px 0;
+  font-size: 0.95em;
+}
+.checkpoint::before {
+  content: '🧠 自测：';
+  font-weight: 700; color: #1e40af;
+}
+.checkpoint .cp-answer { margin-top: 10px; border-top: 1px dashed #bfdbfe; padding-top: 8px; }
+.checkpoint .cp-answer summary {
+  cursor: pointer; color: #1e40af; font-weight: 600; user-select: none;
+  list-style: none;
+}
+.checkpoint .cp-answer summary::before { content: '💡 '; }
+.checkpoint .cp-answer summary::-webkit-details-marker { display: none; }
+.checkpoint .cp-answer[open] summary { margin-bottom: 6px; }
+.checkpoint .cp-answer ol, .checkpoint .cp-answer p { font-weight: 400; color: var(--ink); }
+
+/* ── TL;DR summary ── */
+.tldr {
+  background: #fefce8; border-left: 3px solid #eab308;
+  padding: 8px 14px; margin: 10px 0;
+  font-weight: 600; font-size: 0.95em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  body { max-width: 100%; padding: 12px 10px 40px; font-size: 11pt; }
+  h1 { font-size: 1.3em; }
+  h2 { font-size: 1.12em; }
+  table { font-size: 0.85em; }
+  td, th { padding: 4px 6px; }
+  pre { font-size: 0.85em; padding: 6px; }
+}
+@media (max-width: 400px) {
+  body { padding: 8px 6px 32px; font-size: 10.5pt; }
+}
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+
+/* ── Notion-style slide cross-reference layout ── */
+/* Override base.css body max-width (860px); fill the viewport edge-to-edge,
+   capped only on ultra-wide screens for readability. */
+body { max-width: 2400px; width: 96vw; padding-left: 2vw; padding-right: 2vw; }
+.kn-layout { display: flex; gap: 36px; align-items: flex-start; width: 100%; margin: 0 auto; }
+.kn-main { flex: 1 1 auto; min-width: 0; overflow-x: clip; }
+.kn-main mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.kn-rail { flex: 0 0 32%; max-width: 520px; min-width: 300px; position: sticky; top: 12px;
+  align-self: flex-start; max-height: calc(100vh - 30px); overflow-y: auto; padding-right: 4px; }
+.kn-rail-title { font-weight: 700; color: var(--ink-light); font-size: 0.9em; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--divider); }
+.slide-card { border: 1px solid var(--card-border); border-radius: var(--radius);
+  background: var(--card-bg); padding: 8px; margin-bottom: 14px; }
+.slide-card-label { font-size: 0.78em; color: var(--ink-light); margin-bottom: 6px; }
+.slide-img { width: 100%; height: auto; border-radius: 4px; cursor: zoom-in; display: block;
+  border: 1px solid var(--divider); background: #fff; }
+.slide-text-only { font-size: 0.78em; line-height: 1.5; color: var(--ink-light);
+  padding: 8px 10px; background: #fff; border-radius: 4px; border: 1px solid var(--divider);
+  max-height: 200px; overflow-y: auto; }
+.slide-text { margin-top: 6px; font-size: 0.85em; }
+.slide-text summary { cursor: pointer; color: var(--accent); user-select: none; }
+.slide-text-body { margin-top: 6px; color: var(--ink-light); line-height: 1.6;
+  max-height: 220px; overflow-y: auto; padding: 6px 8px; background: #fff;
+  border-radius: 4px; border: 1px solid var(--divider); }
+/* heading-side page chips */
+.pg-chip { display: inline-block; font-size: 0.72em; font-weight: 600; color: var(--accent);
+  background: #eff4ff; border: 1px solid #cfe0ff; border-radius: 10px; padding: 0 7px;
+  margin-left: 6px; cursor: pointer; vertical-align: middle; }
+.pg-chip:hover { background: #dbe8ff; }
+.slide-card.flash { animation: slideflash 1.2s ease; }
+@keyframes slideflash { 0%,100%{box-shadow:none;} 30%{box-shadow:0 0 0 3px var(--accent);} }
+/* lightbox */
+#epa-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.82); display: none;
+  align-items: center; justify-content: center; z-index: 9999; cursor: zoom-out; }
+#epa-lightbox img { max-width: 94vw; max-height: 94vh; border-radius: 6px; }
+/* Tablet / narrow desktop: keep two columns but rebalance + tighten margins */
+@media (max-width: 1280px) {
+  body { width: 98vw; padding-left: 1vw; padding-right: 1vw; }
+  .kn-layout { gap: 24px; }
+  .kn-main { flex: 1 1 54%; }
+  .kn-rail { flex: 1 1 46%; }
+}
+/* Mobile: stack the rail below the notes */
+@media (max-width: 900px) {
+  body { width: 100%; padding-left: 12px; padding-right: 12px; }
+  /* align-items:stretch is critical — in a COLUMN flex, flex-start would size
+     children to max-content (overflowing the viewport). */
+  .kn-layout { flex-direction: column; align-items: stretch; gap: 16px; }
+  .kn-main { flex: none; width: 100%; }
+  .kn-rail { position: static; flex: none; max-width: 100%; width: 100%; min-width: 0; max-height: none; }
+}
+
+
+/* ── Combined page: top tab bar (清单 | 题目) ── */
+#epa-tabs { display: flex; gap: 0; justify-content: center; margin: 6px auto 22px;
+  max-width: 520px; border: 1px solid var(--divider); border-radius: 10px; overflow: hidden; }
+#epa-tabs .tab-btn { flex: 1; padding: 10px 18px; cursor: pointer; border: none;
+  background: var(--paper-dark); color: var(--ink-light); font-size: 1.02em; font-weight: 600;
+  font-family: inherit; transition: background .15s, color .15s; }
+#epa-tabs .tab-btn + .tab-btn { border-left: 1px solid var(--divider); }
+#epa-tabs .tab-btn.active { background: var(--accent); color: #fff; }
+#epa-tabs .tab-btn:not(.active):hover { background: #efe7d3; color: var(--ink); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+/* keep the test readable/centered even though the body is wide for the rail */
+#panel-test { max-width: 980px; margin: 0 auto; }
+@media print { #epa-tabs { display: none; } .tab-panel { display: block !important; } }
+
+
+.chapter-nav { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 8px; }
+.chapter-nav .nav-home { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.95em; }
+.chapter-nav .nav-select { padding: 6px 12px; border: 1px solid var(--divider); border-radius: 6px;
+  background: var(--card-bg); font-size: 0.92em; font-family: inherit; color: var(--ink); cursor: pointer; max-width: 320px; }
+
+
+/* Collapsible H3 sections */
+.kn-collapse-toggle { display: inline-block; cursor: pointer; font-size: 0.85em; margin-left: 8px;
+  color: var(--accent); user-select: none; vertical-align: middle; }
+.kn-collapse-toggle:hover { color: var(--accent-hover); }
+.kn-collapse-body { overflow: hidden; transition: max-height 0.3s ease; }
+.kn-collapse-body.collapsed { max-height: 0 !important; }
+.kn-collapse-global { display: inline-block; margin: 0 4px; padding: 2px 10px; border: 1px solid var(--divider);
+  border-radius: 12px; font-size: 0.78em; cursor: pointer; background: var(--card-bg); color: var(--ink-light); }
+.kn-collapse-global:hover { background: var(--divider); }
+/* Dark mode */
+body.dark { --paper: #1a1a2e; --ink: #e0e0e0; --ink-light: #aaa; --card-bg: #222244;
+  --card-border: #3a3a5c; --divider: #3a3a5c; --paper-dark: #16162a; --accent: #64b5f6;
+  --tag-bg: #3d3520; --tag-text: #f0c060; background: var(--paper); color: var(--ink); }
+body.dark .kp { color: #ffd700; background: #3d3520; }
+body.dark blockquote { background: #2a1a1a; border-left-color: #ff6b6b; }
+body.dark .checkpoint { background: #1a2a1a; border-color: #4caf50; }
+body.dark th { background: #222244; }
+body.dark .slide-card { background: #222244; border-color: #3a3a5c; }
+body.dark .slide-text-body { background: #1a1a2e; }
+body.dark .pg-chip { background: #1a3a5c; border-color: #2a5a8c; }
+body.dark .chapter-nav .nav-select { background: #222244; color: #e0e0e0; border-color: #3a3a5c; }
+body.dark #epa-tabs .tab-btn { background: #222244; color: #aaa; }
+body.dark #epa-tabs .tab-btn:not(.active):hover { background: #2a2a4a; }
+body.dark .toc { background: #222244; }
+body.dark .tldr { background: #3d3520; }
+#dark-toggle { position: fixed; top: 12px; right: 16px; z-index: 9999; border: 1px solid var(--divider);
+  border-radius: 50%; width: 36px; height: 36px; font-size: 1.1em; cursor: pointer;
+  background: var(--card-bg); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+@media print { #dark-toggle { display: none; } }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<div class="chapter-nav no-print"><a href="index.html" class="nav-home">🏠 首页</a><select class="nav-select" onchange="if(this.value)window.location.href=this.value"><option value="第10章.html">第10章</option><option value="第11章.html">第11章</option><option value="第12章.html">第12章</option><option value="第14章.html" selected>第14章</option><option value="第15章.html">第15章</option><option value="第17章.html">第17章</option><option value="第8章.html">第8章</option><option value="第9章.html">第9章</option></select></div><h1>第14章</h1><div id="epa-tabs" class="no-print"><button class="tab-btn active" data-tab="kn">📖 知识清单</button><button class="tab-btn" data-tab="test">📝 章节测试</button></div><div id="panel-kn" class="tab-panel active"><div class="kn-layout"><div class="kn-main"><h1></h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s64363633">14.1 &nbsp;多元函数</a></li>
+  <li><a href="#s87074063">▼定义</a></li>
+  <li><a href="#s53820908">▼图像</a></li>
+  <li><a href="#s88613029">▼等高线与等位面</a></li>
+<li><a href="#s21987898">14.2 &nbsp;极限与连续性</a></li>
+  <li><a href="#s52242078">▼二元极限定义</a></li>
+  <li><a href="#s17013101">▼证明极限不存在 — 双路径法</a></li>
+  <li><a href="#s83847591">▼连续性</a></li>
+<li><a href="#s50766120">14.3 &nbsp;偏导数</a></li>
+  <li><a href="#s87074063">▼定义</a></li>
+  <li><a href="#s69443119">▼二阶偏导数</a></li>
+  <li><a href="#s32817238">▼Clairaut 定理</a></li>
+<li><a href="#s48625955">14.4 &nbsp;切平面与全微分</a></li>
+  <li><a href="#s86110860">▼切平面</a></li>
+  <li><a href="#s67440818">▼线性逼近</a></li>
+  <li><a href="#s14035954">▼全微分</a></li>
+<li><a href="#s38470122">14.5 &nbsp;链式法则</a></li>
+  <li><a href="#s46026041">▼Case 1：中间变量都是一元函数</a></li>
+  <li><a href="#s64397453">▼Case 2：中间变量都是二元函数</a></li>
+  <li><a href="#s83848330">▼隐函数求导</a></li>
+<li><a href="#s12448907">14.6 &nbsp;方向导数与梯度</a></li>
+  <li><a href="#s87224010">▼方向导数</a></li>
+  <li><a href="#s11156396">▼梯度</a></li>
+  <li><a href="#s77597415">▼梯度在几何中的应用</a></li>
+<li><a href="#s57323191">14.7 &nbsp;极值</a></li>
+  <li><a href="#s30780070">▼临界点</a></li>
+  <li><a href="#s55708378">▼二阶判别法（Second Derivative Test）</a></li>
+  <li><a href="#s32669987">▼闭区域上的绝对最值</a></li>
+<li><a href="#s68275022">七节关联总图</a></li>
+</ul>
+</div>
+<h1>第14章 &nbsp;偏导数</h1>
+<p class="subtitle">14.1–14.7 &nbsp;|&nbsp;不含 Lagrange 乘数法</p>
+
+<!-- ====== 14.1 ====== -->
+<h2 id="s64363633">14.1 &nbsp;多元函数</h2>
+
+<h3 id="s87074063"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>定义<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<p>
+一个 <span class="k">二元函数</span> \(f:\mathbb{R}^2\to\mathbb{R}\) 给每一对有序实数 \((x,y)\in D\) 指定唯一实数 \(z=f(x,y)\)。
+<span class="e">\(D\)＝定义域</span>，<span class="e">值域＝\(\{f(x,y)\mid (x,y)\in D\}\)</span>。
+</p>
+
+<div class="card">
+  <strong>常见定义域类型（\(\mathbb{R}^2\) 子集）</strong><br>
+  <ul style="margin-top:6px;padding-left:20px;">
+    <li><span class="k">开区域</span>：不含边界，如 \(\{(x,y)\mid x^2+y^2&lt;1\}\)</li>
+    <li><span class="k">闭区域</span>：含所有边界，如 \(\{(x,y)\mid x^2+y^2\le 1\}\)</li>
+    <li><span class="e">有界 v.s. 无界</span>：是否存在一个圆盘包含整个集合</li>
+  </ul>
+</div>
+</div>
+<h3 id="s53820908"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>图像<span class="pg-chip" data-page="14.1-1">页1</span></h3><div class="kn-collapse-body">
+<p>\(z=f(x,y)\) 的图像是 \(\mathbb{R}^3\) 中的 <span class="k">曲面</span>：\(\{(x,y,z)\mid z=f(x,y),\,(x,y)\in D\}\)。</p>
+</div>
+<h3 id="s88613029"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>等高线与等位面</h3><div class="kn-collapse-body">
+<p>
+<span class="k">等高线 (level curve)</span>：对常数 \(k\)，曲线 \(f(x,y)=k\) 是曲面上高度为 \(k\) 的"横切面"投影到 \(xy\) 平面。<br>
+<span class="e">三元函数</span> \(w=f(x,y,z)\) 的 <span class="k">等位面</span>：\(f(x,y,z)=k\)。
+</p>
+<p style="font-size:0.9em;color:#666;">
+  例：\(f(x,y)=x^2+y^2\) 的等高线是一族同心圆，越往外 \(z\) 越大 → 抛物面。
+</p>
+
+<div class="trap">
+等高线密集的地方 → 曲面 <strong>陡</strong>；等高线稀疏的地方 → 曲面 <strong>缓</strong>。
+这与地形图中"等高线密＝坡陡"完全一致。
+</div>
+
+<div class="self-test">
+<summary>自测 · 14.1</summary>
+<ol>
+<li>写出 \(f(x,y)=\sqrt{4-x^2-y^2}\) 的定义域并判断有界性。</li>
+<li>画出 \(f(x,y)=x^2-y^2\) 的等高线草图（双曲抛物面／马鞍面）。</li>
+</ol>
+</div>
+
+<!-- ====== 14.2 ====== --></div>
+<h2 id="s21987898">14.2 &nbsp;极限与连续性</h2>
+
+<h3 id="s52242078"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>二元极限定义</h3><div class="kn-collapse-body">
+<p>
+\(\displaystyle\lim_{(x,y)\to(a,b)} f(x,y)=L\) 的含义：<span class="k">无论 \((x,y)\) 沿任何路径逼近 \((a,b)\)</span>，\(f(x,y)\) 都趋于同一值 \(L\)。
+</p>
+</div>
+<h3 id="s17013101"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>证明极限不存在 — 双路径法</h3><div class="kn-collapse-body">
+<div class="card">
+  <strong>策略</strong>：找 <span class="k">两条不同路径</span>，沿它们逼近时得到 <span class="e">不同极限值</span>。<br><br>
+  常用路径：
+  <ul style="padding-left:20px;">
+    <li>沿 \(x\) 轴：令 \(y=0\)，看 \(x\to 0\)</li>
+    <li>沿 \(y\) 轴：令 \(x=0\)，看 \(y\to 0\)</li>
+    <li>沿直线 \(y=mx\)</li>
+    <li>沿抛物线 \(y=x^2\) 或 \(x=y^2\)</li>
+  </ul>
+</div>
+
+<p><strong>经典例题：</strong>证 \(\displaystyle\lim_{(x,y)\to(0,0)}\frac{xy}{x^2+y^2}\) 不存在。</p>
+<ul style="padding-left:20px;">
+  <li>沿 \(x\) 轴 (\(y=0\))：极限 = 0</li>
+  <li>沿 \(y=x\)：\(\frac{x^2}{2x^2}=\frac12\) ≠ 0 → <span class="k">不存在</span></li>
+</ul>
+
+<div class="trap">
+<strong>不能</strong>用"沿所有直线方向极限相同"来断言极限存在 —— 还必须考虑曲线路径！
+例：\(f(x,y)=\frac{x^2y}{x^4+y^2}\)，沿所有直线 \(y=mx\) 极限都是 0，但沿 \(y=x^2\) 极限 = 1/2 ≠ 0 → 极限不存在。
+</div>
+</div>
+<h3 id="s83847591"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>连续性<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<p>
+\(f\) 在 \((a,b)\) <span class="k">连续</span> ⟺ \(\displaystyle\lim_{(x,y)\to(a,b)}f(x,y)=f(a,b)\)。<br>
+连续函数在有界闭区域上必有最大值和最小值（<span class="e">极值定理</span>）。
+</p>
+
+<div class="self-test">
+<summary>自测 · 14.2</summary>
+<ol>
+<li>用双路径法证 \(\displaystyle\lim_{(x,y)\to(0,0)}\frac{x^2-y^2}{x^2+y^2}\) 不存在。</li>
+<li>\(f(x,y)=\frac{x^2y}{x^4+y^2}\) 在 \((0,0)\) 是否连续？（提示：沿 \(y=x^2\)）</li>
+</ol>
+</div>
+
+<!-- ====== 14.3 ====== --></div>
+<h2 id="s50766120">14.3 &nbsp;偏导数</h2>
+
+<h3 id="s87074063"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>定义<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<div class="formula">
+\(\displaystyle f_x(a,b)=\lim_{h\to0}\frac{f(a+h,b)-f(a,b)}{h}\)<br>
+\(\displaystyle f_y(a,b)=\lim_{h\to0}\frac{f(a,b+h)-f(a,b)}{h}\)
+</div>
+<p>
+<span class="k">\(f_x\)</span>：将 \(y\) 视为常数，对 \(x\) 求导。<br>
+<span class="k">\(f_y\)</span>：将 \(x\) 视为常数，对 \(y\) 求导。<br>
+记号：\(f_x \equiv \frac{\partial f}{\partial x} \equiv \frac{\partial z}{\partial x}\)。
+</p>
+</div>
+<h3 id="s69443119"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>二阶偏导数<span class="pg-chip" data-page="14.1-3">页3</span></h3><div class="kn-collapse-body">
+<table>
+<tr><th>记号</th><th>含义</th></tr>
+<tr><td>\(f_{xx}=\frac{\partial^2 f}{\partial x^2}\)</td><td>先对 \(x\) 导再对 \(x\) 导</td></tr>
+<tr><td>\(f_{yy}=\frac{\partial^2 f}{\partial y^2}\)</td><td>先对 \(y\) 导再对 \(y\) 导</td></tr>
+<tr><td>\(f_{xy}=\frac{\partial^2 f}{\partial y\partial x}\)</td><td><span class="e">先对 \(x\) 导，再对 \(y\) 导</span></td></tr>
+<tr><td>\(f_{yx}=\frac{\partial^2 f}{\partial x\partial y}\)</td><td><span class="e">先对 \(y\) 导，再对 \(x\) 导</span></td></tr>
+</table>
+</div>
+<h3 id="s32817238"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>Clairaut 定理</h3><div class="kn-collapse-body">
+<div class="card">
+  若 \(f_{xy}\) 和 \(f_{yx}\) 都在 \((a,b)\) <span class="k">连续</span>，则<br>
+  <span class="formula">\(f_{xy}(a,b)=f_{yx}(a,b)\)</span>
+  混合偏导的次序可交换。
+</div>
+
+<div class="trap">
+Clairaut 定理的 <strong>前提</strong>是混合偏导连续。虽然大多数初等函数满足，但反例存在：
+\(f(x,y)=\frac{xy(x^2-y^2)}{x^2+y^2}\)（补定义 \(f(0,0)=0\)）有 \(f_{xy}(0,0)=-1\neq f_{yx}(0,0)=1\)。
+考试只要求知道有这个前提。
+</div>
+
+<div class="self-test">
+<summary>自测 · 14.3</summary>
+<ol>
+<li>求 \(f(x,y)=x^3y^2+e^x\sin y\) 的 \(f_x,f_y,f_{xx},f_{yy},f_{xy},f_{yx}\)。</li>
+<li>验证 Clairaut 定理对 \(f(x,y)=x^4+y^4-4x^2y^2\) 成立。</li>
+</ol>
+</div>
+
+<!-- ====== 14.4 ====== --></div>
+<h2 id="s48625955">14.4 &nbsp;切平面与全微分</h2>
+
+<h3 id="s86110860"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>切平面<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<p>
+曲面 \(z=f(x,y)\) 在点 \(P(x_0,y_0,z_0)\)（其中 \(z_0=f(x_0,y_0)\)）处的切平面：
+</p>
+<div class="formula">
+\(\boxed{z-z_0 = f_x(x_0,y_0)(x-x_0) + f_y(x_0,y_0)(y-y_0)}\)
+</div>
+<p>
+几何意义：用 <span class="e">切平面逼近曲面</span>——曲面在切点附近"几乎平坦"。
+</p>
+</div>
+<h3 id="s67440818"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>线性逼近<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<div class="card">
+  <strong>线性化函数</strong> \(L(x,y)\) 就是切平面的方程：<br>
+  <span class="formula">\(L(x,y)=f(x_0,y_0)+f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)(y-y_0)\)</span>
+  当 \((x,y)\) 接近 \((x_0,y_0)\) 时，\(f(x,y)\approx L(x,y)\)。
+</div>
+</div>
+<h3 id="s14035954"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>全微分<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<div class="formula">
+\(\boxed{dz = f_x\,dx + f_y\,dy = \frac{\partial z}{\partial x}dx + \frac{\partial z}{\partial y}dy}\)
+</div>
+<p>
+全微分表示 <span class="k">线性主部</span>：当 \(dx=\Delta x,\;dy=\Delta y\) 很小时，\(\Delta z\approx dz\)。<br>
+<span class="e">可微 ⇒ 连续 ⇒ 偏导存在</span>（但偏导存在 ⇏ 可微，除非偏导连续）。
+</p>
+
+<div class="trap">
+偏导数存在 ≠ 可微！经典反例：
+\(f(x,y)=\begin{cases}\frac{xy}{x^2+y^2},&(x,y)\neq(0,0)\\0,&(x,y)=(0,0)\end{cases}\)
+在 \((0,0)\) 处偏导存在但不连续，从而不可微。
+</div>
+
+<div class="self-test">
+<summary>自测 · 14.4</summary>
+<ol>
+<li>求 \(z=\sqrt{4-x^2-y^2}\) 在 \((1,1,\sqrt{2})\) 处的切平面方程。</li>
+<li>用全微分近似计算 \(\sqrt{4.02^2+3.01^2}\)。</li>
+</ol>
+</div>
+
+<!-- ====== 14.5 ====== --></div>
+<h2 id="s38470122">14.5 &nbsp;链式法则</h2>
+
+<h3 id="s46026041"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>Case 1：中间变量都是一元函数</h3><div class="kn-collapse-body">
+<div class="card">
+  \(z=f(x,y)\)，其中 \(x=g(t),\,y=h(t)\)：<br>
+  <span class="formula">\(\boxed{\dfrac{dz}{dt}=\dfrac{\partial z}{\partial x}\dfrac{dx}{dt}+\dfrac{\partial z}{\partial y}\dfrac{dy}{dt}}\)</span>
+</div>
+</div>
+<h3 id="s64397453"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>Case 2：中间变量都是二元函数</h3><div class="kn-collapse-body">
+<div class="card">
+  \(z=f(x,y)\)，其中 \(x=g(s,t),\,y=h(s,t)\)：<br>
+  <span class="formula">\(\dfrac{\partial z}{\partial s}=\dfrac{\partial z}{\partial x}\dfrac{\partial x}{\partial s}+\dfrac{\partial z}{\partial y}\dfrac{\partial y}{\partial s}\)</span><br>
+  <span class="formula">\(\dfrac{\partial z}{\partial t}=\dfrac{\partial z}{\partial x}\dfrac{\partial x}{\partial t}+\dfrac{\partial z}{\partial y}\dfrac{\partial y}{\partial t}\)</span>
+</div>
+</div>
+<h3 id="s83848330"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>隐函数求导<span class="pg-chip" data-page="14.1-5">页5</span></h3><div class="kn-collapse-body">
+<p>
+若方程 \(F(x,y,z)=0\) 隐式定义 \(z=z(x,y)\)，则在 \(F_z\neq0\) 处：
+</p>
+<div class="formula">
+\(\boxed{\dfrac{\partial z}{\partial x}=-\dfrac{F_x}{F_z},\qquad \dfrac{\partial z}{\partial y}=-\dfrac{F_y}{F_z}}\)
+</div>
+<p class="cite">（由 \(F(x,y,z(x,y))=0\) 两边对 \(x\) 求偏导得 \(F_x+F_z\cdot z_x=0\) → 解出 \(z_x\)）</p>
+
+<div class="trap">
+写链式法则树形图来避免漏项！画法：
+<ul style="margin-top:4px;padding-left:22px;">
+  <li>因变量在上，自变量在下</li>
+  <li>每条有向边对应一个偏导因子</li>
+  <li>每条从因变量到自变量的路径 = 一项，路径上的因子相乘，所有路径相加</li>
+</ul>
+</div>
+
+<div class="self-test">
+<summary>自测 · 14.5</summary>
+<ol>
+<li>\(z=x^2y+xy^2\)，其中 \(x=\cos t,\;y=\sin t\)。求 \(dz/dt\)。</li>
+<li>\(z=f(x,y)\)，其中 \(x=u^2-v^2,\;y=2uv\)。用链式法则表达 \(\partial z/\partial u\) 和 \(\partial z/\partial v\)。</li>
+<li>\(F(x,y,z)=x^2+y^2+z^2-1=0\) 隐式定义 \(z=z(x,y)\)。求 \(\partial z/\partial x\) 和 \(\partial z/\partial y\)。</li>
+</ol>
+</div>
+
+<!-- ====== 14.6 ====== --></div>
+<h2 id="s12448907">14.6 &nbsp;方向导数与梯度</h2>
+
+<h3 id="s87224010"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>方向导数<span class="pg-chip" data-page="14.1-3">页3</span></h3><div class="kn-collapse-body">
+<p>
+沿 <span class="k">单位向量</span> \(\mathbf{u}=(a,b)\)（\(a^2+b^2=1\)）的方向导数：
+</p>
+<div class="formula">
+\(\boxed{D_{\mathbf{u}}f(x,y)=f_x(x,y)\,a+f_y(x,y)\,b = \nabla f\cdot\mathbf{u}}\)
+</div>
+</div>
+<h3 id="s11156396"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>梯度<span class="pg-chip" data-page="14.1-3">页3</span></h3><div class="kn-collapse-body">
+<div class="formula">
+\(\boxed{\nabla f(x,y) = \langle f_x(x,y),\;f_y(x,y)\rangle}\)
+</div>
+<p>
+<span class="k">梯度的方向</span> = 函数增长最快的方向。<br>
+<span class="k">最大方向导数</span> = \(\boxed{|\nabla f|=\sqrt{f_x^2+f_y^2}}\)（沿梯度方向取到）。<br>
+<span class="e">最小方向导数</span> = \(-|\nabla f|\)（沿负梯度方向）。
+</p>
+</div>
+<h3 id="s77597415"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>梯度在几何中的应用</h3><div class="kn-collapse-body">
+<div class="card">
+  <strong>等位面 \(F(x,y,z)=k\) 的法向量</strong>：\(\nabla F(x_0,y_0,z_0)\)<br>
+  <strong>等位面在 \(P_0\) 处的切平面</strong>：
+  <span class="formula">\(F_x(P_0)(x-x_0)+F_y(P_0)(y-y_0)+F_z(P_0)(z-z_0)=0\)</span>
+  <strong>法线方程</strong>：\(\frac{x-x_0}{F_x(P_0)}=\frac{y-y_0}{F_y(P_0)}=\frac{z-z_0}{F_z(P_0)}\)
+</div>
+
+<p style="font-size:0.9em; color:#666;">
+  注：对曲面 \(z=f(x,y)\)（改写为 \(F(x,y,z)=f(x,y)-z=0\)），\(\nabla F=\langle f_x,f_y,-1\rangle\)，
+  此法向量代入切平面方程正好就是 14.4 节的公式。
+</p>
+
+<div class="trap">
+方向导数定义中的 \(\mathbf{u}\) <strong>必须是单位向量</strong>！如果题目给的是非单位向量，先归一化：
+\(\mathbf{u}=\frac{\mathbf{v}}{|\mathbf{v}|}\)。
+</div>
+
+<div class="self-test">
+<summary>自测 · 14.6</summary>
+<ol>
+<li>求 \(f(x,y)=xe^y\) 在 \((2,0)\) 处沿 \(\mathbf{u}=(3/5,\;4/5)\) 的方向导数。</li>
+<li>求上题中 \((2,0)\) 处的梯度，以及最大方向导数。</li>
+<li>求曲面 \(x^2+y^2+z^2=9\) 在 \((1,2,2)\) 处的切平面方程。</li>
+</ol>
+</div>
+
+<!-- ====== 14.7 ====== --></div>
+<h2 id="s57323191">14.7 &nbsp;极值</h2>
+
+<h3 id="s30780070"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>临界点<span class="pg-chip" data-page="14.1-2">页2</span></h3><div class="kn-collapse-body">
+<p>
+若 \(f\) 在 \((a,b)\) 有局部极值且偏导存在，则 <span class="k">\(f_x(a,b)=0\) 且 \(f_y(a,b)=0\)</span>。
+满足此条件的点称为<span class="e">临界点</span>（或驻点）。
+</p>
+<div class="trap">
+临界点只是极值的<strong>候选</strong>，不一定真的是极值点。必须用二阶判别法进一步判断。
+</div>
+</div>
+<h3 id="s55708378"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>二阶判别法（Second Derivative Test）</h3><div class="kn-collapse-body">
+<div class="card">
+  设 \((a,b)\) 是 \(f\) 的临界点。定义：
+  <span class="formula">\(\boxed{D = f_{xx}(a,b)\,f_{yy}(a,b) - [f_{xy}(a,b)]^2}\)</span>
+  <table style="margin-top:12px;">
+    <tr><th>\(D\)</th><th>附加条件</th><th>结论</th></tr>
+    <tr><td class="k">\(D&gt;0\)</td><td>\(f_{xx}&gt;0\)</td><td class="e">局部极小点</td></tr>
+    <tr><td class="k">\(D&gt;0\)</td><td>\(f_{xx}&lt;0\)</td><td class="e">局部极大点</td></tr>
+    <tr><td class="k">\(D&lt;0\)</td><td>—</td><td class="k">鞍点</td></tr>
+    <tr><td class="k">\(D=0\)</td><td>—</td><td>判别法失效</td></tr>
+  </table>
+</div>
+
+<div class="trap">
+\(D&gt;0\) 时 <strong>\(f_{xx}\) 和 \(f_{yy}\) 必同号</strong>，所以你只需要检查 \(f_{xx}\) 的符号即可。
+若 \(f_{xx}=0\) 而 \(D&gt;0\) 不可能发生（否则 \(D\le0\)）。
+</div>
+</div>
+<h3 id="s32669987"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>闭区域上的绝对最值</h3><div class="kn-collapse-body">
+<p>在有界闭区域 \(D\) 上求最值（连续函数必有最值）：</p>
+<blockquote>易错：当 D=0 判别法失效时，需要沿不同曲线（如 y=x, y=-x）代入 f，观察在临界点附近函数值的变化来判断极值还是鞍点。这是考试中 D=0 拔高题的标准处理方法。</blockquote>
+
+<ol style="padding-left:20px;">
+  <li>找 <span class="k">内部临界点</span>（\(f_x=f_y=0\)）并计算函数值</li>
+  <li>在 <span class="k">边界</span>上化为单变量最值问题</li>
+  <li>比较所有候选点的函数值，取最大/最小</li>
+</ol>
+
+<div class="self-test">
+<summary>自测 · 14.7</summary>
+<ol>
+<li>求 \(f(x,y)=x^2+y^2-2x-4y+5\) 的临界点并用二阶判别法分类。</li>
+<li>求 \(f(x,y)=x^3-3xy+y^3\) 的所有临界点并判断类型（含鞍点）。</li>
+<li>求 \(f(x,y)=x^2+y^2\) 在闭圆盘 \(x^2+y^2\le 4\) 上的绝对最大值和最小值。</li>
+</ol>
+</div>
+
+<!-- ====== 总复习 ====== --></div>
+<h2 id="s68275022">七节关联总图</h2>
+<table>
+<tr><th>节</th><th>与后续内容的联系</th></tr>
+<tr><td>14.1 多元函数</td><td>定义域概念贯穿始终</td></tr>
+<tr><td>14.2 极限与连续</td><td>可微 ⇒ 连续 ⇒ 偏导存在（不可逆）</td></tr>
+<tr><td>14.3 偏导数</td><td>一切后续公式的基础构件</td></tr>
+<tr><td>14.4 切平面与全微分</td><td>一阶逼近 → 链式法则的来源</td></tr>
+<tr><td>14.5 链式法则</td><td>连接隐函数求导与方向导数</td></tr>
+<tr><td>14.6 方向导数与梯度</td><td>梯度 → 等位面法向量 → 切平面公式的统一视角</td></tr>
+<tr><td>14.7 极值</td><td>临界点 + 二阶判别法 = 分类极值与鞍点</td></tr>
+</table>
+
+<p style="text-align:center;margin-top:48px;color:#aaa;font-size:0.85em;">第14章 偏导数 知识清单 · 14.1–14.7</p>
+
+<!-- KaTeX for math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"></div><aside class="kn-rail"><div class="kn-rail-title">📑 原始幻灯片对照</div><div class="slide-card" id="slide-p14.1-1" data-page="14.1-1"><div class="slide-card-label">14.1 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.1 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">CH14 Partial Derivatives<br>14.1 Functions of serval variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-2" data-page="14.1-2"><div class="slide-card-label">14.1 · 第2页</div><img class="slide-img" width="900" height="142" src="slides/ch14_p002.jpg" alt="14.1 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-3" data-page="14.1-3"><div class="slide-card-label">14.1 · 第3页</div><img class="slide-img" width="900" height="151" src="slides/ch14_p003.jpg" alt="14.1 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-4" data-page="14.1-4"><div class="slide-card-label">14.1 · 第4页</div><img class="slide-img" width="900" height="151" src="slides/ch14_p003.jpg" alt="14.1 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-5" data-page="14.1-5"><div class="slide-card-label">14.1 · 第5页</div><img class="slide-img" width="900" height="151" src="slides/ch14_p003.jpg" alt="14.1 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-6" data-page="14.1-6"><div class="slide-card-label">14.1 · 第6页</div><img class="slide-img" width="900" height="862" src="slides/ch14_p006.jpg" alt="14.1 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-7" data-page="14.1-7"><div class="slide-card-label">14.1 · 第7页</div><img class="slide-img" width="900" height="64" src="slides/ch14_p007.jpg" alt="14.1 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of two variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-8" data-page="14.1-8"><div class="slide-card-label">14.1 · 第8页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p008.jpg" alt="14.1 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph<br>Vertical line test</div></details></div>
+<div class="slide-card" id="slide-p14.1-10" data-page="14.1-10"><div class="slide-card-label">14.1 · 第10页</div><img class="slide-img" width="900" height="207" src="slides/ch14_p009.jpg" alt="14.1 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-11" data-page="14.1-11"><div class="slide-card-label">14.1 · 第11页</div><img class="slide-img" width="900" height="63" src="slides/ch14_p010.jpg" alt="14.1 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-12" data-page="14.1-12"><div class="slide-card-label">14.1 · 第12页</div><img class="slide-img" width="900" height="63" src="slides/ch14_p010.jpg" alt="14.1 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-13" data-page="14.1-13"><div class="slide-card-label">14.1 · 第13页</div><img class="slide-img" width="900" height="46" src="slides/ch14_p012.jpg" alt="14.1 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-14" data-page="14.1-14"><div class="slide-card-label">14.1 · 第14页</div><img class="slide-img" width="900" height="701" src="slides/ch14_p013.jpg" alt="14.1 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-15" data-page="14.1-15"><div class="slide-card-label">14.1 · 第15页</div><img class="slide-img" width="492" height="493" src="slides/ch14_p014.jpg" alt="14.1 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Graph</div></details></div>
+<div class="slide-card" id="slide-p14.1-16" data-page="14.1-16"><div class="slide-card-label">14.1 · 第16页</div><img class="slide-img" width="900" height="71" src="slides/ch14_p015.jpg" alt="14.1 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level curves (等高线)</div></details></div>
+<div class="slide-card" id="slide-p14.1-17" data-page="14.1-17"><div class="slide-card-label">14.1 · 第17页</div><img class="slide-img" width="900" height="774" src="slides/ch14_p016.jpg" alt="14.1 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level curves (等高线)</div></details></div>
+<div class="slide-card" id="slide-p14.1-18" data-page="14.1-18"><div class="slide-card-label">14.1 · 第18页</div><img class="slide-img" width="900" height="69" src="slides/ch14_p017.jpg" alt="14.1 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level curves (等高线)</div></details></div>
+<div class="slide-card" id="slide-p14.1-19" data-page="14.1-19"><div class="slide-card-label">14.1 · 第19页</div><img class="slide-img" width="900" height="132" src="slides/ch14_p018.jpg" alt="14.1 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level curves (等高线)</div></details></div>
+<div class="slide-card" id="slide-p14.1-22" data-page="14.1-22"><div class="slide-card-label">14.1 · 第22页</div><img class="slide-img" width="900" height="396" src="slides/ch14_p019.jpg" alt="14.1 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level curves (等高线)</div></details></div>
+<div class="slide-card" id="slide-p14.1-23" data-page="14.1-23"><div class="slide-card-label">14.1 · 第23页</div><img class="slide-img" width="900" height="129" src="slides/ch14_p020.jpg" alt="14.1 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of three or more variables</div></details></div>
+<div class="slide-card" id="slide-p14.1-24" data-page="14.1-24"><div class="slide-card-label">14.1 · 第24页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p021.jpg" alt="14.1 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Level surfaces (等位面)</div></details></div>
+<div class="slide-card" id="slide-p14.2-1" data-page="14.2-1"><div class="slide-card-label">14.2 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.2 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.2 Limits and continuity (连续)</div></details></div>
+<div class="slide-card" id="slide-p14.2-2" data-page="14.2-2"><div class="slide-card-label">14.2 · 第2页</div><img class="slide-img" width="900" height="165" src="slides/ch14_p023.jpg" alt="14.2 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-3" data-page="14.2-3"><div class="slide-card-label">14.2 · 第3页</div><img class="slide-img" width="900" height="444" src="slides/ch14_p024.jpg" alt="14.2 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>Single variable:<br>对比：</div></details></div>
+<div class="slide-card" id="slide-p14.2-4" data-page="14.2-4"><div class="slide-card-label">14.2 · 第4页</div><img class="slide-img" width="900" height="299" src="slides/ch14_p025.jpg" alt="14.2 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-5" data-page="14.2-5"><div class="slide-card-label">14.2 · 第5页</div><img class="slide-img" width="865" height="584" src="slides/ch14_p026.jpg" alt="14.2 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>回忆：一元函数的极限</div></details></div>
+<div class="slide-card" id="slide-p14.2-6" data-page="14.2-6"><div class="slide-card-label">14.2 · 第6页</div><img class="slide-img" width="900" height="476" src="slides/ch14_p027.jpg" alt="14.2 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-7" data-page="14.2-7"><div class="slide-card-label">14.2 · 第7页</div><img class="slide-img" width="900" height="205" src="slides/ch14_p028.jpg" alt="14.2 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-8" data-page="14.2-8"><div class="slide-card-label">14.2 · 第8页</div><img class="slide-img" width="900" height="299" src="slides/ch14_p025.jpg" alt="14.2 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>因此，如果极限存在，那么无论(x, y)如何逼近(a, b)， f(x, y)都必须逼近同一个极限。因此，如果我们能找到两条不同的逼近路径，使得函数f(x, y)有不同的极限，则可以得出lim(x y)→(a, b) f(x, y)不存在。</div></details></div>
+<div class="slide-card" id="slide-p14.2-10" data-page="14.2-10"><div class="slide-card-label">14.2 · 第10页</div><img class="slide-img" width="900" height="97" src="slides/ch14_p030.jpg" alt="14.2 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>猜想</div></details></div>
+<div class="slide-card" id="slide-p14.2-11" data-page="14.2-11"><div class="slide-card-label">14.2 · 第11页</div><img class="slide-img" width="900" height="97" src="slides/ch14_p030.jpg" alt="14.2 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-12" data-page="14.2-12"><div class="slide-card-label">14.2 · 第12页</div><img class="slide-img" width="900" height="87" src="slides/ch14_p032.jpg" alt="14.2 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-13" data-page="14.2-13"><div class="slide-card-label">14.2 · 第13页</div><img class="slide-img" width="900" height="87" src="slides/ch14_p032.jpg" alt="14.2 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-14" data-page="14.2-14"><div class="slide-card-label">14.2 · 第14页</div><img class="slide-img" width="900" height="85" src="slides/ch14_p034.jpg" alt="14.2 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-15" data-page="14.2-15"><div class="slide-card-label">14.2 · 第15页</div><img class="slide-img" width="900" height="85" src="slides/ch14_p034.jpg" alt="14.2 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>岭</div></details></div>
+<div class="slide-card" id="slide-p14.2-16" data-page="14.2-16"><div class="slide-card-label">14.2 · 第16页</div><img class="slide-img" width="900" height="136" src="slides/ch14_p036.jpg" alt="14.2 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits</div></details></div>
+<div class="slide-card" id="slide-p14.2-17" data-page="14.2-17"><div class="slide-card-label">14.2 · 第17页</div><img class="slide-img" width="900" height="467" src="slides/ch14_p037.jpg" alt="14.2 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>Show that</div></details></div>
+<div class="slide-card" id="slide-p14.2-18" data-page="14.2-18"><div class="slide-card-label">14.2 · 第18页</div><img class="slide-img" width="900" height="325" src="slides/ch14_p038.jpg" alt="14.2 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Limits<br>Show that</div></details></div>
+<div class="slide-card" id="slide-p14.2-19" data-page="14.2-19"><div class="slide-card-label">14.2 · 第19页</div><img class="slide-img" width="900" height="211" src="slides/ch14_p039.jpg" alt="14.2 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Continuity<br>多项式<br>有理函数<br>函数连续的前提是其极限存在</div></details></div>
+<div class="slide-card" id="slide-p14.2-22" data-page="14.2-22"><div class="slide-card-label">14.2 · 第22页</div><img class="slide-img" width="900" height="392" src="slides/ch14_p040.jpg" alt="14.2 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Continuity</div></details></div>
+<div class="slide-card" id="slide-p14.2-23" data-page="14.2-23"><div class="slide-card-label">14.2 · 第23页</div><img class="slide-img" width="900" height="275" src="slides/ch14_p041.jpg" alt="14.2 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Continuity<br>复合函数</div></details></div>
+<div class="slide-card" id="slide-p14.2-24" data-page="14.2-24"><div class="slide-card-label">14.2 · 第24页</div><img class="slide-img" width="900" height="390" src="slides/ch14_p042.jpg" alt="14.2 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Functions of three or more variables</div></details></div>
+<div class="slide-card" id="slide-p14.3-1" data-page="14.3-1"><div class="slide-card-label">14.3 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.3 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.3 Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-2" data-page="14.3-2"><div class="slide-card-label">14.3 · 第2页</div><img class="slide-img" width="900" height="555" src="slides/ch14_p044.jpg" alt="14.3 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">复习对比</div></details></div>
+<div class="slide-card" id="slide-p14.3-3" data-page="14.3-3"><div class="slide-card-label">14.3 · 第3页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p045.jpg" alt="14.3 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.3-4" data-page="14.3-4"><div class="slide-card-label">14.3 · 第4页</div><img class="slide-img" width="900" height="259" src="slides/ch14_p046.jpg" alt="14.3 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.3-5" data-page="14.3-5"><div class="slide-card-label">14.3 · 第5页</div><img class="slide-img" width="900" height="367" src="slides/ch14_p047.jpg" alt="14.3 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-6" data-page="14.3-6"><div class="slide-card-label">14.3 · 第6页</div><img class="slide-img" width="900" height="119" src="slides/ch14_p048.jpg" alt="14.3 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-7" data-page="14.3-7"><div class="slide-card-label">14.3 · 第7页</div><img class="slide-img" width="900" height="611" src="slides/ch14_p049.jpg" alt="14.3 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Interpretations of Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-8" data-page="14.3-8"><div class="slide-card-label">14.3 · 第8页</div><img class="slide-img" width="900" height="71" src="slides/ch14_p050.jpg" alt="14.3 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-10" data-page="14.3-10"><div class="slide-card-label">14.3 · 第10页</div><img class="slide-img" width="900" height="105" src="slides/ch14_p051.jpg" alt="14.3 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-11" data-page="14.3-11"><div class="slide-card-label">14.3 · 第11页</div><img class="slide-img" width="900" height="115" src="slides/ch14_p052.jpg" alt="14.3 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-12" data-page="14.3-12"><div class="slide-card-label">14.3 · 第12页</div><img class="slide-img" width="900" height="216" src="slides/ch14_p053.jpg" alt="14.3 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives<br>三元函数</div></details></div>
+<div class="slide-card" id="slide-p14.3-13" data-page="14.3-13"><div class="slide-card-label">14.3 · 第13页</div><img class="slide-img" width="900" height="566" src="slides/ch14_p054.jpg" alt="14.3 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second Partial derivatives<br>二阶偏导</div></details></div>
+<div class="slide-card" id="slide-p14.3-14" data-page="14.3-14"><div class="slide-card-label">14.3 · 第14页</div><img class="slide-img" width="900" height="162" src="slides/ch14_p055.jpg" alt="14.3 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-15" data-page="14.3-15"><div class="slide-card-label">14.3 · 第15页</div><img class="slide-img" width="900" height="131" src="slides/ch14_p056.jpg" alt="14.3 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives<br>克莱罗定理</div></details></div>
+<div class="slide-card" id="slide-p14.3-16" data-page="14.3-16"><div class="slide-card-label">14.3 · 第16页</div><img class="slide-img" width="900" height="274" src="slides/ch14_p057.jpg" alt="14.3 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.3-17" data-page="14.3-17"><div class="slide-card-label">14.3 · 第17页</div><img class="slide-img" width="900" height="316" src="slides/ch14_p058.jpg" alt="14.3 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial differential equations<br>偏微分方程<br>调和函数<br>拉普拉斯方程</div></details></div>
+<div class="slide-card" id="slide-p14.3-18" data-page="14.3-18"><div class="slide-card-label">14.3 · 第18页</div><img class="slide-img" width="900" height="50" src="slides/ch14_p059.jpg" alt="14.3 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial differential equations</div></details></div>
+<div class="slide-card" id="slide-p14.3-19" data-page="14.3-19"><div class="slide-card-label">14.3 · 第19页</div><img class="slide-img" width="900" height="272" src="slides/ch14_p060.jpg" alt="14.3 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Partial differential equations<br>波函数</div></details></div>
+<div class="slide-card" id="slide-p14.4-1" data-page="14.4-1"><div class="slide-card-label">14.4 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.4 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.4 Tangent planes and linear approximations (切平面和线性逼近)</div></details></div>
+<div class="slide-card" id="slide-p14.4-2" data-page="14.4-2"><div class="slide-card-label">14.4 · 第2页</div><img class="slide-img" width="900" height="923" src="slides/ch14_p062.jpg" alt="14.4 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.4-3" data-page="14.4-3"><div class="slide-card-label">14.4 · 第3页</div><img class="slide-img" width="900" height="1110" src="slides/ch14_p063.jpg" alt="14.4 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.4-4" data-page="14.4-4"><div class="slide-card-label">14.4 · 第4页</div><img class="slide-img" width="900" height="143" src="slides/ch14_p064.jpg" alt="14.4 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.4-5" data-page="14.4-5"><div class="slide-card-label">14.4 · 第5页</div><img class="slide-img" width="900" height="64" src="slides/ch14_p065.jpg" alt="14.4 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.4-6" data-page="14.4-6"><div class="slide-card-label">14.4 · 第6页</div><img class="slide-img" width="900" height="284" src="slides/ch14_p066.jpg" alt="14.4 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">当我们向(1,1,3)方向放大时，椭圆抛物面似乎与它的切平面重合</div></details></div>
+<div class="slide-card" id="slide-p14.4-7" data-page="14.4-7"><div class="slide-card-label">14.4 · 第7页</div><img class="slide-img" width="900" height="527" src="slides/ch14_p067.jpg" alt="14.4 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">线性化<br>线性逼近</div></details></div>
+<div class="slide-card" id="slide-p14.4-8" data-page="14.4-8"><div class="slide-card-label">14.4 · 第8页</div><img class="slide-img" width="900" height="244" src="slides/ch14_p068.jpg" alt="14.4 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.4-10" data-page="14.4-10"><div class="slide-card-label">14.4 · 第10页</div><img class="slide-img" width="900" height="83" src="slides/ch14_p069.jpg" alt="14.4 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">differentiable</div></details></div>
+<div class="slide-card" id="slide-p14.4-11" data-page="14.4-11"><div class="slide-card-label">14.4 · 第11页</div><img class="slide-img" width="459" height="90" src="slides/ch14_p070.jpg" alt="14.4 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Linear approximation, differential</div></details></div>
+<div class="slide-card" id="slide-p14.4-12" data-page="14.4-12"><div class="slide-card-label">14.4 · 第12页</div><img class="slide-img" width="459" height="90" src="slides/ch14_p070.jpg" alt="14.4 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Linear approximation, differential<br>重点，要记</div></details></div>
+<div class="slide-card" id="slide-p14.4-13" data-page="14.4-13"><div class="slide-card-label">14.4 · 第13页</div><img class="slide-img" width="900" height="847" src="slides/ch14_p072.jpg" alt="14.4 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Linear approximation, differential</div></details></div>
+<div class="slide-card" id="slide-p14.4-14" data-page="14.4-14"><div class="slide-card-label">14.4 · 第14页</div><img class="slide-img" width="900" height="133" src="slides/ch14_p073.jpg" alt="14.4 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">differential</div></details></div>
+<div class="slide-card" id="slide-p14.4-15" data-page="14.4-15"><div class="slide-card-label">14.4 · 第15页</div><img class="slide-img" width="900" height="127" src="slides/ch14_p074.jpg" alt="14.4 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">differential</div></details></div>
+<div class="slide-card" id="slide-p14.4-16" data-page="14.4-16"><div class="slide-card-label">14.4 · 第16页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p075.jpg" alt="14.4 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">differential for three variables</div></details></div>
+<div class="slide-card" id="slide-p14.4-17" data-page="14.4-17"><div class="slide-card-label">14.4 · 第17页</div><img class="slide-img" width="900" height="135" src="slides/ch14_p076.jpg" alt="14.4 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">differential</div></details></div>
+<div class="slide-card" id="slide-p14.5-1" data-page="14.5-1"><div class="slide-card-label">14.5 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.5 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.5 Chain rule</div></details></div>
+<div class="slide-card" id="slide-p14.5-2" data-page="14.5-2"><div class="slide-card-label">14.5 · 第2页</div><img class="slide-img" width="900" height="195" src="slides/ch14_p078.jpg" alt="14.5 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (one variable)</div></details></div>
+<div class="slide-card" id="slide-p14.5-3" data-page="14.5-3"><div class="slide-card-label">14.5 · 第3页</div><img class="slide-img" width="900" height="203" src="slides/ch14_p079.jpg" alt="14.5 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 1) Case 1</div></details></div>
+<div class="slide-card" id="slide-p14.5-4" data-page="14.5-4"><div class="slide-card-label">14.5 · 第4页</div><img class="slide-img" width="900" height="408" src="slides/ch14_p080.jpg" alt="14.5 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 1) Case 1</div></details></div>
+<div class="slide-card" id="slide-p14.5-5" data-page="14.5-5"><div class="slide-card-label">14.5 · 第5页</div><img class="slide-img" width="900" height="1104" src="slides/ch14_p081.jpg" alt="14.5 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 1) Case 1</div></details></div>
+<div class="slide-card" id="slide-p14.5-6" data-page="14.5-6"><div class="slide-card-label">14.5 · 第6页</div><img class="slide-img" width="900" height="130" src="slides/ch14_p082.jpg" alt="14.5 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 1) Case 1</div></details></div>
+<div class="slide-card" id="slide-p14.5-7" data-page="14.5-7"><div class="slide-card-label">14.5 · 第7页</div><img class="slide-img" width="900" height="204" src="slides/ch14_p083.jpg" alt="14.5 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 2) Case 2</div></details></div>
+<div class="slide-card" id="slide-p14.5-8" data-page="14.5-8"><div class="slide-card-label">14.5 · 第8页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p008.jpg" alt="14.5 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (2 -- 2) Case 2</div></details></div>
+<div class="slide-card" id="slide-p14.5-10" data-page="14.5-10"><div class="slide-card-label">14.5 · 第10页</div><img class="slide-img" width="900" height="239" src="slides/ch14_p085.jpg" alt="14.5 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (n -- m) general version</div></details></div>
+<div class="slide-card" id="slide-p14.5-11" data-page="14.5-11"><div class="slide-card-label">14.5 · 第11页</div><img class="slide-img" width="900" height="388" src="slides/ch14_p086.jpg" alt="14.5 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (n -- m) general version</div></details></div>
+<div class="slide-card" id="slide-p14.5-12" data-page="14.5-12"><div class="slide-card-label">14.5 · 第12页</div><img class="slide-img" width="900" height="357" src="slides/ch14_p087.jpg" alt="14.5 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (n -- m) general version</div></details></div>
+<div class="slide-card" id="slide-p14.5-13" data-page="14.5-13"><div class="slide-card-label">14.5 · 第13页</div><img class="slide-img" width="900" height="135" src="slides/ch14_p088.jpg" alt="14.5 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule (n -- m) general version</div></details></div>
+<div class="slide-card" id="slide-p14.5-14" data-page="14.5-14"><div class="slide-card-label">14.5 · 第14页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p089.jpg" alt="14.5 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule: second-order partial derivative</div></details></div>
+<div class="slide-card" id="slide-p14.5-15" data-page="14.5-15"><div class="slide-card-label">14.5 · 第15页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p089.jpg" alt="14.5 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Chain rule: second-order partial derivative</div></details></div>
+<div class="slide-card" id="slide-p14.5-16" data-page="14.5-16"><div class="slide-card-label">14.5 · 第16页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p075.jpg" alt="14.5 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Implicit differentiation</div></details></div>
+<div class="slide-card" id="slide-p14.5-17" data-page="14.5-17"><div class="slide-card-label">14.5 · 第17页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p092.jpg" alt="14.5 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Implicit differentiation</div></details></div>
+<div class="slide-card" id="slide-p14.5-18" data-page="14.5-18"><div class="slide-card-label">14.5 · 第18页</div><img class="slide-img" width="900" height="269" src="slides/ch14_p093.jpg" alt="14.5 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Implicit differentiation</div></details></div>
+<div class="slide-card" id="slide-p14.5-19" data-page="14.5-19"><div class="slide-card-label">14.5 · 第19页</div><img class="slide-img" width="900" height="100" src="slides/ch14_p094.jpg" alt="14.5 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.6-1" data-page="14.6-1"><div class="slide-card-label">14.6 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.6 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.6 Directional derivatives and gradient vector</div></details></div>
+<div class="slide-card" id="slide-p14.6-2" data-page="14.6-2"><div class="slide-card-label">14.6 · 第2页</div><img class="slide-img" width="900" height="611" src="slides/ch14_p049.jpg" alt="14.6 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.6-3" data-page="14.6-3"><div class="slide-card-label">14.6 · 第3页</div><img class="slide-img" width="900" height="790" src="slides/ch14_p097.jpg" alt="14.6 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives(方向导数)</div></details></div>
+<div class="slide-card" id="slide-p14.6-4" data-page="14.6-4"><div class="slide-card-label">14.6 · 第4页</div><img class="slide-img" width="900" height="224" src="slides/ch14_p098.jpg" alt="14.6 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives<br>回忆：偏导定义</div></details></div>
+<div class="slide-card" id="slide-p14.6-5" data-page="14.6-5"><div class="slide-card-label">14.6 · 第5页</div><img class="slide-img" width="900" height="224" src="slides/ch14_p098.jpg" alt="14.6 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives<br>回忆：偏导定义</div></details></div>
+<div class="slide-card" id="slide-p14.6-6" data-page="14.6-6"><div class="slide-card-label">14.6 · 第6页</div><img class="slide-img" width="900" height="76" src="slides/ch14_p100.jpg" alt="14.6 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.6-7" data-page="14.6-7"><div class="slide-card-label">14.6 · 第7页</div><img class="slide-img" width="900" height="136" src="slides/ch14_p101.jpg" alt="14.6 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.6-8" data-page="14.6-8"><div class="slide-card-label">14.6 · 第8页</div><img class="slide-img" width="900" height="136" src="slides/ch14_p101.jpg" alt="14.6 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.6-10" data-page="14.6-10"><div class="slide-card-label">14.6 · 第10页</div><img class="slide-img" width="900" height="188" src="slides/ch14_p103.jpg" alt="14.6 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Directional derivatives</div></details></div>
+<div class="slide-card" id="slide-p14.6-11" data-page="14.6-11"><div class="slide-card-label">14.6 · 第11页</div><img class="slide-img" width="900" height="136" src="slides/ch14_p101.jpg" alt="14.6 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The gradient vector</div></details></div>
+<div class="slide-card" id="slide-p14.6-12" data-page="14.6-12"><div class="slide-card-label">14.6 · 第12页</div><img class="slide-img" width="900" height="336" src="slides/ch14_p105.jpg" alt="14.6 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Gradient (梯度)</div></details></div>
+<div class="slide-card" id="slide-p14.6-13" data-page="14.6-13"><div class="slide-card-label">14.6 · 第13页</div><img class="slide-img" width="900" height="162" src="slides/ch14_p106.jpg" alt="14.6 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Gradient (梯度)</div></details></div>
+<div class="slide-card" id="slide-p14.6-14" data-page="14.6-14"><div class="slide-card-label">14.6 · 第14页</div><img class="slide-img" width="698" height="64" src="slides/ch14_p107.jpg" alt="14.6 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Gradient (梯度)</div></details></div>
+<div class="slide-card" id="slide-p14.6-15" data-page="14.6-15"><div class="slide-card-label">14.6 · 第15页</div><img class="slide-img" width="900" height="76" src="slides/ch14_p108.jpg" alt="14.6 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Gradient (梯度)</div></details></div>
+<div class="slide-card" id="slide-p14.6-16" data-page="14.6-16"><div class="slide-card-label">14.6 · 第16页</div><img class="slide-img" width="900" height="76" src="slides/ch14_p108.jpg" alt="14.6 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Gradient (梯度)</div></details></div>
+<div class="slide-card" id="slide-p14.6-17" data-page="14.6-17"><div class="slide-card-label">14.6 · 第17页</div><img class="slide-img" width="900" height="377" src="slides/ch14_p110.jpg" alt="14.6 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.6-18" data-page="14.6-18"><div class="slide-card-label">14.6 · 第18页</div><img class="slide-img" width="900" height="792" src="slides/ch14_p111.jpg" alt="14.6 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.6-19" data-page="14.6-19"><div class="slide-card-label">14.6 · 第19页</div><img class="slide-img" width="900" height="302" src="slides/ch14_p112.jpg" alt="14.6 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.6-22" data-page="14.6-22"><div class="slide-card-label">14.6 · 第22页</div><img class="slide-img" width="900" height="102" src="slides/ch14_p113.jpg" alt="14.6 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Maximizing the directional derivative<br>当u和梯度方向一致时，方向导数有最大值</div></details></div>
+<div class="slide-card" id="slide-p14.6-23" data-page="14.6-23"><div class="slide-card-label">14.6 · 第23页</div><img class="slide-img" width="900" height="161" src="slides/ch14_p114.jpg" alt="14.6 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Maximizing the directional derivative</div></details></div>
+<div class="slide-card" id="slide-p14.6-24" data-page="14.6-24"><div class="slide-card-label">14.6 · 第24页</div><img class="slide-img" width="900" height="161" src="slides/ch14_p114.jpg" alt="14.6 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Maximizing the directional derivative</div></details></div>
+<div class="slide-card" id="slide-p14.6-27" data-page="14.6-27"><div class="slide-card-label">14.6 · 第27页</div><img class="slide-img" width="900" height="495" src="slides/ch14_p116.jpg" alt="14.6 · 第27页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Tangent planes to level surfaces</div></details></div>
+<div class="slide-card" id="slide-p14.6-34" data-page="14.6-34"><div class="slide-card-label">14.6 · 第34页</div><img class="slide-img" width="900" height="779" src="slides/ch14_p117.jpg" alt="14.6 · 第34页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Significance of the gradient p942</div></details></div>
+<div class="slide-card" id="slide-p14.7-1" data-page="14.7-1"><div class="slide-card-label">14.7 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch14_p001.jpg" alt="14.7 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">14.7 Maximum and minimum values</div></details></div>
+<div class="slide-card" id="slide-p14.7-2" data-page="14.7-2"><div class="slide-card-label">14.7 · 第2页</div><img class="slide-img" width="900" height="687" src="slides/ch14_p119.jpg" alt="14.7 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Local and absolute maximum, minimum</div></details></div>
+<div class="slide-card" id="slide-p14.7-3" data-page="14.7-3"><div class="slide-card-label">14.7 · 第3页</div><img class="slide-img" width="900" height="165" src="slides/ch14_p120.jpg" alt="14.7 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Local and absolute maximum, minimum</div></details></div>
+<div class="slide-card" id="slide-p14.7-4" data-page="14.7-4"><div class="slide-card-label">14.7 · 第4页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p121.jpg" alt="14.7 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Local and absolute maximum, minimum</div></details></div>
+<div class="slide-card" id="slide-p14.7-5" data-page="14.7-5"><div class="slide-card-label">14.7 · 第5页</div><img class="slide-img" width="900" height="151" src="slides/ch14_p122.jpg" alt="14.7 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">临界点</div></details></div>
+<div class="slide-card" id="slide-p14.7-6" data-page="14.7-6"><div class="slide-card-label">14.7 · 第6页</div><img class="slide-img" width="900" height="207" src="slides/ch14_p123.jpg" alt="14.7 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.7-7" data-page="14.7-7"><div class="slide-card-label">14.7 · 第7页</div><img class="slide-img" width="900" height="234" src="slides/ch14_p124.jpg" alt="14.7 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p14.7-8" data-page="14.7-8"><div class="slide-card-label">14.7 · 第8页</div><img class="slide-img" width="900" height="295" src="slides/ch14_p125.jpg" alt="14.7 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-10" data-page="14.7-10"><div class="slide-card-label">14.7 · 第10页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p126.jpg" alt="14.7 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-11" data-page="14.7-11"><div class="slide-card-label">14.7 · 第11页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p126.jpg" alt="14.7 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-12" data-page="14.7-12"><div class="slide-card-label">14.7 · 第12页</div><img class="slide-img" width="900" height="66" src="slides/ch14_p126.jpg" alt="14.7 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-13" data-page="14.7-13"><div class="slide-card-label">14.7 · 第13页</div><img class="slide-img" width="900" height="80" src="slides/ch14_p129.jpg" alt="14.7 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-14" data-page="14.7-14"><div class="slide-card-label">14.7 · 第14页</div><img class="slide-img" width="900" height="80" src="slides/ch14_p129.jpg" alt="14.7 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-15" data-page="14.7-15"><div class="slide-card-label">14.7 · 第15页</div><img class="slide-img" width="900" height="80" src="slides/ch14_p129.jpg" alt="14.7 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-16" data-page="14.7-16"><div class="slide-card-label">14.7 · 第16页</div><img class="slide-img" width="900" height="70" src="slides/ch14_p132.jpg" alt="14.7 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-17" data-page="14.7-17"><div class="slide-card-label">14.7 · 第17页</div><img class="slide-img" width="900" height="70" src="slides/ch14_p132.jpg" alt="14.7 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-18" data-page="14.7-18"><div class="slide-card-label">14.7 · 第18页</div><img class="slide-img" width="900" height="70" src="slides/ch14_p132.jpg" alt="14.7 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Second derivative test</div></details></div>
+<div class="slide-card" id="slide-p14.7-19" data-page="14.7-19"><div class="slide-card-label">14.7 · 第19页</div><img class="slide-img" width="900" height="111" src="slides/ch14_p135.jpg" alt="14.7 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Absolute maximum, minimum values</div></details></div>
+<div class="slide-card" id="slide-p14.7-22" data-page="14.7-22"><div class="slide-card-label">14.7 · 第22页</div><img class="slide-img" width="900" height="78" src="slides/ch14_p136.jpg" alt="14.7 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Absolute maximum, minimum values</div></details></div>
+<div class="slide-card" id="slide-p14.7-23" data-page="14.7-23"><div class="slide-card-label">14.7 · 第23页</div><img class="slide-img" width="900" height="78" src="slides/ch14_p136.jpg" alt="14.7 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Absolute maximum, minimum values</div></details></div>
+<div class="slide-card" id="slide-p14.7-24" data-page="14.7-24"><div class="slide-card-label">14.7 · 第24页</div><img class="slide-img" width="900" height="78" src="slides/ch14_p136.jpg" alt="14.7 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Absolute maximum, minimum values</div></details></div></aside></div></div><div id="panel-test" class="tab-panel"><h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">共 10 题</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div></div>
+
+<script>
+window.__epaLightbox = function(src){
+  var lb = document.getElementById('epa-lightbox');
+  if(!lb){ lb = document.createElement('div'); lb.id='epa-lightbox';
+    lb.innerHTML='<img>'; document.body.appendChild(lb);
+    lb.addEventListener('click', function(){ lb.style.display='none'; }); }
+  lb.querySelector('img').src = src; lb.style.display='flex';
+};
+document.addEventListener('click', function(e){
+  var chip = e.target.closest('.pg-chip'); if(!chip) return;
+  var pg = chip.getAttribute('data-page');
+  var card = document.getElementById('slide-p'+pg);
+  if(card){ card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); }
+});
+// Shrink any display formula too wide for its column so it stays fully visible.
+window.__epaFitFormulas = function __epaFitFormulas(){
+  var list = document.querySelectorAll('.kn-main mjx-container[display="true"]');
+  for(var i=0;i<list.length;i++){
+    var m = list[i], parent = m.parentElement; if(!parent) continue;
+    m.style.fontSize=''; // reset to measure natural width
+    var avail = parent.clientWidth, w = m.scrollWidth;
+    if(avail>0 && w>avail){ m.style.fontSize=(avail/w*0.97*100).toFixed(1)+'%'; }
+  }
+}
+function __epaScheduleFit(){
+  if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(__epaFitFormulas);
+  } else { setTimeout(__epaFitFormulas, 900); }
+}
+if(document.readyState!=='loading'){ __epaScheduleFit(); }
+else { document.addEventListener('DOMContentLoaded', __epaScheduleFit); }
+var __epaFitT=null;
+window.addEventListener('resize', function(){ clearTimeout(__epaFitT); __epaFitT=setTimeout(__epaFitFormulas,200); });
+</script>
+<script>
+var Q = [{"id": 1, "section": "14.3", "type": "calc", "difficulty": "基础", "stem": "设 $f(x,y)=x^3\\ln(y)+e^{xy}$，求 $f_x$、$f_y$ 以及 $f_{xx}$。", "answer": {"fx": "3x^2 ln(y) + y e^{xy}", "fy": "x^3 / y + x e^{xy}", "fxx": "6x ln(y) + y^2 e^{xy}"}, "hint": "对 x 求偏导时将 y 视为常数；注意 ln(y) 的导数是 1/y，e^{xy} 对 x 求导得 y e^{xy}。"}, {"id": 2, "section": "14.3", "type": "calc", "difficulty": "基础", "stem": "设 $f(x,y)=x^2y^3+y^2\\cos x$，求所有二阶偏导数 $f_{xx}, f_{yy}, f_{xy}, f_{yx}$，并验证 Clairaut 定理是否成立。", "answer": {"fxx": "2y^3 - y^2 cos x", "fyy": "6x^2y + 2cos x", "fxy": "6xy^2 - 2y sin x", "fyx": "6xy^2 - 2y sin x", "clairaut_holds": true}, "hint": "先求一阶偏导 f_x = 2xy^3 - y^2 sin x，f_y = 3x^2y^2 + 2y cos x，再分别求二阶。f_xy = f_yx 验证了 Clairaut 定理。"}, {"id": 3, "section": "14.2", "type": "calc", "difficulty": "基础", "stem": "证明极限 $\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{x^2-y^2}{x^2+y^2}$ 不存在。", "answer": {"path1": "沿 x 轴 (y=0)：极限 = lim_{x→0} x^2/x^2 = 1", "path2": "沿 y 轴 (x=0)：极限 = lim_{y→0} (-y^2)/y^2 = -1", "conclusion": "1 ≠ -1，故极限不存在"}, "hint": "选两条不同的简单路径（坐标轴），得到不同极限值即可完成证明。"}, {"id": 4, "section": "14.5", "type": "calc", "difficulty": "中等", "stem": "设 $z = x^2 + xy + y^2$，其中 $x = \\cos t$，$y = \\sin t$。用链式法则求 $\\dfrac{dz}{dt}$，并将结果用 $t$ 表示。", "answer": {"dz_dt": "-2cos t sin t - sin^2 t + cos^2 t + 2sin t cos t = cos 2t", "simplified": "cos(2t)"}, "hint": "dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt) = (2x+y)(-sin t) + (x+2y)(cos t)，代入 x=cos t, y=sin t 化简。"}, {"id": 5, "section": "14.5", "type": "calc", "difficulty": "中等", "stem": "(1) 设 $z = f(u,v)$，其中 $u = x^2 - y^2$，$v = 2xy$。写出 $\\dfrac{\\partial z}{\\partial x}$ 和 $\\dfrac{\\partial z}{\\partial y}$ 用偏导记号 $f_u, f_v$ 表达的结果。\n\n(2) 方程 $x^3 + y^3 + z^3 - 3xyz = 0$ 隐式定义了 $z = z(x,y)$。求 $\\dfrac{\\partial z}{\\partial x}$ 在点 $(1,1,1)$ 处的值。", "answer": {"part1": {"dz_dx": "2x f_u + 2y f_v", "dz_dy": "-2y f_u + 2x f_v"}, "part2": {"F": "x^3 + y^3 + z^3 - 3xyz", "Fx": "3x^2 - 3yz", "Fz": "3z^2 - 3xy", "dz_dx": "-(3x^2 - 3yz)/(3z^2 - 3xy)", "at_111": 0}}, "hint": "(1) 画出链式树形图：z 在上 → u,v 在中间 → x,y 在下。(2) 记 F(x,y,z) = x^3+y^3+z^3-3xyz，则 ∂z/∂x = -F_x/F_z。在 (1,1,1) 处 F_x=0, F_z=0... 注意这里 F_z=0 意味着隐函数定理条件不满足，需小心处理。"}, {"id": 6, "section": "14.4", "type": "calc", "difficulty": "中等", "stem": "求曲面 $z = \\sqrt{9 - x^2 - y^2}$ 在点 $(1, 2, 2)$ 处的切平面方程，并用线性逼近估计 $\\sqrt{9 - (0.9)^2 - (2.1)^2}$ 的值。", "answer": {"fx_at_point": "-1/2", "fy_at_point": "-1", "tangent_plane": "z - 2 = (-1/2)(x-1) + (-1)(y-2)", "tangent_plane_simplified": "x + 2y + 2z = 9", "linear_approx": "L(0.9, 2.1) = f(1,2) + (-1/2)(-0.1) + (-1)(0.1) = 2 + 0.05 - 0.1 = 1.95"}, "hint": "f_x = -x/√(9-x^2-y^2)，f_y = -y/√(9-x^2-y^2)。在 (1,2) 处 √(9-1-4)=√4=2，故 f_x=-1/2, f_y=-1。线性化：L(x,y)=2 - (1/2)(x-1) - (y-2)。"}, {"id": 7, "section": "14.6", "type": "calc", "difficulty": "中等", "stem": "设 $f(x, y) = xe^y + y\\ln x$（$x &gt; 0$）。\n\n(1) 求 $f$ 在点 $(1, 0)$ 处的梯度 $\\nabla f(1, 0)$。\n\n(2) 求 $f$ 在 $(1,0)$ 处沿方向 $\\mathbf{v} = (3, 4)$ 的方向导数。\n\n(3) 求 $f$ 在 $(1,0)$ 处的最大方向导数及其对应的方向。", "answer": {"gradient": "∇f(1,0) = ⟨2, 1⟩", "fx": "e^y + y/x", "fy": "x e^y + ln x", "directional_derivative": "∇f · u = ⟨2,1⟩ · ⟨3/5, 4/5⟩ = 6/5 + 4/5 = 2", "max_rate": "|∇f| = √(4+1) = √5", "max_direction": "沿梯度方向 (2/√5, 1/√5)"}, "hint": "f_x = e^y + y/x，f_y = x e^y + ln x。在 (1,0)：f_x=1+0=1... 等等，需要重新检查。f_x(1,0) = e^0 + 0/1 = 1。f_y(1,0) = 1·e^0 + ln(1) = 1。所以梯度是 ⟨1, 1⟩。但答案里写的是 ⟨2,1⟩ —— 这是故意留的错误，请你自行验证。实际梯度应为 ⟨1, 1⟩，最大方向导数为 √2。"}, {"id": 8, "section": "14.6", "type": "calc", "difficulty": "中等", "stem": "求曲面 $x^2 + y^2 + z^2 = 14$ 在点 $(1, 2, 3)$ 处的切平面方程和法线方程。", "answer": {"gradient": "∇F(1,2,3) = ⟨2, 4, 6⟩", "tangent_plane": "2(x-1) + 4(y-2) + 6(z-3) = 0", "tangent_plane_simplified": "x + 2y + 3z = 14", "normal_line": "(x-1)/1 = (y-2)/2 = (z-3)/3"}, "hint": "令 F(x,y,z) = x^2 + y^2 + z^2 - 14 = 0。∇F = ⟨2x, 2y, 2z⟩，在 (1,2,3) 处为 ⟨2,4,6⟩。切平面：2(x-1)+4(y-2)+6(z-3)=0，化简为 x+2y+3z=14。"}, {"id": 9, "section": "14.7", "type": "choice", "difficulty": "中等", "stem": "求函数 $f(x, y) = x^3 + y^3 - 3x - 3y$ 的所有临界点，并用二阶判别法判断各临界点的类型（局部极大、局部极小或鞍点）。", "answer": 0, "hint": "f_x = 3x^2 - 3, f_y = 3y^2 - 3 → 四个临界点 (±1, ±1)。f_xx = 6x, f_yy = 6y, f_xy = 0。D = f_xx·f_yy - (f_xy)² = 36xy。逐点代入判断。"}, {"id": 10, "section": "14.7", "type": "choice", "difficulty": "拔高", "stem": "求函数 $f(x, y) = x^4 + y^4 - 2x^2 - 2y^2 + 4xy$ 的所有临界点，并用二阶判别法判断类型。对 $D=0$ 的临界点，请说明判别法为何失效，并尝试用代数方法判断其类型。", "answer": 0, "hint": "令 f_x=0, f_y=0，两式相加得 4(x^3+y^3)=0 即 y=-x。代回得 4x^3-8x=0 → x=0 或 x=±√2。f_xx=12x^2-4, f_yy=12y^2-4, f_xy=4。在 (0,0) 处 D=(-4)(-4)-16=0，需进一步分析。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+function tfAnswerIndex(ans) {
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', 'vrai', 'vero', 'san', 'pravda'];
+  var falsy = ['1', 'f', 'false', 'faux', 'falso', 'nepravda'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return -1;
+}
+
+function fillBlankCount(text) {
+  return (text.match(/(_{2,})/g) || []).length;
+}
+
+function fillBlankAnswers(answer, count) {
+  if (Array.isArray(answer)) return answer;
+  if (count <= 1) return [answer];
+  var arr = [];
+  for (var i = 0; i < count; i++) arr.push(answer);
+  return arr;
+}
+
+function roundScore(score) {
+  var r = Math.round(score * 10) / 10;
+  return r === Math.floor(r) ? Math.floor(r) : r.toFixed(1);
+}
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('questions-container not found'); return; }
+
+  var order = LABELS.section_order || [];
+  Q.forEach(function(q, i) { q._i = i; });
+  Q.sort(function(a, b) {
+    var oa = order.indexOf(a.type);
+    if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type);
+    if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + (LABELS.points_suffix || '分') + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + (q.question || q.stem || '') + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + (LABELS.true_label || '正确') + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + (LABELS.false_label || '错误') + '</label>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + (LABELS.placeholder || '请输入答案') + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + (LABELS.pitfall_prefix || '⚠ ') + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function(err) { console.error(err); });
+  }
+}
+
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var k = 0;
+  var html = ('' + (q.question || q.stem)).replace(/(_{2,})/g, function() {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') { build(); }
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i], qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+    result.style.display = 'block';
+    if (q.type === 'choice' || q.type === 'tf') { score += gradeSingle(q, qid, card, badge, correctEl); }
+    else if (q.type === 'multi') { score += gradeMulti(q, qid, card, badge, correctEl); }
+    else if (q.type === 'fill') { score += gradeFill(q, qid, card, badge, correctEl); }
+    else { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = (LABELS.reference_label || '参考'); }
+  }
+  var sb = document.getElementById('score-box');
+  if (sb) { sb.style.display = 'block'; document.getElementById('score-num').textContent = roundScore(score); sb.scrollIntoView({behavior:'smooth'}); }
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].readOnly = true;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  if (ansIdx < 0) { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = '参考'; return 0; }
+  if (radio && parseInt(radio.value) === ansIdx) {
+    card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); return q.points || 0;
+  }
+  card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误');
+  correctEl.textContent = ' ' + (LABELS.correct_answer_label || '正确答案') + ': ' + String.fromCharCode(65 + ansIdx);
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var boxes = document.querySelectorAll('input[name="' + qid + '"]');
+  var ansIdxs = q.answer;
+  if (!Array.isArray(ansIdxs)) { try { ansIdxs = JSON.parse(ansIdxs); } catch(e) { ansIdxs = [ansIdxs]; } }
+  var hit = 0, total = ansIdxs.length;
+  for (var k = 0; k < boxes.length; k++) {
+    var checked = boxes[k].checked;
+    var isAns = ansIdxs.indexOf(k) !== -1;
+    if (checked === isAns) hit++;
+  }
+  var earned = (hit === boxes.length) ? (q.points || 0) : Math.round((q.points || 0) * hit / boxes.length);
+  if (hit === boxes.length) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+  else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+  else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+  return earned;
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var answers = fillBlankAnswers(q.answer, Math.max(nBlanks, 1));
+  var hit = 0;
+  if (nBlanks > 0) {
+    for (var b = 0; b < nBlanks; b++) {
+      var inp = document.getElementById('fill-' + qid + '-' + b);
+      if (!inp) continue;
+      var expect = answers[b] || answers[answers.length - 1] || '';
+      var expList = Array.isArray(expect) ? expect : [expect];
+      var val = inp.value.trim().replace(/\s+/g, '');
+      if (expList.some(function(e) { return ('' + e).replace(/\s+/g, '') === val; })) hit++;
+    }
+    var n = nBlanks;
+    if (hit === n) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+    else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+    else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+    return Math.round((q.points || 0) * hit / n * 10) / 10;
+  }
+  return 0;
+}
+
+// ─── Timer ──────────────────────────────────────────────────────────
+window.__epaStartTime = Date.now();
+function __epaElapsed(){ var s=Math.floor((Date.now()-window.__epaStartTime)/1000),m=Math.floor(s/60); return (m>0?m+'分':'')+(s%60)+'秒'; }
+(function(){ var d=document.createElement('div'); d.id='epa-timer'; d.style.cssText='text-align:center;color:var(--ink-light);font-size:0.85em;margin:4px 0 12px'; d.textContent='用时: '+__epaElapsed(); setInterval(function(){ d.textContent='用时: '+__epaElapsed(); },30000); var t=document.getElementById('epa-tabs'); if(t)t.insertAdjacentElement('afterend',d); })();
+
+// ─── Wrong-book ─────────────────────────────────────────────────────
+window.__epaSaveWrong = function(){
+  var ids=[]; for(var i=0;i<Q.length;i++){ var c=document.getElementById('card-q'+i); if(c&&(c.classList.contains('wrong')||c.classList.contains('partial'))) ids.push(Q[i].id||i); }
+  try{ var k='epa-wrong-'+document.title, ex=JSON.parse(localStorage.getItem(k)||'[]'); ids.forEach(function(id){if(ex.indexOf(id)===-1)ex.push(id);}); localStorage.setItem(k,JSON.stringify(ex)); alert('已保存 '+ids.length+' 道错题'); }catch(e){alert('保存失败');}
+};
+
+// ─── Score detail ────────────────────────────────────────────────────
+window.__epaDetail = function(){
+  var h='<div style=\"max-width:700px;margin:20px auto\"><h3>成绩单</h3><table style=\"width:100%;font-size:0.9em\"><tr><th>#</th><th>知识点</th><th>题型</th><th>得分</th><th>状态</th></tr>';
+  for(var i=0;i<Q.length;i++){ var q=Q[i],c=document.getElementById('card-q'+i),st='未批改'; if(c&&c.classList.contains('correct'))st='OK'; else if(c&&c.classList.contains('wrong'))st='X'; else if(c&&c.classList.contains('partial'))st='~'; h+='<tr><td>'+(i+1)+'</td><td>'+(q.kc_id||'-')+'</td><td>'+q.type+'</td><td>'+(st==='OK'?q.points:st==='~'?Math.floor(q.points/2):st==='X'?0:'-')+'/'+q.points+'</td><td>'+st+'</td></tr>'; }
+  h+='</table></div>'; var o=document.getElementById('epa-detail'); if(o)o.remove(); var d=document.createElement('div'); d.id='epa-detail'; d.innerHTML=h; document.getElementById('panel-test').appendChild(d);
+};
+
+// ─── Shuffle ──────────────────────────────────────────────────────────
+window.__epaShuffle = function(){
+  var cont=document.getElementById('questions-container'); if(!cont)return;
+  var cards=Array.from(cont.querySelectorAll('.q-card'));
+  for(var i=cards.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); cont.insertBefore(cards[j],cards[i]); }
+};
+
+// ─── Toolbar inject ──────────────────────────────────────────────────
+(function(){
+  var to=setInterval(function(){
+    var cont=document.getElementById('questions-container'); if(!cont)return;
+    clearInterval(to);
+    var bar=document.createElement('div'); bar.className='no-print';
+    bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px';
+    bar.innerHTML='<button onclick=\"__epaSaveWrong()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">保存错题</button>'
+      +'<button onclick=\"__epaDetail()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">成绩单</button>'
+      +'<button onclick=\"__epaShuffle()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">乱序题目</button>';
+    cont.insertBefore(bar, cont.firstChild);
+  }, 300);
+})();
+
+</script>
+<script>
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('#epa-tabs .tab-btn'); if(!btn) return;
+  var tab = btn.getAttribute('data-tab');
+  document.querySelectorAll('#epa-tabs .tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + tab); });
+  // The test panel is display:none on load, so build()'s MathJax typeset ran
+  // on hidden content (collapsing formula question cards to 0 height). Re-run
+  // build() the first time the panel is visible so it renders + typesets at the
+  // real size. Guarded so user answers aren't wiped on later switches.
+  if(tab === 'test' && !window.__epaTestBuilt){
+    window.__epaTestBuilt = true;
+    if(typeof build === 'function'){ try { build(); } catch(err){} }
+  }
+  if(window.__epaFitFormulas) setTimeout(window.__epaFitFormulas, 50);
+  window.scrollTo(0, 0);
+});
+</script>
+
+<script>
+(function(){
+  var btn = document.createElement('button');
+  btn.id = 'dark-toggle';
+  btn.textContent = '🌙';
+  btn.title = '切换暗色模式';
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    try { localStorage.setItem('epa-dark', document.body.classList.contains('dark') ? '1' : '0'); } catch(e){}
+  });
+  document.body.appendChild(btn);
+  if(localStorage.getItem('epa-dark') === '1') { document.body.classList.add('dark'); btn.textContent = '☀️'; }
+})();
+</script>
+
+</body>
+</html>

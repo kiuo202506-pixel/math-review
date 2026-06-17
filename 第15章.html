@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>第15章</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+/* Modern monospace stack — avoids the ugly Courier New fallback on Windows. */
+:root {
+  --mono: "Cascadia Code", "JetBrains Mono", "Fira Code", "Source Code Pro",
+          Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+}
+code {
+  font-family: var(--mono);
+  background: #eee8d8; color: #8a4b1e;
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+pre {
+  font-family: var(--mono);
+  background: #2d2a26; color: #ece6da;
+  padding: 14px 16px; border-radius: var(--radius);
+  overflow-x: auto; line-height: 1.6; font-size: 0.9em;
+  border: 1px solid #3d3934; tab-size: 2;
+}
+pre code {
+  background: none; color: inherit; padding: 0; font-size: 1em; border-radius: 0;
+}
+
+/* ── Long display formulas: scroll inside their column, never overflow ── */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* ── Checkpoint self-test ── */
+.checkpoint {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius);
+  padding: 10px 16px; margin: 18px 0;
+  font-size: 0.95em;
+}
+.checkpoint::before {
+  content: '🧠 自测：';
+  font-weight: 700; color: #1e40af;
+}
+.checkpoint .cp-answer { margin-top: 10px; border-top: 1px dashed #bfdbfe; padding-top: 8px; }
+.checkpoint .cp-answer summary {
+  cursor: pointer; color: #1e40af; font-weight: 600; user-select: none;
+  list-style: none;
+}
+.checkpoint .cp-answer summary::before { content: '💡 '; }
+.checkpoint .cp-answer summary::-webkit-details-marker { display: none; }
+.checkpoint .cp-answer[open] summary { margin-bottom: 6px; }
+.checkpoint .cp-answer ol, .checkpoint .cp-answer p { font-weight: 400; color: var(--ink); }
+
+/* ── TL;DR summary ── */
+.tldr {
+  background: #fefce8; border-left: 3px solid #eab308;
+  padding: 8px 14px; margin: 10px 0;
+  font-weight: 600; font-size: 0.95em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  body { max-width: 100%; padding: 12px 10px 40px; font-size: 11pt; }
+  h1 { font-size: 1.3em; }
+  h2 { font-size: 1.12em; }
+  table { font-size: 0.85em; }
+  td, th { padding: 4px 6px; }
+  pre { font-size: 0.85em; padding: 6px; }
+}
+@media (max-width: 400px) {
+  body { padding: 8px 6px 32px; font-size: 10.5pt; }
+}
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+
+/* ── Notion-style slide cross-reference layout ── */
+/* Override base.css body max-width (860px); fill the viewport edge-to-edge,
+   capped only on ultra-wide screens for readability. */
+body { max-width: 2400px; width: 96vw; padding-left: 2vw; padding-right: 2vw; }
+.kn-layout { display: flex; gap: 36px; align-items: flex-start; width: 100%; margin: 0 auto; }
+.kn-main { flex: 1 1 auto; min-width: 0; overflow-x: clip; }
+.kn-main mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.kn-rail { flex: 0 0 32%; max-width: 520px; min-width: 300px; position: sticky; top: 12px;
+  align-self: flex-start; max-height: calc(100vh - 30px); overflow-y: auto; padding-right: 4px; }
+.kn-rail-title { font-weight: 700; color: var(--ink-light); font-size: 0.9em; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--divider); }
+.slide-card { border: 1px solid var(--card-border); border-radius: var(--radius);
+  background: var(--card-bg); padding: 8px; margin-bottom: 14px; }
+.slide-card-label { font-size: 0.78em; color: var(--ink-light); margin-bottom: 6px; }
+.slide-img { width: 100%; height: auto; border-radius: 4px; cursor: zoom-in; display: block;
+  border: 1px solid var(--divider); background: #fff; }
+.slide-text-only { font-size: 0.78em; line-height: 1.5; color: var(--ink-light);
+  padding: 8px 10px; background: #fff; border-radius: 4px; border: 1px solid var(--divider);
+  max-height: 200px; overflow-y: auto; }
+.slide-text { margin-top: 6px; font-size: 0.85em; }
+.slide-text summary { cursor: pointer; color: var(--accent); user-select: none; }
+.slide-text-body { margin-top: 6px; color: var(--ink-light); line-height: 1.6;
+  max-height: 220px; overflow-y: auto; padding: 6px 8px; background: #fff;
+  border-radius: 4px; border: 1px solid var(--divider); }
+/* heading-side page chips */
+.pg-chip { display: inline-block; font-size: 0.72em; font-weight: 600; color: var(--accent);
+  background: #eff4ff; border: 1px solid #cfe0ff; border-radius: 10px; padding: 0 7px;
+  margin-left: 6px; cursor: pointer; vertical-align: middle; }
+.pg-chip:hover { background: #dbe8ff; }
+.slide-card.flash { animation: slideflash 1.2s ease; }
+@keyframes slideflash { 0%,100%{box-shadow:none;} 30%{box-shadow:0 0 0 3px var(--accent);} }
+/* lightbox */
+#epa-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.82); display: none;
+  align-items: center; justify-content: center; z-index: 9999; cursor: zoom-out; }
+#epa-lightbox img { max-width: 94vw; max-height: 94vh; border-radius: 6px; }
+/* Tablet / narrow desktop: keep two columns but rebalance + tighten margins */
+@media (max-width: 1280px) {
+  body { width: 98vw; padding-left: 1vw; padding-right: 1vw; }
+  .kn-layout { gap: 24px; }
+  .kn-main { flex: 1 1 54%; }
+  .kn-rail { flex: 1 1 46%; }
+}
+/* Mobile: stack the rail below the notes */
+@media (max-width: 900px) {
+  body { width: 100%; padding-left: 12px; padding-right: 12px; }
+  /* align-items:stretch is critical — in a COLUMN flex, flex-start would size
+     children to max-content (overflowing the viewport). */
+  .kn-layout { flex-direction: column; align-items: stretch; gap: 16px; }
+  .kn-main { flex: none; width: 100%; }
+  .kn-rail { position: static; flex: none; max-width: 100%; width: 100%; min-width: 0; max-height: none; }
+}
+
+
+/* ── Combined page: top tab bar (清单 | 题目) ── */
+#epa-tabs { display: flex; gap: 0; justify-content: center; margin: 6px auto 22px;
+  max-width: 520px; border: 1px solid var(--divider); border-radius: 10px; overflow: hidden; }
+#epa-tabs .tab-btn { flex: 1; padding: 10px 18px; cursor: pointer; border: none;
+  background: var(--paper-dark); color: var(--ink-light); font-size: 1.02em; font-weight: 600;
+  font-family: inherit; transition: background .15s, color .15s; }
+#epa-tabs .tab-btn + .tab-btn { border-left: 1px solid var(--divider); }
+#epa-tabs .tab-btn.active { background: var(--accent); color: #fff; }
+#epa-tabs .tab-btn:not(.active):hover { background: #efe7d3; color: var(--ink); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+/* keep the test readable/centered even though the body is wide for the rail */
+#panel-test { max-width: 980px; margin: 0 auto; }
+@media print { #epa-tabs { display: none; } .tab-panel { display: block !important; } }
+
+
+.chapter-nav { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 8px; }
+.chapter-nav .nav-home { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.95em; }
+.chapter-nav .nav-select { padding: 6px 12px; border: 1px solid var(--divider); border-radius: 6px;
+  background: var(--card-bg); font-size: 0.92em; font-family: inherit; color: var(--ink); cursor: pointer; max-width: 320px; }
+
+
+/* Collapsible H3 sections */
+.kn-collapse-toggle { display: inline-block; cursor: pointer; font-size: 0.85em; margin-left: 8px;
+  color: var(--accent); user-select: none; vertical-align: middle; }
+.kn-collapse-toggle:hover { color: var(--accent-hover); }
+.kn-collapse-body { overflow: hidden; transition: max-height 0.3s ease; }
+.kn-collapse-body.collapsed { max-height: 0 !important; }
+.kn-collapse-global { display: inline-block; margin: 0 4px; padding: 2px 10px; border: 1px solid var(--divider);
+  border-radius: 12px; font-size: 0.78em; cursor: pointer; background: var(--card-bg); color: var(--ink-light); }
+.kn-collapse-global:hover { background: var(--divider); }
+/* Dark mode */
+body.dark { --paper: #1a1a2e; --ink: #e0e0e0; --ink-light: #aaa; --card-bg: #222244;
+  --card-border: #3a3a5c; --divider: #3a3a5c; --paper-dark: #16162a; --accent: #64b5f6;
+  --tag-bg: #3d3520; --tag-text: #f0c060; background: var(--paper); color: var(--ink); }
+body.dark .kp { color: #ffd700; background: #3d3520; }
+body.dark blockquote { background: #2a1a1a; border-left-color: #ff6b6b; }
+body.dark .checkpoint { background: #1a2a1a; border-color: #4caf50; }
+body.dark th { background: #222244; }
+body.dark .slide-card { background: #222244; border-color: #3a3a5c; }
+body.dark .slide-text-body { background: #1a1a2e; }
+body.dark .pg-chip { background: #1a3a5c; border-color: #2a5a8c; }
+body.dark .chapter-nav .nav-select { background: #222244; color: #e0e0e0; border-color: #3a3a5c; }
+body.dark #epa-tabs .tab-btn { background: #222244; color: #aaa; }
+body.dark #epa-tabs .tab-btn:not(.active):hover { background: #2a2a4a; }
+body.dark .toc { background: #222244; }
+body.dark .tldr { background: #3d3520; }
+#dark-toggle { position: fixed; top: 12px; right: 16px; z-index: 9999; border: 1px solid var(--divider);
+  border-radius: 50%; width: 36px; height: 36px; font-size: 1.1em; cursor: pointer;
+  background: var(--card-bg); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+@media print { #dark-toggle { display: none; } }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<div class="chapter-nav no-print"><a href="index.html" class="nav-home">🏠 首页</a><select class="nav-select" onchange="if(this.value)window.location.href=this.value"><option value="第10章.html">第10章</option><option value="第11章.html">第11章</option><option value="第12章.html">第12章</option><option value="第14章.html">第14章</option><option value="第15章.html" selected>第15章</option><option value="第17章.html">第17章</option><option value="第8章.html">第8章</option><option value="第9章.html">第9章</option></select></div><h1>第15章</h1><div id="epa-tabs" class="no-print"><button class="tab-btn active" data-tab="kn">📖 知识清单</button><button class="tab-btn" data-tab="test">📝 章节测试</button></div><div id="panel-kn" class="tab-panel active"><div class="kn-layout"><div class="kn-main"><h1></h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s47903668">15.1–15.2 二重积分 &amp; Fubini 定理</a></li>
+  <li><a href="#s79631790">▼叙事弧 —— 从面积求和到累次积分</a></li>
+  <li><a href="#s32085202">▼Fubini 定理（矩形区域）</a></li>
+  <li><a href="#s74086875">▼交换积分次序（矩形区域）</a></li>
+<li><a href="#s68302040">15.3 一般区域上的二重积分</a></li>
+  <li><a href="#s34223211">▼叙事弧 —— 矩形太好算了，现实世界没有矩形区域</a></li>
+  <li><a href="#s47488260">▼I 型区域（x-型）</a></li>
+  <li><a href="#s52759290">▼II 型区域（y-型）</a></li>
+  <li><a href="#s58829083">▼积分次序的选择策略</a></li>
+  <li><a href="#s66144830">▼自测 · 15.1–15.3</a></li>
+<li><a href="#s31048131">15.4 极坐标下的二重积分</a></li>
+  <li><a href="#s15933380">▼叙事弧 —— 「圆」的对称性呼唤极坐标</a></li>
+  <li><a href="#s70762056">▼坐标变换</a></li>
+  <li><a href="#s59341662">▼自测 · 15.4</a></li>
+<li><a href="#s28437983">15.6 曲面面积</a></li>
+  <li><a href="#s14633458">▼叙事弧 —— 从平面面积到曲面面积，多一个「拉伸因子」</a></li>
+  <li><a href="#s27744486">▼几何解释</a></li>
+<li><a href="#s89148112">15.7 三重积分（直角坐标）</a></li>
+  <li><a href="#s67563476">▼叙事弧 —— 再加一维，从面积到体积，从平面区域到立体</a></li>
+  <li><a href="#s92132099">▼六种积分次序</a></li>
+  <li><a href="#s58825174">▼自测 · 15.7</a></li>
+<li><a href="#s90542373">15.8 柱坐标</a></li>
+  <li><a href="#s43949488">▼叙事弧 —— 极坐标 + z 轴不变 = 柱坐标</a></li>
+  <li><a href="#s70762056">▼坐标变换</a></li>
+  <li><a href="#s79884412">▼自测 · 15.8</a></li>
+<li><a href="#s22010426">15.9 球坐标</a></li>
+  <li><a href="#s44873892">▼叙事弧 —— 球对称时柱坐标也不够用，球坐标登场</a></li>
+  <li><a href="#s70762056">▼坐标变换</a></li>
+  <li><a href="#s36125178">▼φ 的几何解释</a></li>
+  <li><a href="#s38782173">▼自测 · 15.9</a></li>
+<li><a href="#s34948917">综合对照表：坐标选择决策</a></li>
+<li><a href="#s26744123">章节总结 · 自测清单</a></li>
+</ul>
+</div>
+<div class="container">
+
+<h1>第15章 多重积分</h1>
+<p class="subtitle">15.1 – 15.9（不含 15.5 独立应用、15.10 Jacobian）｜高等数学（下）<br>知识清单 · 公式速查 · 易错提醒 · 自测</p>
+
+<!-- ============================================================ -->
+<h2 id="s47903668">15.1–15.2 二重积分 &amp; Fubini 定理</h2>
+
+<h3 id="s79631790"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 从面积求和到累次积分</h3><div class="kn-collapse-body">
+<p>一维定积分 ∫ f(x)dx 的底层是「切条 → 求和 → 取极限」。到了二维，自然想法是把平面区域切成小矩形，每个小矩形贡献 f(x<sub>ij</sub>*, y<sub>ij</sub>*) · ΔA，然后对 i,j 双重求和取极限。这就是二重积分的定义。</p>
+
+<p>但真正算的时候没人用黎曼和。Fubini 定理告诉我们：在「好」区域上，二重积分可以拆成<strong>两次一维积分</strong>——先积 x 再积 y，或者反过来。这是本章最核心的计算技巧。</p>
+
+<div class="formula">
+∬<sub>R</sub> f(x,y) dA = ∫<sub>a</sub><sup>b</sup> [ ∫<sub>c</sub><sup>d</sup> f(x,y) dy ] dx = ∫<sub>c</sub><sup>d</sup> [ ∫<sub>a</sub><sup>b</sup> f(x,y) dx ] dy
+</div>
+
+<div class="card">
+  </div><h3 id="s32085202"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>Fubini 定理（矩形区域）</h3><div class="kn-collapse-body">
+  <p>若 f(x,y) 在矩形 R = [a,b] × [c,d] 上连续，则：</p>
+  <div class="formula">
+    ∬<sub>R</sub> f(x,y) dA = ∫<sub>a</sub><sup>b</sup> ∫<sub>c</sub><sup>d</sup> f(x,y) dy dx = ∫<sub>c</sub><sup>d</sup> ∫<sub>a</sub><sup>b</sup> f(x,y) dx dy
+  </div>
+  <p><span class="tag">要点</span> 次序可交换，但要确保每个积分限是<strong>常数</strong>（矩形区域下的对称性）。</p>
+</div>
+
+<div class="card">
+  </div><h3 id="s74086875"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>交换积分次序（矩形区域）</h3><div class="kn-collapse-body">
+  <p>当 f(x,y) = g(x)·h(y) 即被积函数可分离变量时：</p>
+  <div class="formula">
+    ∬<sub>R</sub> g(x)h(y) dA = (∫<sub>a</sub><sup>b</sup> g(x) dx) · (∫<sub>c</sub><sup>d</sup> h(y) dy)
+  </div>
+  <p>直接变成两个一维积分相乘，极其方便。</p>
+</div>
+
+<div class="warn-box">
+  <strong>易错提醒：</strong> Fubini 定理要求 f(x,y) <strong>连续</strong>（或至少在区域上可积且累次积分存在）。遇到间断点或无界区域必须谨慎——积分次序可能影响结果甚至导致发散。
+</div>
+
+<!-- ============================================================ --></div>
+<h2 id="s68302040">15.3 一般区域上的二重积分</h2>
+
+<h3 id="s34223211"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 矩形太好算了，现实世界没有矩形区域</h3><div class="kn-collapse-body">
+<p>圆盘、三角形、由曲线围成的区域才是常态。解决思路：把一般区域描述为「夹在两条曲线之间」的条带。根据夹的方向不同分为 I 型（竖直条）和 II 型（水平条）。</p>
+
+<div class="card">
+  </div><h3 id="s47488260"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>I 型区域（x-型）</h3><div class="kn-collapse-body">
+  <p>区域 D 夹在两条曲线 y = g₁(x) 和 y = g₂(x) 之间，x ∈ [a,b]：</p>
+  <div class="formula">
+    ∬<sub>D</sub> f(x,y) dA = ∫<sub>a</sub><sup>b</sup> ∫<sub>g₁(x)</sub><sup>g₂(x)</sup> f(x,y) dy dx
+  </div>
+  <p><strong>先积 y，再积 x。</strong>内层积分限是 x 的函数，外层是常数。</p>
+  <p><span class="tag">判断</span> 能用竖直线贯穿区域，且交于不超过两个边界点时，适合 I 型。</p>
+</div>
+
+<div class="card">
+  </div><h3 id="s52759290"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>II 型区域（y-型）</h3><div class="kn-collapse-body">
+  <p>区域 D 夹在两条曲线 x = h₁(y) 和 x = h₂(y) 之间，y ∈ [c,d]：</p>
+  <div class="formula">
+    ∬<sub>D</sub> f(x,y) dA = ∫<sub>c</sub><sup>d</sup> ∫<sub>h₁(y)</sub><sup>h₂(y)</sup> f(x,y) dx dy
+  </div>
+  <p><strong>先积 x，再积 y。</strong>内层积分限是 y 的函数。</p>
+  <p><span class="tag">判断</span> 能用水平线贯穿区域，且交于不超过两个边界点时，适合 II 型。</p>
+</div>
+</div>
+<h3 id="s58829083"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>积分次序的选择策略</h3><div class="kn-collapse-body">
+<table>
+  <tr><th>策略</th><th>说明</th></tr>
+  <tr><td>先观察被积函数</td><td>f(x,y) 对哪个变量的不定积分更简单？优先把那个变量放在内层。</td></tr>
+  <tr><td>再看区域形状</td><td>区域是「上下夹」还是「左右夹」更自然？选择对应的类型。</td></tr>
+  <tr><td>考虑换序</td><td>一种次序积不出来时果断换序——先画出区域，重新描述积分限。</td></tr>
+</table>
+
+<div class="warn-box">
+  <strong>易错提醒：</strong> 换序不是简单地把 dx dy 改成 dy dx。必须<strong>画出区域</strong>，根据图形重新写积分限。被积函数中若有无法初等积分的表达式（如 e<sup>x²</sup>），换序往往是唯一的出路。
+</div>
+
+<div class="self-test">
+  </div><h3 id="s66144830"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>自测 · 15.1–15.3</h3><div class="kn-collapse-body">
+  <ol>
+    <li>写出 ∬<sub>R</sub> xy dA（R = [0,1]×[0,2]）作为累次积分的两种形式，并算出结果。</li>
+    <li>D 由 y = x² 和 y = x 围成。分别用 I 型和 II 型写出 ∬<sub>D</sub> f(x,y) dA 的累次积分表达式。</li>
+    <li>为什么 ∬<sub>D</sub> e<sup>x²</sup> dA（D 由 y = x, y = 1, x = 0 围成）必须先积 y？</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s31048131">15.4 极坐标下的二重积分<span class="pg-chip" data-page="15.1-15.2-2">页2</span></h2>
+
+<h3 id="s15933380"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 「圆」的对称性呼唤极坐标</h3><div class="kn-collapse-body">
+<p>如果区域是圆、扇形、或边界含 x²+y²，直角坐标下的积分限会写得面目狰狞。极坐标将圆形区域变成矩形，代价是面积元变了。</p>
+
+<div class="card">
+  </div><h3 id="s70762056"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>坐标变换</h3><div class="kn-collapse-body">
+  <div class="equation-row">
+    <div class="formula" style="flex:1;">
+      x = r cos θ<br>
+      y = r sin θ<br>
+      x² + y² = r²
+    </div>
+    <div class="formula" style="flex:1;">
+      dA = <strong>r</strong> dr dθ
+    </div>
+  </div>
+  <div class="formula">
+    ∬<sub>D</sub> f(x,y) dA = ∫<sub>α</sub><sup>β</sup> ∫<sub>r₁(θ)</sub><sup>r₂(θ)</sup> f(r cos θ, r sin θ) · <strong>r</strong> dr dθ
+  </div>
+</div>
+
+<div class="warn-box">
+  <strong>高频失分点：</strong> 极坐标的面积元是 <strong>r dr dθ</strong>，不是 dr dθ！少乘那个 r 是本考点最经典的错误。几何解释：小扇形的面积 ≈ r·Δr·Δθ，那个 r 来自弧长。
+</div>
+
+<table>
+  <tr><th>适合极坐标的场景</th><th>示例</th></tr>
+  <tr><td>被积函数含 x² + y²</td><td>∬ (x²+y²) dA → ∬ r² · r dr dθ = ∬ r³ dr dθ</td></tr>
+  <tr><td>积分区域是圆/扇形/圆环</td><td>圆盘 x²+y² ≤ R² → 0≤r≤R, 0≤θ≤2π</td></tr>
+  <tr><td>区域边界含 x²+y² 的组合</td><td>圆环 1≤x²+y²≤4 → 1≤r≤2</td></tr>
+</table>
+
+<div class="tip-box">
+  <strong>何时用极坐标？三条判据（满足任一即可）：</strong>
+  <ol>
+    <li>被积函数中出现 x²+y² —— 直接换成 r²。</li>
+    <li>积分区域是圆、扇形、圆环 —— 直角坐标限很繁琐。</li>
+    <li>被积函数中有 x²+y² 的整体函数如 √(x²+y²)、1/(x²+y²) 等。</li>
+  </ol>
+</div>
+
+<div class="self-test">
+  </div><h3 id="s59341662"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>自测 · 15.4</h3><div class="kn-collapse-body">
+  <ol>
+    <li>∬<sub>D</sub> (x² + y²) dA，D 是单位圆盘 x²+y² ≤ 1。写出极坐标表达式并计算。</li>
+    <li>∬<sub>D</sub> √(x²+y²) dA，D 是圆环 1≤x²+y²≤4。答：∫₀²π ∫₁² r · r dr dθ = 2π · (8/3 − 1/3) = 14π/3。</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s28437983">15.6 曲面面积</h2>
+
+<h3 id="s14633458"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 从平面面积到曲面面积，多一个「拉伸因子」</h3><div class="kn-collapse-body">
+<p>一元函数曲线弧长公式是 ∫ √(1+[f']²) dx。到了二元，曲面 z = f(x,y) 的面积类似地多了一个根号下的偏导数平方和——本质是切平面微元的面积相对于底面积 dA 的拉伸比。</p>
+
+<div class="formula">
+  曲面面积 S = ∬<sub>D</sub> √[ 1 + (f<sub>x</sub>)² + (f<sub>y</sub>)² ] dA
+</div>
+<p>其中 D 是曲面在 xy 平面上的投影区域，f<sub>x</sub> = ∂f/∂x，f<sub>y</sub> = ∂f/∂y。</p>
+
+<div class="card">
+  </div><h3 id="s27744486"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>几何解释</h3><div class="kn-collapse-body">
+  <p>曲面上一个小面片的面积 ≈ 切平面上对应平行四边形的面积。该平行四边形的边向量是 ⟨Δx, 0, f<sub>x</sub>Δx⟩ 和 ⟨0, Δy, f<sub>y</sub>Δy⟩，其叉积的模为 √[1 + (f<sub>x</sub>)² + (f<sub>y</sub>)²] Δx Δy。取极限 → 上述积分。</p>
+</div>
+
+<div class="tip-box">
+  <strong>选择积分坐标的要点：</strong> 曲面面积的计算本质上是一个二重积分问题。选择直角坐标还是极坐标，取决于<strong>投影区域 D</strong> 的形状和<strong>被积表达式</strong> √[1+(f<sub>x</sub>)²+(f<sub>y</sub>)²] 的复杂度。如果曲面关于 z 轴有旋转对称性，极坐标往往更合适。
+</div>
+
+<div class="warn-box">
+  <strong>易错提醒：</strong> 不要混淆曲面面积和曲面积分（第16章）。这里计算的只是 <strong>曲面的几何面积</strong>，不涉及向量场。另外，如果曲面是参数方程给出的，需要用参数形式面积公式；本章重点在显式 z = f(x,y) 的情形。
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s89148112">15.7 三重积分（直角坐标）</h2>
+
+<h3 id="s67563476"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 再加一维，从面积到体积，从平面区域到立体</h3><div class="kn-collapse-body">
+<p>三重积分的思路和二重完全一致：把立体区域切成小长方体 → 黎曼和取极限 → Fubini 定理拆成三次一维积分。直角坐标下 dV = dx dy dz。</p>
+
+<div class="formula">
+  ∭<sub>E</sub> f(x,y,z) dV = ∫<sub>a</sub><sup>b</sup> ∫<sub>g₁(x)</sub><sup>g₂(x)</sup> ∫<sub>u₁(x,y)</sub><sup>u₂(x,y)</sup> f(x,y,z) dz dy dx
+</div>
+<p>体积的特殊情况：当 f(x,y,z) = 1 时，三重积分就是立体区域的体积。</p>
+
+<div class="card">
+  </div><h3 id="s92132099"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>六种积分次序</h3><div class="kn-collapse-body">
+  <p>三重积分有 3! = 6 种可能的积分次序（dz dy dx, dz dx dy, dy dz dx, dy dx dz, dx dy dz, dx dz dy）。选择原则：</p>
+  <ol>
+    <li><strong>内层：</strong>放最容易积的变量，或积分限最简洁的变量。</li>
+    <li><strong>中层：</strong>用消去内层变量后的剩余变量之一来描述。</li>
+    <li><strong>外层：</strong>积分限必须是常数。</li>
+  </ol>
+</div>
+
+<div class="tip-box">
+  <strong>积分次序决策流程：</strong><br>
+  步骤1：画出立体区域（至少想象 z 的范围）→ "底面 + 顶面" 或 "后面 + 前面"。<br>
+  步骤2：确定投影区域 D（通常是 xy 平面的投影）。<br>
+  步骤3：z 方向从底面 z = u₁(x,y) 到顶面 z = u₂(x,y) 先积。<br>
+  步骤4：投影区域 D 按 15.3 的二重积分方式处理。
+</div>
+
+<table>
+  <tr><th>区域类型</th><th>描述方式</th><th>推荐次序</th></tr>
+  <tr><td>z 方向简单夹</td><td>z₁(x,y) ≤ z ≤ z₂(x,y)</td><td>先 z，再 xy</td></tr>
+  <tr><td>y 方向简单夹</td><td>y₁(x,z) ≤ y ≤ y₂(x,z)</td><td>先 y，再 xz</td></tr>
+  <tr><td>x 方向简单夹</td><td>x₁(y,z) ≤ x ≤ x₂(y,z)</td><td>先 x，再 yz</td></tr>
+</table>
+
+<div class="warn-box">
+  <strong>易错提醒：</strong> 三重积分换序比二重复杂得多。每种次序需要重新审视三维区域的「边界投影」——建议保持 z 最内层，然后在 xy 投影上做二重积分。
+</div>
+
+<div class="self-test">
+  </div><h3 id="s58825174"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>自测 · 15.7</h3><div class="kn-collapse-body">
+  <ol>
+    <li>用三重积分求四面体体积：x≥0, y≥0, z≥0, x+y+z≤1。</li>
+    <li>对上述区域写出 dz dy dx 形式的累次积分限。</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s90542373">15.8 柱坐标</h2>
+
+<h3 id="s43949488"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 极坐标 + z 轴不变 = 柱坐标</h3><div class="kn-collapse-body">
+<p>柱坐标是极坐标的自然三维推广：把 (x,y) 换成 (r,θ)，z 保持不变。专门对付「旋转体」——绕 z 轴有对称性的立体。</p>
+
+<div class="card">
+  </div><h3 id="s70762056"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>坐标变换</h3><div class="kn-collapse-body">
+  <div class="equation-row">
+    <div class="formula" style="flex:1;">
+      x = r cos θ<br>
+      y = r sin θ<br>
+      z = z
+    </div>
+    <div class="formula" style="flex:1;">
+      dV = <strong>r</strong> dz dr dθ<br>
+      x² + y² = r²
+    </div>
+  </div>
+  <div class="formula">
+    ∭<sub>E</sub> f(x,y,z) dV = ∫<sub>α</sub><sup>β</sup> ∫<sub>r₁(θ)</sub><sup>r₂(θ)</sup> ∫<sub>z₁(r,θ)</sub><sup>z₂(r,θ)</sup> f(r cos θ, r sin θ, z) · <strong>r</strong> dz dr dθ
+  </div>
+</div>
+
+<div class="tip-box">
+  <strong>什么时候用柱坐标？</strong>
+  <ol>
+    <li>立体区域是<strong>绕 z 轴的旋转体</strong>（圆柱、圆锥、旋转抛物面）。</li>
+    <li>被积函数中含 x²+y² 且 z 的表达相对简单。</li>
+    <li>投影区域是圆/扇形/圆环——这往往是决定性的标志。</li>
+  </ol>
+</div>
+
+<table>
+  <tr><th>立体区域</th><th>柱坐标描述</th></tr>
+  <tr><td>圆柱 x²+y² ≤ R², 0≤z≤H</td><td>0≤r≤R, 0≤θ≤2π, 0≤z≤H</td></tr>
+  <tr><td>圆柱壳 R₁²≤x²+y²≤R₂², 0≤z≤H</td><td>R₁≤r≤R₂, 0≤θ≤2π, 0≤z≤H</td></tr>
+  <tr><td>锥体 z = √(x²+y²), 0≤z≤H</td><td>z≤r≤H? 或 0≤r≤z≤H——需画图确定</td></tr>
+  <tr><td>旋转抛物面 z = x²+y², 0≤z≤H</td><td>0≤r≤√H, 0≤θ≤2π, r²≤z≤H</td></tr>
+</table>
+
+<div class="warn-box">
+  <strong>易错提醒：</strong> 柱坐标下的体积元还是 <strong>r dz dr dθ</strong>（或 r dr dz dθ 取决于次序），和极坐标一样不要漏 r。积分次序常见 dz dr dθ（先 z）、dr dz dθ（先 r）、或 dθ 最外层不动。
+</div>
+
+<div class="self-test">
+  </div><h3 id="s79884412"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>自测 · 15.8</h3><div class="kn-collapse-body">
+  <ol>
+    <li>用柱坐标求 ∭<sub>E</sub> z dV，E 是圆柱 x²+y² ≤ 4，0 ≤ z ≤ 3。</li>
+    <li>用柱坐标求旋转抛物面 z = x²+y² 下方、平面 z = 4 上方的立体体积。</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s22010426">15.9 球坐标</h2>
+
+<h3 id="s44873892"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>叙事弧 —— 球对称时柱坐标也不够用，球坐标登场</h3><div class="kn-collapse-body">
+<p>球坐标用三个新变量描述空间点：ρ（到原点的距离）、φ（从 z 轴正方向量的角度，余纬度）、θ（在 xy 平面上的方位角，同极坐标的 θ）。适合球体、球壳、锥体等有球对称性的区域。</p>
+
+<div class="card">
+  </div><h3 id="s70762056"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>坐标变换</h3><div class="kn-collapse-body">
+  <div class="formula">
+    x = ρ sin φ cos θ<br>
+    y = ρ sin φ sin θ<br>
+    z = ρ cos φ<br>
+    <br>
+    x² + y² + z² = ρ²<br>
+    dV = <strong>ρ² sin φ</strong> dρ dφ dθ
+  </div>
+  <p><span class="tag">范围</span> ρ ≥ 0，0 ≤ φ ≤ π（注意 φ 是 0 到 π，不是 2π），0 ≤ θ ≤ 2π。</p>
+</div>
+
+<div class="warn-box">
+  <strong>高频失分点（再次强调）：</strong> 球坐标的体积元是 <strong>ρ² sin φ dρ dφ dθ</strong>。ρ² 来自径向缩放，sin φ 来自 φ 方向的弧长收缩（φ 靠近 0 或 π 时纬线变短）。<strong>不要漏掉 sin φ！</strong>而且 φ 的积分范围是 [0, π]，不是 [0, 2π]。
+</div>
+
+<div class="tip-box">
+  <strong>什么时候用球坐标？</strong>
+  <ol>
+    <li>积分区域是<strong>球体或球壳</strong>（如 x²+y²+z² ≤ R²）。</li>
+    <li>被积函数中含 <strong>x²+y²+z²</strong> 的组合（如 √(x²+y²+z²) = ρ）。</li>
+    <li>区域由一个<strong>圆锥面和一个球面</strong>围成（常见题型：冰激凌锥体）。</li>
+  </ol>
+</div>
+
+<table>
+  <tr><th>区域</th><th>球坐标描述</th></tr>
+  <tr><td>球体 x²+y²+z² ≤ R²</td><td>0≤ρ≤R, 0≤φ≤π, 0≤θ≤2π</td></tr>
+  <tr><td>上半球体（z ≥ 0 部分）</td><td>0≤ρ≤R, 0≤φ≤π/2, 0≤θ≤2π</td></tr>
+  <tr><td>球壳 R₁²≤x²+y²+z²≤R₂²</td><td>R₁≤ρ≤R₂, 0≤φ≤π, 0≤θ≤2π</td></tr>
+  <tr><td>冰激凌锥：锥 φ=π/4 内 + 球 ρ≤R</td><td>0≤ρ≤R, 0≤φ≤π/4, 0≤θ≤2π</td></tr>
+</table>
+
+<div class="card">
+  </div><h3 id="s36125178"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>φ 的几何解释</h3><div class="kn-collapse-body">
+  <p>φ = 0 对应 z 轴正方向（北极），φ = π 对应 z 轴负方向（南极），φ = π/2 对应 xy 平面（赤道）。<strong>φ 越接近 0 或 π，sin φ 越小 → 面积微元越小。</strong>这就是为什么 dV 中要乘 sin φ。</p>
+</div>
+
+<div class="warn-box">
+  <strong>易错提醒 —— 柱坐标 vs 球坐标的选择：</strong><br>
+  不要看到 x²+y² 就条件反射用柱坐标。如果立体区域的「顶」也是曲面（如球面的一部分），球坐标可能更好。经验法则：对称轴是 z 轴 → 柱坐标；对称中心是原点 → 球坐标。
+</div>
+
+<div class="self-test">
+  </div><h3 id="s38782173"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>自测 · 15.9</h3><div class="kn-collapse-body">
+  <ol>
+    <li>用球坐标写出 ∭<sub>E</sub> (x²+y²+z²) dV，E 是单位球 x²+y²+z² ≤ 1。</li>
+    <li>"冰激凌锥体"：z ≥ √(x²+y²)（即 φ ≤ π/4）的上半部分，含于球 ρ ≤ 2。写出球坐标下的积分限。</li>
+    <li>问：如果把上半球面 z = √(1−x²−y²) 写成 φ 的方程，z≥0 对应 φ 的什么范围？</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============================================================ --></div>
+<h2 id="s34948917">综合对照表：坐标选择决策</h2>
+
+<table>
+  <tr><th>场景特征</th><th>推荐坐标</th><th>关键变换</th></tr>
+  <tr><td>矩形区域、三角形等直线边界</td><td>直角坐标</td><td>—</td></tr>
+  <tr><td>含 x²+y² + 圆/扇形区域</td><td>极坐标（二重）</td><td>dA = r dr dθ</td></tr>
+  <tr><td>绕 z 轴旋转体（圆柱/抛物面/锥）</td><td>柱坐标（三重）</td><td>dV = r dz dr dθ</td></tr>
+  <tr><td>球体、原点对称（含 x²+y²+z²）</td><td>球坐标（三重）</td><td>dV = ρ² sin φ dρ dφ dθ</td></tr>
+  <tr><td>曲面 z=f(x,y) 的面积</td><td>取决于投影 D</td><td>dS = √[1+f<sub>x</sub>²+f<sub>y</sub>²] dA</td></tr>
+</table>
+
+<hr>
+
+<!-- ============================================================ -->
+<h2 id="s26744123">章节总结 · 自测清单</h2>
+
+<div class="self-test">
+  <ol>
+    <li><strong>二重积分定义</strong> —— 能否用黎曼和解释 ∬ f dA？</li>
+    <li><strong>Fubini 定理</strong> —— 矩形区域下两种次序都写一遍，结果是否相等？</li>
+    <li><strong>I 型 vs II 型</strong> —— 给定区域 D，能否分别用两种类型正确写出累次积分限？</li>
+    <li><strong>换序</strong> —— 是否必须先画图再重写积分限？</li>
+    <li><strong>极坐标</strong> —— dA = r dr dθ，r 是否每次都没漏？</li>
+    <li><strong>曲面面积</strong> —— 公式中 f<sub>x</sub>²+f<sub>y</sub>² 是否先算偏导数再平方？</li>
+    <li><strong>三重积分</strong> —— 能否正确描述三维区域的边界（z₁≤z≤z₂ + xy 投影）？</li>
+    <li><strong>柱坐标</strong> —— dV = r dz dr dθ，r 是否每次都乘上？</li>
+    <li><strong>球坐标</strong> —— dV = ρ² sin φ dρ dφ dθ，sin φ 是否记得写？φ 范围是 [0,π] 是否确认？</li>
+    <li><strong>坐标选择</strong> —— 看到题目能否在 3 秒内判断应该用什么坐标？</li>
+  </ol>
+</div>
+
+</div></div><aside class="kn-rail"><div class="kn-rail-title">📑 原始幻灯片对照</div><div class="slide-card" id="slide-p15.1-15.2-1" data-page="15.1-15.2-1"><div class="slide-card-label">15.1-15.2 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p001.jpg" alt="15.1-15.2 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">CH15 Multiple Integrals<br>15.1 Double integrals over rectangles</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-2" data-page="15.1-15.2-2"><div class="slide-card-label">15.1-15.2 · 第2页</div><img class="slide-img" width="900" height="561" src="slides/ch15_p002.jpg" alt="15.1-15.2 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Review of definite integral</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-3" data-page="15.1-15.2-3"><div class="slide-card-label">15.1-15.2 · 第3页</div><img class="slide-img" width="900" height="685" src="slides/ch15_p003.jpg" alt="15.1-15.2 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals(二重积分)</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-4" data-page="15.1-15.2-4"><div class="slide-card-label">15.1-15.2 · 第4页</div><img class="slide-img" width="900" height="536" src="slides/ch15_p004.jpg" alt="15.1-15.2 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-5" data-page="15.1-15.2-5"><div class="slide-card-label">15.1-15.2 · 第5页</div><img class="slide-img" width="900" height="724" src="slides/ch15_p005.jpg" alt="15.1-15.2 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-6" data-page="15.1-15.2-6"><div class="slide-card-label">15.1-15.2 · 第6页</div><img class="slide-img" width="900" height="648" src="slides/ch15_p006.jpg" alt="15.1-15.2 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-7" data-page="15.1-15.2-7"><div class="slide-card-label">15.1-15.2 · 第7页</div><img class="slide-img" width="900" height="234" src="slides/ch15_p007.jpg" alt="15.1-15.2 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-8" data-page="15.1-15.2-8"><div class="slide-card-label">15.1-15.2 · 第8页</div><img class="slide-img" width="900" height="231" src="slides/ch15_p008.jpg" alt="15.1-15.2 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-9" data-page="15.1-15.2-9"><div class="slide-card-label">15.1-15.2 · 第9页</div><img class="slide-img" width="900" height="131" src="slides/ch15_p009.jpg" alt="15.1-15.2 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-10" data-page="15.1-15.2-10"><div class="slide-card-label">15.1-15.2 · 第10页</div><img class="slide-img" width="900" height="131" src="slides/ch15_p009.jpg" alt="15.1-15.2 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-11" data-page="15.1-15.2-11"><div class="slide-card-label">15.1-15.2 · 第11页</div><img class="slide-img" width="900" height="131" src="slides/ch15_p009.jpg" alt="15.1-15.2 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-12" data-page="15.1-15.2-12"><div class="slide-card-label">15.1-15.2 · 第12页</div><img class="slide-img" width="900" height="145" src="slides/ch15_p012.jpg" alt="15.1-15.2 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-13" data-page="15.1-15.2-13"><div class="slide-card-label">15.1-15.2 · 第13页</div><img class="slide-img" width="900" height="215" src="slides/ch15_p013.jpg" alt="15.1-15.2 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Midpoint rule</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-14" data-page="15.1-15.2-14"><div class="slide-card-label">15.1-15.2 · 第14页</div><img class="slide-img" width="900" height="543" src="slides/ch15_p014.jpg" alt="15.1-15.2 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Midpoint rule</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-15" data-page="15.1-15.2-15"><div class="slide-card-label">15.1-15.2 · 第15页</div><img class="slide-img" width="900" height="569" src="slides/ch15_p015.jpg" alt="15.1-15.2 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Average value</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-16" data-page="15.1-15.2-16"><div class="slide-card-label">15.1-15.2 · 第16页</div><img class="slide-img" width="900" height="569" src="slides/ch15_p015.jpg" alt="15.1-15.2 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Average value</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-17" data-page="15.1-15.2-17"><div class="slide-card-label">15.1-15.2 · 第17页</div><img class="slide-img" width="900" height="128" src="slides/ch15_p017.jpg" alt="15.1-15.2 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Average value</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-18" data-page="15.1-15.2-18"><div class="slide-card-label">15.1-15.2 · 第18页</div><img class="slide-img" width="566" height="456" src="slides/ch15_p018.jpg" alt="15.1-15.2 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Average value</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-20" data-page="15.1-15.2-20"><div class="slide-card-label">15.1-15.2 · 第20页</div><img class="slide-img" width="900" height="420" src="slides/ch15_p019.jpg" alt="15.1-15.2 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Properties of double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-21" data-page="15.1-15.2-21"><div class="slide-card-label">15.1-15.2 · 第21页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p020.jpg" alt="15.1-15.2 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.2 Iterated integrals<br>逐次积分</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-22" data-page="15.1-15.2-22"><div class="slide-card-label">15.1-15.2 · 第22页</div><img class="slide-img" width="900" height="656" src="slides/ch15_p021.jpg" alt="15.1-15.2 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-24" data-page="15.1-15.2-24"><div class="slide-card-label">15.1-15.2 · 第24页</div><img class="slide-img" width="900" height="260" src="slides/ch15_p022.jpg" alt="15.1-15.2 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-25" data-page="15.1-15.2-25"><div class="slide-card-label">15.1-15.2 · 第25页</div><img class="slide-img" width="900" height="122" src="slides/ch15_p023.jpg" alt="15.1-15.2 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-27" data-page="15.1-15.2-27"><div class="slide-card-label">15.1-15.2 · 第27页</div><img class="slide-img" width="900" height="73" src="slides/ch15_p024.jpg" alt="15.1-15.2 · 第27页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-33" data-page="15.1-15.2-33"><div class="slide-card-label">15.1-15.2 · 第33页</div><img class="slide-img" width="900" height="53" src="slides/ch15_p025.jpg" alt="15.1-15.2 · 第33页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals<br>注意选择积分顺序，会使积分更加简单</div></details></div>
+<div class="slide-card" id="slide-p15.1-15.2-35" data-page="15.1-15.2-35"><div class="slide-card-label">15.1-15.2 · 第35页</div><img class="slide-img" width="900" height="624" src="slides/ch15_p026.jpg" alt="15.1-15.2 · 第35页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Iterated integrals</div></details></div>
+<div class="slide-card" id="slide-p15.3-1" data-page="15.3-1"><div class="slide-card-label">15.3 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p001.jpg" alt="15.3 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.3 Double integrals over general regions</div></details></div>
+<div class="slide-card" id="slide-p15.3-2" data-page="15.3-2"><div class="slide-card-label">15.3 · 第2页</div><img class="slide-img" width="900" height="673" src="slides/ch15_p028.jpg" alt="15.3 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-3" data-page="15.3-3"><div class="slide-card-label">15.3 · 第3页</div><img class="slide-img" width="900" height="573" src="slides/ch15_p029.jpg" alt="15.3 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-4" data-page="15.3-4"><div class="slide-card-label">15.3 · 第4页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p030.jpg" alt="15.3 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-5" data-page="15.3-5"><div class="slide-card-label">15.3 · 第5页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p031.jpg" alt="15.3 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-6" data-page="15.3-6"><div class="slide-card-label">15.3 · 第6页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p032.jpg" alt="15.3 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-7" data-page="15.3-7"><div class="slide-card-label">15.3 · 第7页</div><img class="slide-img" width="556" height="291" src="slides/ch15_p033.jpg" alt="15.3 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-8" data-page="15.3-8"><div class="slide-card-label">15.3 · 第8页</div><img class="slide-img" width="556" height="291" src="slides/ch15_p033.jpg" alt="15.3 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-9" data-page="15.3-9"><div class="slide-card-label">15.3 · 第9页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p035.jpg" alt="15.3 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">If the limits of integration are functions, it should be integrated at first. (积分上下限为函数的要先积)<br>The limits of integration of the final step must be constants. (后积的上下限必为常数)</div></details></div>
+<div class="slide-card" id="slide-p15.3-10" data-page="15.3-10"><div class="slide-card-label">15.3 · 第10页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p036.jpg" alt="15.3 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Type I:<br>Type II:</div></details></div>
+<div class="slide-card" id="slide-p15.3-11" data-page="15.3-11"><div class="slide-card-label">15.3 · 第11页</div><img class="slide-img" width="900" height="85" src="slides/ch15_p037.jpg" alt="15.3 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-12" data-page="15.3-12"><div class="slide-card-label">15.3 · 第12页</div><img class="slide-img" width="900" height="85" src="slides/ch15_p037.jpg" alt="15.3 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-13" data-page="15.3-13"><div class="slide-card-label">15.3 · 第13页</div><img class="slide-img" width="900" height="85" src="slides/ch15_p037.jpg" alt="15.3 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-14" data-page="15.3-14"><div class="slide-card-label">15.3 · 第14页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p040.jpg" alt="15.3 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Sol I:  Step1. sketch the region at first,<br>Step3. choose type I region for the double integration<br>Step4. write down the double integration</div></details></div>
+<div class="slide-card" id="slide-p15.3-15" data-page="15.3-15"><div class="slide-card-label">15.3 · 第15页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p040.jpg" alt="15.3 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Sol I:</div></details></div>
+<div class="slide-card" id="slide-p15.3-16" data-page="15.3-16"><div class="slide-card-label">15.3 · 第16页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p040.jpg" alt="15.3 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Sol II:<br>choose type II region for the double integration</div></details></div>
+<div class="slide-card" id="slide-p15.3-17" data-page="15.3-17"><div class="slide-card-label">15.3 · 第17页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p040.jpg" alt="15.3 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-18" data-page="15.3-18"><div class="slide-card-label">15.3 · 第18页</div><img class="slide-img" width="900" height="63" src="slides/ch15_p044.jpg" alt="15.3 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Sol I:  Step1. sketch the region at first,<br>Step3. choose type II region for the double integration<br>Step4. write down the double integration</div></details></div>
+<div class="slide-card" id="slide-p15.3-20" data-page="15.3-20"><div class="slide-card-label">15.3 · 第20页</div><img class="slide-img" width="900" height="63" src="slides/ch15_p044.jpg" alt="15.3 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Sol II:  Type I</div></details></div>
+<div class="slide-card" id="slide-p15.3-21" data-page="15.3-21"><div class="slide-card-label">15.3 · 第21页</div><img class="slide-img" width="900" height="63" src="slides/ch15_p044.jpg" alt="15.3 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-22" data-page="15.3-22"><div class="slide-card-label">15.3 · 第22页</div><img class="slide-img" width="900" height="63" src="slides/ch15_p044.jpg" alt="15.3 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.3-24" data-page="15.3-24"><div class="slide-card-label">15.3 · 第24页</div><img class="slide-img" width="900" height="67" src="slides/ch15_p048.jpg" alt="15.3 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Type I:</div></details></div>
+<div class="slide-card" id="slide-p15.3-25" data-page="15.3-25"><div class="slide-card-label">15.3 · 第25页</div><img class="slide-img" width="900" height="67" src="slides/ch15_p048.jpg" alt="15.3 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Type II:</div></details></div>
+<div class="slide-card" id="slide-p15.3-27" data-page="15.3-27"><div class="slide-card-label">15.3 · 第27页</div><img class="slide-img" width="900" height="63" src="slides/ch15_p050.jpg" alt="15.3 · 第27页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-1" data-page="15.4-1"><div class="slide-card-label">15.4 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p001.jpg" alt="15.4 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.4 Double integrals in polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.4-2" data-page="15.4-2"><div class="slide-card-label">15.4 · 第2页</div><img class="slide-img" width="900" height="633" src="slides/ch15_p052.jpg" alt="15.4 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-3" data-page="15.4-3"><div class="slide-card-label">15.4 · 第3页</div><img class="slide-img" width="900" height="679" src="slides/ch15_p053.jpg" alt="15.4 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-4" data-page="15.4-4"><div class="slide-card-label">15.4 · 第4页</div><img class="slide-img" width="900" height="913" src="slides/ch15_p054.jpg" alt="15.4 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-5" data-page="15.4-5"><div class="slide-card-label">15.4 · 第5页</div><img class="slide-img" width="900" height="679" src="slides/ch15_p053.jpg" alt="15.4 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-6" data-page="15.4-6"><div class="slide-card-label">15.4 · 第6页</div><img class="slide-img" width="900" height="680" src="slides/ch15_p056.jpg" alt="15.4 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-7" data-page="15.4-7"><div class="slide-card-label">15.4 · 第7页</div><img class="slide-img" width="900" height="679" src="slides/ch15_p053.jpg" alt="15.4 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>复习10.4</div></details></div>
+<div class="slide-card" id="slide-p15.4-8" data-page="15.4-8"><div class="slide-card-label">15.4 · 第8页</div><img class="slide-img" width="900" height="339" src="slides/ch15_p058.jpg" alt="15.4 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar “rectangle”<br>The limits of integration are constants</div></details></div>
+<div class="slide-card" id="slide-p15.4-9" data-page="15.4-9"><div class="slide-card-label">15.4 · 第9页</div><img class="slide-img" width="900" height="452" src="slides/ch15_p059.jpg" alt="15.4 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar “rectangle”<br>区域R与10.4中的有什么区别？</div></details></div>
+<div class="slide-card" id="slide-p15.4-10" data-page="15.4-10"><div class="slide-card-label">15.4 · 第10页</div><img class="slide-img" width="900" height="452" src="slides/ch15_p059.jpg" alt="15.4 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar “rectangle”</div></details></div>
+<div class="slide-card" id="slide-p15.4-11" data-page="15.4-11"><div class="slide-card-label">15.4 · 第11页</div><img class="slide-img" width="900" height="685" src="slides/ch15_p061.jpg" alt="15.4 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar “rectangle”</div></details></div>
+<div class="slide-card" id="slide-p15.4-12" data-page="15.4-12"><div class="slide-card-label">15.4 · 第12页</div><img class="slide-img" width="900" height="189" src="slides/ch15_p062.jpg" alt="15.4 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar “rectangle”</div></details></div>
+<div class="slide-card" id="slide-p15.4-13" data-page="15.4-13"><div class="slide-card-label">15.4 · 第13页</div><img class="slide-img" width="900" height="69" src="slides/ch15_p063.jpg" alt="15.4 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-14" data-page="15.4-14"><div class="slide-card-label">15.4 · 第14页</div><img class="slide-img" width="900" height="69" src="slides/ch15_p063.jpg" alt="15.4 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-15" data-page="15.4-15"><div class="slide-card-label">15.4 · 第15页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p065.jpg" alt="15.4 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-16" data-page="15.4-16"><div class="slide-card-label">15.4 · 第16页</div><img class="slide-img" width="900" height="74" src="slides/ch15_p065.jpg" alt="15.4 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-17" data-page="15.4-17"><div class="slide-card-label">15.4 · 第17页</div><img class="slide-img" width="900" height="804" src="slides/ch15_p067.jpg" alt="15.4 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p15.4-18" data-page="15.4-18"><div class="slide-card-label">15.4 · 第18页</div><img class="slide-img" width="900" height="804" src="slides/ch15_p067.jpg" alt="15.4 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p15.4-20" data-page="15.4-20"><div class="slide-card-label">15.4 · 第20页</div><img class="slide-img" width="900" height="70" src="slides/ch15_p069.jpg" alt="15.4 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">一重积分怎么求解的？</div></details></div>
+<div class="slide-card" id="slide-p15.4-21" data-page="15.4-21"><div class="slide-card-label">15.4 · 第21页</div><img class="slide-img" width="900" height="318" src="slides/ch15_p070.jpg" alt="15.4 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p15.4-22" data-page="15.4-22"><div class="slide-card-label">15.4 · 第22页</div><img class="slide-img" width="900" height="71" src="slides/ch15_p071.jpg" alt="15.4 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.4-24" data-page="15.4-24"><div class="slide-card-label">15.4 · 第24页</div><img class="slide-img" width="900" height="71" src="slides/ch15_p071.jpg" alt="15.4 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"></div>
+<div class="slide-card" id="slide-p15.6-15.7-1" data-page="15.6-15.7-1"><div class="slide-card-label">15.6-15.7 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p001.jpg" alt="15.6-15.7 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.6 Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-2" data-page="15.6-15.7-2"><div class="slide-card-label">15.6-15.7 · 第2页</div><img class="slide-img" width="900" height="948" src="slides/ch15_p074.jpg" alt="15.6-15.7 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-3" data-page="15.6-15.7-3"><div class="slide-card-label">15.6-15.7 · 第3页</div><img class="slide-img" width="681" height="141" src="slides/ch15_p075.jpg" alt="15.6-15.7 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-4" data-page="15.6-15.7-4"><div class="slide-card-label">15.6-15.7 · 第4页</div><img class="slide-img" width="900" height="554" src="slides/ch15_p076.jpg" alt="15.6-15.7 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-5" data-page="15.6-15.7-5"><div class="slide-card-label">15.6-15.7 · 第5页</div><img class="slide-img" width="900" height="322" src="slides/ch15_p077.jpg" alt="15.6-15.7 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-6" data-page="15.6-15.7-6"><div class="slide-card-label">15.6-15.7 · 第6页</div><img class="slide-img" width="900" height="484" src="slides/ch15_p078.jpg" alt="15.6-15.7 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-7" data-page="15.6-15.7-7"><div class="slide-card-label">15.6-15.7 · 第7页</div><img class="slide-img" width="900" height="323" src="slides/ch15_p079.jpg" alt="15.6-15.7 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-8" data-page="15.6-15.7-8"><div class="slide-card-label">15.6-15.7 · 第8页</div><img class="slide-img" width="900" height="72" src="slides/ch15_p080.jpg" alt="15.6-15.7 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-9" data-page="15.6-15.7-9"><div class="slide-card-label">15.6-15.7 · 第9页</div><img class="slide-img" width="900" height="72" src="slides/ch15_p080.jpg" alt="15.6-15.7 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-10" data-page="15.6-15.7-10"><div class="slide-card-label">15.6-15.7 · 第10页</div><img class="slide-img" width="900" height="70" src="slides/ch15_p082.jpg" alt="15.6-15.7 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-11" data-page="15.6-15.7-11"><div class="slide-card-label">15.6-15.7 · 第11页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p083.jpg" alt="15.6-15.7 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.7 Triple integrals</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-12" data-page="15.6-15.7-12"><div class="slide-card-label">15.6-15.7 · 第12页</div><img class="slide-img" width="900" height="561" src="slides/ch15_p002.jpg" alt="15.6-15.7 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Review of definite integral</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-13" data-page="15.6-15.7-13"><div class="slide-card-label">15.6-15.7 · 第13页</div><img class="slide-img" width="900" height="685" src="slides/ch15_p003.jpg" alt="15.6-15.7 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals(二重积分)</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-14" data-page="15.6-15.7-14"><div class="slide-card-label">15.6-15.7 · 第14页</div><img class="slide-img" width="900" height="536" src="slides/ch15_p004.jpg" alt="15.6-15.7 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-15" data-page="15.6-15.7-15"><div class="slide-card-label">15.6-15.7 · 第15页</div><img class="slide-img" width="900" height="724" src="slides/ch15_p005.jpg" alt="15.6-15.7 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-16" data-page="15.6-15.7-16"><div class="slide-card-label">15.6-15.7 · 第16页</div><img class="slide-img" width="900" height="648" src="slides/ch15_p006.jpg" alt="15.6-15.7 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Double integrals</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-17" data-page="15.6-15.7-17"><div class="slide-card-label">15.6-15.7 · 第17页</div><img class="slide-img" width="900" height="557" src="slides/ch15_p089.jpg" alt="15.6-15.7 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals<br>三重积分有什么几何意义？</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-18" data-page="15.6-15.7-18"><div class="slide-card-label">15.6-15.7 · 第18页</div><img class="slide-img" width="900" height="176" src="slides/ch15_p090.jpg" alt="15.6-15.7 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals<br>The iterated integrals: the value of integration is independent of the order. （积分值与积分顺序无关）</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-20" data-page="15.6-15.7-20"><div class="slide-card-label">15.6-15.7 · 第20页</div><img class="slide-img" width="900" height="658" src="slides/ch15_p091.jpg" alt="15.6-15.7 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">区域D的类型有几种？怎么积分？<br>参考15.3节PPT</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-21" data-page="15.6-15.7-21"><div class="slide-card-label">15.6-15.7 · 第21页</div><img class="slide-img" width="369" height="392" src="slides/ch15_p092.jpg" alt="15.6-15.7 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">对于区域D，先积y，再积x</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-22" data-page="15.6-15.7-22"><div class="slide-card-label">15.6-15.7 · 第22页</div><img class="slide-img" width="484" height="564" src="slides/ch15_p093.jpg" alt="15.6-15.7 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">对于区域D，先积x，再积y</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-24" data-page="15.6-15.7-24"><div class="slide-card-label">15.6-15.7 · 第24页</div><img class="slide-img" width="900" height="161" src="slides/ch15_p094.jpg" alt="15.6-15.7 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">对于区域D，仍然有两种积法</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-25" data-page="15.6-15.7-25"><div class="slide-card-label">15.6-15.7 · 第25页</div><img class="slide-img" width="900" height="80" src="slides/ch15_p095.jpg" alt="15.6-15.7 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals<br>Choose Type 1<br>四面体</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-27" data-page="15.6-15.7-27"><div class="slide-card-label">15.6-15.7 · 第27页</div><img class="slide-img" width="900" height="659" src="slides/ch15_p096.jpg" alt="15.6-15.7 · 第27页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals<br>Choose Type 3</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-33" data-page="15.6-15.7-33"><div class="slide-card-label">15.6-15.7 · 第33页</div><img class="slide-img" width="900" height="130" src="slides/ch15_p097.jpg" alt="15.6-15.7 · 第33页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Applications of triple integrals</div></details></div>
+<div class="slide-card" id="slide-p15.6-15.7-35" data-page="15.6-15.7-35"><div class="slide-card-label">15.6-15.7 · 第35页</div><img class="slide-img" width="900" height="695" src="slides/ch15_p098.jpg" alt="15.6-15.7 · 第35页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Exercise:</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-1" data-page="15.8-15.9-1"><div class="slide-card-label">15.8-15.9 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p001.jpg" alt="15.8-15.9 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.8 Triple integrals in cylindrical coordinates(柱坐标)</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-2" data-page="15.8-15.9-2"><div class="slide-card-label">15.8-15.9 · 第2页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p100.jpg" alt="15.8-15.9 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Cartesian coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-3" data-page="15.8-15.9-3"><div class="slide-card-label">15.8-15.9 · 第3页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p101.jpg" alt="15.8-15.9 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-4" data-page="15.8-15.9-4"><div class="slide-card-label">15.8-15.9 · 第4页</div><img class="slide-img" width="900" height="751" src="slides/ch15_p102.jpg" alt="15.8-15.9 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-5" data-page="15.8-15.9-5"><div class="slide-card-label">15.8-15.9 · 第5页</div><img class="slide-img" width="900" height="751" src="slides/ch15_p102.jpg" alt="15.8-15.9 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-6" data-page="15.8-15.9-6"><div class="slide-card-label">15.8-15.9 · 第6页</div><img class="slide-img" width="900" height="132" src="slides/ch15_p104.jpg" alt="15.8-15.9 · 第6页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-7" data-page="15.8-15.9-7"><div class="slide-card-label">15.8-15.9 · 第7页</div><img class="slide-img" width="900" height="132" src="slides/ch15_p104.jpg" alt="15.8-15.9 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-8" data-page="15.8-15.9-8"><div class="slide-card-label">15.8-15.9 · 第8页</div><img class="slide-img" width="900" height="159" src="slides/ch15_p106.jpg" alt="15.8-15.9 · 第8页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-9" data-page="15.8-15.9-9"><div class="slide-card-label">15.8-15.9 · 第9页</div><img class="slide-img" width="900" height="94" src="slides/ch15_p107.jpg" alt="15.8-15.9 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-10" data-page="15.8-15.9-10"><div class="slide-card-label">15.8-15.9 · 第10页</div><img class="slide-img" width="900" height="102" src="slides/ch15_p108.jpg" alt="15.8-15.9 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates<br>mass:</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-11" data-page="15.8-15.9-11"><div class="slide-card-label">15.8-15.9 · 第11页</div><img class="slide-img" width="900" height="102" src="slides/ch15_p108.jpg" alt="15.8-15.9 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-12" data-page="15.8-15.9-12"><div class="slide-card-label">15.8-15.9 · 第12页</div><img class="slide-img" width="900" height="83" src="slides/ch15_p110.jpg" alt="15.8-15.9 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-13" data-page="15.8-15.9-13"><div class="slide-card-label">15.8-15.9 · 第13页</div><img class="slide-img" width="900" height="83" src="slides/ch15_p110.jpg" alt="15.8-15.9 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with cylindrical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-14" data-page="15.8-15.9-14"><div class="slide-card-label">15.8-15.9 · 第14页</div><img class="slide-img" width="900" height="675" src="slides/ch15_p112.jpg" alt="15.8-15.9 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">15.9 triple integrals in spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-15" data-page="15.8-15.9-15"><div class="slide-card-label">15.8-15.9 · 第15页</div><img class="slide-img" width="900" height="944" src="slides/ch15_p113.jpg" alt="15.8-15.9 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-16" data-page="15.8-15.9-16"><div class="slide-card-label">15.8-15.9 · 第16页</div><img class="slide-img" width="900" height="895" src="slides/ch15_p114.jpg" alt="15.8-15.9 · 第16页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-17" data-page="15.8-15.9-17"><div class="slide-card-label">15.8-15.9 · 第17页</div><img class="slide-img" width="619" height="763" src="slides/ch15_p115.jpg" alt="15.8-15.9 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-18" data-page="15.8-15.9-18"><div class="slide-card-label">15.8-15.9 · 第18页</div><img class="slide-img" width="900" height="1017" src="slides/ch15_p116.jpg" alt="15.8-15.9 · 第18页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-20" data-page="15.8-15.9-20"><div class="slide-card-label">15.8-15.9 · 第20页</div><img class="slide-img" width="900" height="75" src="slides/ch15_p117.jpg" alt="15.8-15.9 · 第20页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-21" data-page="15.8-15.9-21"><div class="slide-card-label">15.8-15.9 · 第21页</div><img class="slide-img" width="746" height="329" src="slides/ch15_p118.jpg" alt="15.8-15.9 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-22" data-page="15.8-15.9-22"><div class="slide-card-label">15.8-15.9 · 第22页</div><img class="slide-img" width="746" height="329" src="slides/ch15_p118.jpg" alt="15.8-15.9 · 第22页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-24" data-page="15.8-15.9-24"><div class="slide-card-label">15.8-15.9 · 第24页</div><img class="slide-img" width="900" height="132" src="slides/ch15_p120.jpg" alt="15.8-15.9 · 第24页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-25" data-page="15.8-15.9-25"><div class="slide-card-label">15.8-15.9 · 第25页</div><img class="slide-img" width="900" height="132" src="slides/ch15_p120.jpg" alt="15.8-15.9 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with spherical coordinates</div></details></div>
+<div class="slide-card" id="slide-p15.8-15.9-27" data-page="15.8-15.9-27"><div class="slide-card-label">15.8-15.9 · 第27页</div><img class="slide-img" width="900" height="71" src="slides/ch15_p122.jpg" alt="15.8-15.9 · 第27页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Triple integrals with spherical coordinates</div></details></div></aside></div></div><div id="panel-test" class="tab-panel"><h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">共 10 题</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div></div>
+
+<script>
+window.__epaLightbox = function(src){
+  var lb = document.getElementById('epa-lightbox');
+  if(!lb){ lb = document.createElement('div'); lb.id='epa-lightbox';
+    lb.innerHTML='<img>'; document.body.appendChild(lb);
+    lb.addEventListener('click', function(){ lb.style.display='none'; }); }
+  lb.querySelector('img').src = src; lb.style.display='flex';
+};
+document.addEventListener('click', function(e){
+  var chip = e.target.closest('.pg-chip'); if(!chip) return;
+  var pg = chip.getAttribute('data-page');
+  var card = document.getElementById('slide-p'+pg);
+  if(card){ card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); }
+});
+// Shrink any display formula too wide for its column so it stays fully visible.
+window.__epaFitFormulas = function __epaFitFormulas(){
+  var list = document.querySelectorAll('.kn-main mjx-container[display="true"]');
+  for(var i=0;i<list.length;i++){
+    var m = list[i], parent = m.parentElement; if(!parent) continue;
+    m.style.fontSize=''; // reset to measure natural width
+    var avail = parent.clientWidth, w = m.scrollWidth;
+    if(avail>0 && w>avail){ m.style.fontSize=(avail/w*0.97*100).toFixed(1)+'%'; }
+  }
+}
+function __epaScheduleFit(){
+  if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(__epaFitFormulas);
+  } else { setTimeout(__epaFitFormulas, 900); }
+}
+if(document.readyState!=='loading'){ __epaScheduleFit(); }
+else { document.addEventListener('DOMContentLoaded', __epaScheduleFit); }
+var __epaFitT=null;
+window.addEventListener('resize', function(){ clearTimeout(__epaFitT); __epaFitT=setTimeout(__epaFitFormulas,200); });
+</script>
+<script>
+var Q = [{"id": 1, "type": "calc", "difficulty": "基础", "stem": "计算二重积分 ∬_R (2x + 3y) dA，其中 R = [1, 3] × [0, 2]。", "hint": "矩形区域，直接用 Fubini 定理拆成累次积分，次序任意。", "answer": "28", "solution": "∬_R (2x+3y) dA = ∫_1^3 ∫_0^2 (2x+3y) dy dx。先积 y：∫_0^2 (2x+3y) dy = [2xy + (3/2)y²]_0^2 = 4x + 6。再积 x：∫_1^3 (4x+6) dx = [2x²+6x]_1^3 = (18+18) − (2+6) = 36−8 = 28。……等等，验算：∫_1^3 4x dx = 2x²|_1^3 = 18−2 = 16；∫_1^3 6 dx = 12；合计 28。再用另一种次序验证：∫_0^2 ∫_1^3 (2x+3y) dx dy。先积 x：∫_1^3 (2x+3y) dx = [x²+3xy]_1^3 = (9+9y)−(1+3y) = 8+6y。再积 y：∫_0^2 (8+6y) dy = [8y+3y²]_0^2 = 16+12 = 28。答案 28。", "rubric": "正确写出累次积分限（2分），正确积分（2分），结果正确（1分）。共5分。"}, {"id": 2, "type": "calc", "difficulty": "中等", "stem": "交换下列积分的次序：∫_0^1 ∫_{x²}^{x} f(x,y) dy dx。并在答案中画出积分区域 D 的草图描述。", "hint": "画出 y=x² 和 y=x 在 0≤x≤1 范围内的图像。注意 y=x² 在 0≤x≤1 时位于 y=x 下方。然后用水平线贯穿确定 II 型的积分限。", "answer": "∫_0^1 ∫_{y}^{√y} f(x,y) dx dy", "solution": "区域 D = {(x,y) | 0≤x≤1, x²≤y≤x}。曲线 y=x 和 y=x² 的交点为 (0,0) 和 (1,1)。用水平线贯穿：固定 y∈[0,1]，由 y=x² 得 x=√y（取正值），由 y=x 得 x=y。由于在 0≤x≤1 时 x²≤y≤x 意味着 √y ≥ x ≥ y？不对——画图：抛物线 y=x² 在直线 y=x 下方（因为 x²≤x 当 0≤x≤1）。水平线从左边进入时先碰到 y=x² → x=√y？不对，从左到右，先碰到 x=y 还是 x=√y？当 0≤y≤1 时，√y ≥ y，所以水平线从左边进入时先碰 x=y（较小的 x），然后在 x=√y（较大的 x）处离开。因此 x 的范围是 y ≤ x ≤ √y。积分变为 ∫_0^1 ∫_y^{√y} f(x,y) dx dy。", "rubric": "正确画出区域（2分），正确写出变换后的积分限（2分），积分次序正确（1分）。共5分。"}, {"id": 3, "type": "calc", "difficulty": "中等", "stem": "利用极坐标计算 ∬_D (x² + y²) dA，其中 D 是由圆 x² + y² = 4 和 x² + y² = 9 所围成的圆环区域。", "hint": "圆环区域在极坐标下非常简洁：2 ≤ r ≤ 3，0 ≤ θ ≤ 2π。别忘了 dA = r dr dθ。", "answer": "65π/2", "solution": "令 x = r cos θ, y = r sin θ，则 x²+y² = r²，dA = r dr dθ。区域：2 ≤ r ≤ 3，0 ≤ θ ≤ 2π。∬_D (x²+y²) dA = ∫_0^{2π} ∫_2^3 r² · r dr dθ = ∫_0^{2π} dθ · ∫_2^3 r³ dr = 2π · [r⁴/4]_2^3 = 2π · (81/4 − 16/4) = 2π · (65/4) = 65π/2。", "rubric": "正确写出极坐标变换（含 r 因子）（2分），正确给出积分限（1分），计算正确（2分）。共5分。"}, {"id": 4, "type": "calc", "difficulty": "中等", "stem": "求曲面 z = 2x + 3y 在区域 D = [0,2] × [0,1] 上方的曲面面积。", "hint": "平面 f(x,y) = 2x+3y 的偏导数是常数。曲面面积公式中 √[1+(f_x)²+(f_y)²] 将变成一个常数因子。", "answer": "2√14", "solution": "f(x,y) = 2x+3y。f_x = 2，f_y = 3。√[1+(f_x)²+(f_y)²] = √[1+4+9] = √14。曲面面积 S = ∬_D √14 dA = √14 · Area(D) = √14 · (2×1) = 2√14。", "rubric": "正确计算偏导数（1分），正确写出曲面面积公式（1分），正确识别被积函数为常数并计算区域面积（2分），结果正确（1分）。共5分。"}, {"id": 5, "type": "calc", "difficulty": "中等", "stem": "计算三重积分 ∭_E x dV，其中 E 是由平面 x=0, y=0, z=0 和 x+y+z=1 围成的四面体区域。", "hint": "区域 E 位于第一卦限，x≥0, y≥0, z≥0 且 x+y+z≤1。先积 z（从 0 到 1−x−y），再在 xy 投影上做二重积分。", "answer": "1/24", "solution": "E = {(x,y,z) | x≥0, y≥0, z≥0, x+y+z≤1}。先 z：z 从 0 到 1−x−y。∭_E x dV = ∫_0^1 ∫_0^{1−x} ∫_0^{1−x−y} x dz dy dx。先积 z：∫_0^{1−x−y} x dz = x(1−x−y)。再积 y：∫_0^{1−x} x(1−x−y) dy = x[(1−x)y − y²/2]_0^{1−x} = x[(1−x)² − (1−x)²/2] = x·(1−x)²/2。再积 x：∫_0^1 (x·(1−x)²/2) dx = (1/2)∫_0^1 x(1−2x+x²) dx = (1/2)∫_0^1 (x − 2x² + x³) dx = (1/2)[x²/2 − 2x³/3 + x⁴/4]_0^1 = (1/2)(1/2 − 2/3 + 1/4) = (1/2)(6/12 − 8/12 + 3/12) = (1/2)(1/12) = 1/24。", "rubric": "正确描述积分区域（1分），正确写出三层积分限（2分），逐层积分正确（2分）。共5分。"}, {"id": 6, "type": "calc", "difficulty": "偏难", "stem": "区域 E 由抛物面 z = x² + y² 和平面 z = 4 围成。写出用直角坐标描述的三次积分 ∭_E f(x,y,z) dV 的一种形式（先 z，再 y，再 x），并说明 z 和 y 的积分限。", "hint": "这是一个倒扣的碗形区域。z 从抛物面（底面）到平面 z=4（顶面）。投影区域是圆盘 x²+y²≤4。", "answer": "∫_{-2}^{2} ∫_{-√(4-x²)}^{√(4-x²)} ∫_{x²+y²}^{4} f(x,y,z) dz dy dx", "solution": "抛物面 z=x²+y² 与平面 z=4 相交于圆 x²+y²=4。区域 E = {(x,y,z) | x²+y² ≤ z ≤ 4, (x,y) ∈ D}，其中 D 是圆盘 x²+y² ≤ 4。用直角坐标（先 z）：z 从 x²+y² 到 4。y 从 −√(4−x²) 到 √(4−x²)。x 从 −2 到 2。因此三次积分为 ∫_{-2}^{2} ∫_{-√(4-x²)}^{√(4-x²)} ∫_{x²+y²}^{4} f(x,y,z) dz dy dx。（注：此题更适合用柱坐标计算，但题目要求用直角坐标描述。）", "rubric": "正确找出 z 的边界（1分），正确写出 xy 投影区域（1分），正确写出 y 和 x 的积分限（2分），整体结构正确（1分）。共5分。"}, {"id": 7, "type": "calc", "difficulty": "中等", "stem": "利用柱坐标计算立体区域 E 的体积，其中 E 是圆柱面 x² + y² = 1 内部、平面 z = 0 上方、平面 z = 2 − y 下方的区域。", "hint": "柱坐标下 x²+y² = r²。z 从 0 到 2−y = 2−r sin θ。注意 z 的表达式含 y，需要在柱坐标下转换为 r sin θ。", "answer": "2π", "solution": "柱坐标：x = r cos θ, y = r sin θ, z = z, dV = r dz dr dθ。区域：0 ≤ r ≤ 1, 0 ≤ θ ≤ 2π, 0 ≤ z ≤ 2−r sin θ。由于 z ≥ 0，需要检查 2−r sin θ ≥ 0 是否始终成立：r ≤ 1，|sin θ| ≤ 1，所以 2−r sin θ ≥ 1 &gt; 0，没问题。体积 V = ∫_0^{2π} ∫_0^1 ∫_0^{2−r sin θ} r dz dr dθ = ∫_0^{2π} ∫_0^1 r(2−r sin θ) dr dθ = ∫_0^{2π} ∫_0^1 (2r − r² sin θ) dr dθ。先积 r：∫_0^1 2r dr = 1，∫_0^1 r² dr = 1/3。所以 = ∫_0^{2π} (1 − (1/3) sin θ) dθ = [θ + (1/3) cos θ]_0^{2π} = 2π + 0 − (0 + 1/3) + (0 + 1/3)? 等等重新算：∫_0^{2π} 1 dθ = 2π，∫_0^{2π} sin θ dθ = 0。所以 V = 2π·1 − (1/3)·0 = 2π。不对，再仔细算：∫_0^1 (2r − r² sin θ) dr = [r²]_0^1 − sin θ·[r³/3]_0^1 = 1 − (1/3) sin θ。∫_0^{2π} (1 − (1/3) sin θ) dθ = 2π − (1/3)·0 = 2π。所以 V = 2π。……等等，我重新核实原题：圆柱半径 1，顶面是 z=2−y。z=2−y 是一个倾斜平面，它的平均值在圆柱上应该是 2（因为 ∫ y dA 在圆上对称积分为 0）。所以体积应该是底面积 × 平均高度 = π·1² × 2 = 2π。答案 2π。", "rubric": "正确使用柱坐标（含 r 因子）（1分），正确写出积分限（2分），逐层积分正确（2分）。共5分。"}, {"id": 8, "type": "calc", "difficulty": "中等", "stem": "利用球坐标计算 ∭_E (x² + y² + z²) dV，其中 E 是球体 x² + y² + z² ≤ 4 的上半部分（z ≥ 0）。", "hint": "上半球对应 φ ∈ [0, π/2]。被积函数 x²+y²+z² = ρ²。别忘了 dV = ρ² sin φ dρ dφ dθ。", "answer": "64π/5", "solution": "球坐标：x²+y²+z² = ρ², dV = ρ² sin φ dρ dφ dθ。上半球：0 ≤ ρ ≤ 2, 0 ≤ φ ≤ π/2, 0 ≤ θ ≤ 2π。∭_E (x²+y²+z²) dV = ∫_0^{2π} ∫_0^{π/2} ∫_0^2 ρ² · ρ² sin φ dρ dφ dθ = ∫_0^{2π} dθ · ∫_0^{π/2} sin φ dφ · ∫_0^2 ρ⁴ dρ = 2π · [−cos φ]_0^{π/2} · [ρ⁵/5]_0^2 = 2π · (0−(−1)) · (32/5) = 2π · 1 · 32/5 = 64π/5。", "rubric": "正确使用球坐标变换（1分），正确写出积分限（特别 φ∈[0,π/2]）（1分），正确写出 dV（含 ρ² sin φ）（1分），逐层积分正确（2分）。共5分。"}, {"id": 9, "type": "short", "difficulty": "基础", "stem": "对以下每个积分区域，判断最合适的坐标系（直角/极坐标/柱坐标/球坐标），并简述理由：\n(1) ∬_D f(x,y) dA，D 是由 y = x², y = 4, x = 0 围成的区域。\n(2) ∭_E f(x,y,z) dV，E 是球体 x²+y²+z² ≤ 9 中满足 z ≥ √(x²+y²) 的部分。\n(3) ∬_D f(x,y) dA，D 是半圆环区域：1 ≤ x²+y² ≤ 4，y ≥ 0。\n(4) ∭_E f(x,y,z) dV，E 是旋转抛物面 z = x²+y² 下方、平面 z = 5 上方的立体。", "hint": "逐一分析被积函数和区域的对称性特征。", "answer": -1, "solution": "(1) D 由抛物线和直线围成，边界含 x=0（y 轴），更自然用直角坐标（I 型：0≤x≤2, x²≤y≤4）。\n(2) E 是球体的一部分（球面和锥面围成），具有球对称性，用球坐标：0≤ρ≤3, 0≤φ≤π/4, 0≤θ≤2π。\n(3) 半圆环区域，含 x²+y² 且区域是圆的扇区，用极坐标：1≤r≤2, 0≤θ≤π。\n(4) 旋转抛物面绕 z 轴对称，用柱坐标：0≤θ≤2π, 0≤r≤√5, r²≤z≤5。", "rubric": "每题选择正确（1分），理由合理（1分）。共8分。"}, {"id": 10, "type": "short", "difficulty": "基础", "stem": "将左侧的积分场景与右侧正确的体积/面积元素匹配（连线题，请用文字写出配对结果）：\n(A) 极坐标下的二重积分\n(B) 直角坐标下曲面 z=f(x,y) 的面积\n(C) 柱坐标下的三重积分\n(D) 球坐标下的三重积分\n\n(1) dV = ρ² sin φ dρ dφ dθ\n(2) dA = r dr dθ\n(3) dV = r dz dr dθ\n(4) dS = √[1+(f_x)²+(f_y)²] dA", "hint": "回顾每个坐标系或应用场景的面积/体积元公式。", "answer": -1, "solution": "A 极坐标二重积分：面积元 dA = r dr dθ → (2)。\nB 曲面面积：dS = √[1+(f_x)²+(f_y)²] dA → (4)。\nC 柱坐标三重积分：体积元 dV = r dz dr dθ → (3)。\nD 球坐标三重积分：体积元 dV = ρ² sin φ dρ dφ dθ → (1)。", "rubric": "每个配对正确得1分。共4分。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+function tfAnswerIndex(ans) {
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', 'vrai', 'vero', 'san', 'pravda'];
+  var falsy = ['1', 'f', 'false', 'faux', 'falso', 'nepravda'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return -1;
+}
+
+function fillBlankCount(text) {
+  return (text.match(/(_{2,})/g) || []).length;
+}
+
+function fillBlankAnswers(answer, count) {
+  if (Array.isArray(answer)) return answer;
+  if (count <= 1) return [answer];
+  var arr = [];
+  for (var i = 0; i < count; i++) arr.push(answer);
+  return arr;
+}
+
+function roundScore(score) {
+  var r = Math.round(score * 10) / 10;
+  return r === Math.floor(r) ? Math.floor(r) : r.toFixed(1);
+}
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('questions-container not found'); return; }
+
+  var order = LABELS.section_order || [];
+  Q.forEach(function(q, i) { q._i = i; });
+  Q.sort(function(a, b) {
+    var oa = order.indexOf(a.type);
+    if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type);
+    if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + (LABELS.points_suffix || '分') + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + (q.question || q.stem || '') + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + (LABELS.true_label || '正确') + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + (LABELS.false_label || '错误') + '</label>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + (LABELS.placeholder || '请输入答案') + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + (LABELS.pitfall_prefix || '⚠ ') + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function(err) { console.error(err); });
+  }
+}
+
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var k = 0;
+  var html = ('' + (q.question || q.stem)).replace(/(_{2,})/g, function() {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') { build(); }
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i], qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+    result.style.display = 'block';
+    if (q.type === 'choice' || q.type === 'tf') { score += gradeSingle(q, qid, card, badge, correctEl); }
+    else if (q.type === 'multi') { score += gradeMulti(q, qid, card, badge, correctEl); }
+    else if (q.type === 'fill') { score += gradeFill(q, qid, card, badge, correctEl); }
+    else { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = (LABELS.reference_label || '参考'); }
+  }
+  var sb = document.getElementById('score-box');
+  if (sb) { sb.style.display = 'block'; document.getElementById('score-num').textContent = roundScore(score); sb.scrollIntoView({behavior:'smooth'}); }
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].readOnly = true;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  if (ansIdx < 0) { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = '参考'; return 0; }
+  if (radio && parseInt(radio.value) === ansIdx) {
+    card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); return q.points || 0;
+  }
+  card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误');
+  correctEl.textContent = ' ' + (LABELS.correct_answer_label || '正确答案') + ': ' + String.fromCharCode(65 + ansIdx);
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var boxes = document.querySelectorAll('input[name="' + qid + '"]');
+  var ansIdxs = q.answer;
+  if (!Array.isArray(ansIdxs)) { try { ansIdxs = JSON.parse(ansIdxs); } catch(e) { ansIdxs = [ansIdxs]; } }
+  var hit = 0, total = ansIdxs.length;
+  for (var k = 0; k < boxes.length; k++) {
+    var checked = boxes[k].checked;
+    var isAns = ansIdxs.indexOf(k) !== -1;
+    if (checked === isAns) hit++;
+  }
+  var earned = (hit === boxes.length) ? (q.points || 0) : Math.round((q.points || 0) * hit / boxes.length);
+  if (hit === boxes.length) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+  else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+  else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+  return earned;
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var answers = fillBlankAnswers(q.answer, Math.max(nBlanks, 1));
+  var hit = 0;
+  if (nBlanks > 0) {
+    for (var b = 0; b < nBlanks; b++) {
+      var inp = document.getElementById('fill-' + qid + '-' + b);
+      if (!inp) continue;
+      var expect = answers[b] || answers[answers.length - 1] || '';
+      var expList = Array.isArray(expect) ? expect : [expect];
+      var val = inp.value.trim().replace(/\s+/g, '');
+      if (expList.some(function(e) { return ('' + e).replace(/\s+/g, '') === val; })) hit++;
+    }
+    var n = nBlanks;
+    if (hit === n) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+    else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+    else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+    return Math.round((q.points || 0) * hit / n * 10) / 10;
+  }
+  return 0;
+}
+
+// ─── Timer ──────────────────────────────────────────────────────────
+window.__epaStartTime = Date.now();
+function __epaElapsed(){ var s=Math.floor((Date.now()-window.__epaStartTime)/1000),m=Math.floor(s/60); return (m>0?m+'分':'')+(s%60)+'秒'; }
+(function(){ var d=document.createElement('div'); d.id='epa-timer'; d.style.cssText='text-align:center;color:var(--ink-light);font-size:0.85em;margin:4px 0 12px'; d.textContent='用时: '+__epaElapsed(); setInterval(function(){ d.textContent='用时: '+__epaElapsed(); },30000); var t=document.getElementById('epa-tabs'); if(t)t.insertAdjacentElement('afterend',d); })();
+
+// ─── Wrong-book ─────────────────────────────────────────────────────
+window.__epaSaveWrong = function(){
+  var ids=[]; for(var i=0;i<Q.length;i++){ var c=document.getElementById('card-q'+i); if(c&&(c.classList.contains('wrong')||c.classList.contains('partial'))) ids.push(Q[i].id||i); }
+  try{ var k='epa-wrong-'+document.title, ex=JSON.parse(localStorage.getItem(k)||'[]'); ids.forEach(function(id){if(ex.indexOf(id)===-1)ex.push(id);}); localStorage.setItem(k,JSON.stringify(ex)); alert('已保存 '+ids.length+' 道错题'); }catch(e){alert('保存失败');}
+};
+
+// ─── Score detail ────────────────────────────────────────────────────
+window.__epaDetail = function(){
+  var h='<div style=\"max-width:700px;margin:20px auto\"><h3>成绩单</h3><table style=\"width:100%;font-size:0.9em\"><tr><th>#</th><th>知识点</th><th>题型</th><th>得分</th><th>状态</th></tr>';
+  for(var i=0;i<Q.length;i++){ var q=Q[i],c=document.getElementById('card-q'+i),st='未批改'; if(c&&c.classList.contains('correct'))st='OK'; else if(c&&c.classList.contains('wrong'))st='X'; else if(c&&c.classList.contains('partial'))st='~'; h+='<tr><td>'+(i+1)+'</td><td>'+(q.kc_id||'-')+'</td><td>'+q.type+'</td><td>'+(st==='OK'?q.points:st==='~'?Math.floor(q.points/2):st==='X'?0:'-')+'/'+q.points+'</td><td>'+st+'</td></tr>'; }
+  h+='</table></div>'; var o=document.getElementById('epa-detail'); if(o)o.remove(); var d=document.createElement('div'); d.id='epa-detail'; d.innerHTML=h; document.getElementById('panel-test').appendChild(d);
+};
+
+// ─── Shuffle ──────────────────────────────────────────────────────────
+window.__epaShuffle = function(){
+  var cont=document.getElementById('questions-container'); if(!cont)return;
+  var cards=Array.from(cont.querySelectorAll('.q-card'));
+  for(var i=cards.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); cont.insertBefore(cards[j],cards[i]); }
+};
+
+// ─── Toolbar inject ──────────────────────────────────────────────────
+(function(){
+  var to=setInterval(function(){
+    var cont=document.getElementById('questions-container'); if(!cont)return;
+    clearInterval(to);
+    var bar=document.createElement('div'); bar.className='no-print';
+    bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px';
+    bar.innerHTML='<button onclick=\"__epaSaveWrong()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">保存错题</button>'
+      +'<button onclick=\"__epaDetail()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">成绩单</button>'
+      +'<button onclick=\"__epaShuffle()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">乱序题目</button>';
+    cont.insertBefore(bar, cont.firstChild);
+  }, 300);
+})();
+
+</script>
+<script>
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('#epa-tabs .tab-btn'); if(!btn) return;
+  var tab = btn.getAttribute('data-tab');
+  document.querySelectorAll('#epa-tabs .tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + tab); });
+  // The test panel is display:none on load, so build()'s MathJax typeset ran
+  // on hidden content (collapsing formula question cards to 0 height). Re-run
+  // build() the first time the panel is visible so it renders + typesets at the
+  // real size. Guarded so user answers aren't wiped on later switches.
+  if(tab === 'test' && !window.__epaTestBuilt){
+    window.__epaTestBuilt = true;
+    if(typeof build === 'function'){ try { build(); } catch(err){} }
+  }
+  if(window.__epaFitFormulas) setTimeout(window.__epaFitFormulas, 50);
+  window.scrollTo(0, 0);
+});
+</script>
+
+<script>
+(function(){
+  var btn = document.createElement('button');
+  btn.id = 'dark-toggle';
+  btn.textContent = '🌙';
+  btn.title = '切换暗色模式';
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    try { localStorage.setItem('epa-dark', document.body.classList.contains('dark') ? '1' : '0'); } catch(e){}
+  });
+  document.body.appendChild(btn);
+  if(localStorage.getItem('epa-dark') === '1') { document.body.classList.add('dark'); btn.textContent = '☀️'; }
+})();
+</script>
+
+</body>
+</html>

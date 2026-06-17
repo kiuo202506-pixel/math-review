@@ -21,27 +21,26 @@
   }
   h1 { text-align: center; font-size: 1.3em; margin-bottom: 2px; }
   .subtitle { text-align: center; color: var(--text-dim); font-size: .82em; margin-bottom: 16px; }
-  .stats {
-    display: flex; gap: 10px; justify-content: center; margin-bottom: 18px;
-  }
+  .stats { display: flex; gap: 10px; justify-content: center; margin-bottom: 18px; }
   .stat {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; padding: 6px 14px; text-align: center; font-size: .78em;
   }
   .stat b { display: block; font-size: 1.2em; color: var(--accent); }
   .card {
-    background: var(--surface); border: 1px solid var(--border);
+    display: block; background: var(--surface); border: 1px solid var(--border);
     border-radius: 10px; padding: 14px 18px; margin-bottom: 10px;
-    box-shadow: var(--shadow);
+    text-decoration: none; color: inherit; box-shadow: var(--shadow);
+    transition: transform .1s;
   }
+  .card:active { transform: scale(.985); }
   .card-title { font-weight: 700; font-size: 1.02em; margin-bottom: 2px; }
-  .card-desc { color: var(--text-dim); font-size: .8em; margin-bottom: 6px; }
-  .card-links a {
-    display: inline-block; margin-right: 10px; font-size: .78em;
-    color: var(--accent); text-decoration: none;
-    padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px;
+  .card-desc { color: var(--text-dim); font-size: .8em; margin-bottom: 4px; }
+  .card-meta {
+    display: inline-block; background: rgba(37,99,235,.1); color: var(--accent);
+    font-size: .72em; padding: 1px 8px; border-radius: 10px; font-weight: 600;
   }
-  .card-links a:hover { background: var(--border); }
+  .section-title { font-weight: 700; margin: 20px 0 8px; color: var(--text-dim); font-size: .82em; }
   .footer { text-align: center; color: var(--text-dim); font-size: .7em; margin-top: 24px; }
   .theme-btn {
     position: fixed; top: 10px; right: 12px; z-index: 999;
@@ -63,75 +62,51 @@
   <div class="stat"><b>39</b>外部资源</div>
 </div>
 
-    <div class="card">
-      <div class="card-title">积分应用</div>
+<div class="section-title">互动复习 (笔记 + 测验)</div>
+    <a href="第8章.html" class="card">
+      <div class="card-title">Ch08 积分应用</div>
       <div class="card-desc">弧长/旋转曲面面积/物理工程应用</div>
-      <div class="card-links">
-        <a href="Ch08-积分应用/README.md">公式+资源</a>
-        <a href="习题集/Ch08-积分应用-习题.md">习题 (21题)</a>
-        <a href="答案/Ch08-积分应用-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">微分方程</div>
+      <div class="card-meta">21 题 · 互动测验</div>
+    </a>    <a href="第9章.html" class="card">
+      <div class="card-title">Ch09 微分方程</div>
       <div class="card-desc">一阶/二阶常微分方程</div>
-      <div class="card-links">
-        <a href="Ch09-微分方程/README.md">公式+资源</a>
-        <a href="习题集/Ch09-微分方程-习题.md">习题 (17题)</a>
-        <a href="答案/Ch09-微分方程-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">参数方程与极坐标</div>
+      <div class="card-meta">17 题 · 互动测验</div>
+    </a>    <a href="第10章.html" class="card">
+      <div class="card-title">Ch10 参数方程与极坐标</div>
       <div class="card-desc">曲线/面积/弧长</div>
-      <div class="card-links">
-        <a href="Ch10-参数方程与极坐标/README.md">公式+资源</a>
-        <a href="习题集/Ch10-参数方程与极坐标-习题.md">习题 (20题)</a>
-        <a href="答案/Ch10-参数方程与极坐标-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">数列与级数</div>
-      <div class="card-desc">收敛/几何级数/积分审敛/比较审敛/交错级数</div>
-      <div class="card-links">
-        <a href="Ch11-数列与级数/README.md">公式+资源</a>
-        <a href="习题集/Ch11-数列与级数-习题.md">习题 (29题)</a>
-        <a href="答案/Ch11-数列与级数-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">向量与空间几何</div>
+      <div class="card-meta">20 题 · 互动测验</div>
+    </a>    <a href="第11章.html" class="card">
+      <div class="card-title">Ch11 数列与级数</div>
+      <div class="card-desc">收敛/几何级数/积分审敛/比较审敛</div>
+      <div class="card-meta">29 题 · 互动测验</div>
+    </a>    <a href="第12章.html" class="card">
+      <div class="card-title">Ch12 向量与空间几何</div>
       <div class="card-desc">点积/叉积/直线/平面</div>
-      <div class="card-links">
-        <a href="Ch12-向量与空间几何/README.md">公式+资源</a>
-        <a href="习题集/Ch12-向量与空间几何-习题.md">习题 (26题)</a>
-        <a href="答案/Ch12-向量与空间几何-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">偏导数</div>
+      <div class="card-meta">26 题 · 互动测验</div>
+    </a>    <a href="第14章.html" class="card">
+      <div class="card-title">Ch14 偏导数</div>
       <div class="card-desc">偏导/链式法则/方向导数/极值</div>
-      <div class="card-links">
-        <a href="Ch14-偏导数/README.md">公式+资源</a>
-        <a href="习题集/Ch14-偏导数-习题.md">习题 (35题)</a>
-        <a href="答案/Ch14-偏导数-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">多重积分</div>
+      <div class="card-meta">35 题 · 互动测验</div>
+    </a>    <a href="第15章.html" class="card">
+      <div class="card-title">Ch15 多重积分</div>
       <div class="card-desc">二重积分/三重积分/换序</div>
-      <div class="card-links">
-        <a href="Ch15-多重积分/README.md">公式+资源</a>
-        <a href="习题集/Ch15-多重积分-习题.md">习题 (20题)</a>
-        <a href="答案/Ch15-多重积分-答案.md">答案</a>
-      </div>
-    </div>    <div class="card">
-      <div class="card-title">二阶微分方程</div>
+      <div class="card-meta">20 题 · 互动测验</div>
+    </a>    <a href="第17章.html" class="card">
+      <div class="card-title">Ch17 二阶微分方程</div>
       <div class="card-desc">齐次/非齐次/特征方程</div>
-      <div class="card-links">
-        <a href="Ch17-二阶微分方程/README.md">公式+资源</a>
-        <a href="习题集/Ch17-二阶微分方程-习题.md">习题 (19题)</a>
-        <a href="答案/Ch17-二阶微分方程-答案.md">答案</a>
-      </div>
-    </div>
+      <div class="card-meta">19 题 · 互动测验</div>
+    </a>
+
+<div class="section-title">可打印资料</div>
+<a href="README.md" class="card">
+  <div class="card-title">总索引 README</div>
+  <div class="card-desc">各章概况 + 不考红线 + 资源质量标签</div>
+</a>
 
 <div class="footer">
-  <a href="README.md" style="color:var(--accent)">总索引</a> ·
-  公式速查 + 名校题库链接 · 帽子云部署
+  <a href="习题集/" style="color:var(--accent)">习题集</a> ·
+  <a href="答案/" style="color:var(--accent)">答案</a> ·
+  MIT/Berkeley/UDelaware 名校资源 · 帽子云部署
 </div>
 
 <script>

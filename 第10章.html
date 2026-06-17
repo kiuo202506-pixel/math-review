@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>第10章</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+/* Modern monospace stack — avoids the ugly Courier New fallback on Windows. */
+:root {
+  --mono: "Cascadia Code", "JetBrains Mono", "Fira Code", "Source Code Pro",
+          Consolas, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+}
+code {
+  font-family: var(--mono);
+  background: #eee8d8; color: #8a4b1e;
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+pre {
+  font-family: var(--mono);
+  background: #2d2a26; color: #ece6da;
+  padding: 14px 16px; border-radius: var(--radius);
+  overflow-x: auto; line-height: 1.6; font-size: 0.9em;
+  border: 1px solid #3d3934; tab-size: 2;
+}
+pre code {
+  background: none; color: inherit; padding: 0; font-size: 1em; border-radius: 0;
+}
+
+/* ── Long display formulas: scroll inside their column, never overflow ── */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* ── Checkpoint self-test ── */
+.checkpoint {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius);
+  padding: 10px 16px; margin: 18px 0;
+  font-size: 0.95em;
+}
+.checkpoint::before {
+  content: '🧠 自测：';
+  font-weight: 700; color: #1e40af;
+}
+.checkpoint .cp-answer { margin-top: 10px; border-top: 1px dashed #bfdbfe; padding-top: 8px; }
+.checkpoint .cp-answer summary {
+  cursor: pointer; color: #1e40af; font-weight: 600; user-select: none;
+  list-style: none;
+}
+.checkpoint .cp-answer summary::before { content: '💡 '; }
+.checkpoint .cp-answer summary::-webkit-details-marker { display: none; }
+.checkpoint .cp-answer[open] summary { margin-bottom: 6px; }
+.checkpoint .cp-answer ol, .checkpoint .cp-answer p { font-weight: 400; color: var(--ink); }
+
+/* ── TL;DR summary ── */
+.tldr {
+  background: #fefce8; border-left: 3px solid #eab308;
+  padding: 8px 14px; margin: 10px 0;
+  font-weight: 600; font-size: 0.95em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  body { max-width: 100%; padding: 12px 10px 40px; font-size: 11pt; }
+  h1 { font-size: 1.3em; }
+  h2 { font-size: 1.12em; }
+  table { font-size: 0.85em; }
+  td, th { padding: 4px 6px; }
+  pre { font-size: 0.85em; padding: 6px; }
+}
+@media (max-width: 400px) {
+  body { padding: 8px 6px 32px; font-size: 10.5pt; }
+}
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+
+/* ── Notion-style slide cross-reference layout ── */
+/* Override base.css body max-width (860px); fill the viewport edge-to-edge,
+   capped only on ultra-wide screens for readability. */
+body { max-width: 2400px; width: 96vw; padding-left: 2vw; padding-right: 2vw; }
+.kn-layout { display: flex; gap: 36px; align-items: flex-start; width: 100%; margin: 0 auto; }
+.kn-main { flex: 1 1 auto; min-width: 0; overflow-x: clip; }
+.kn-main mjx-container[display="true"] { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.kn-rail { flex: 0 0 32%; max-width: 520px; min-width: 300px; position: sticky; top: 12px;
+  align-self: flex-start; max-height: calc(100vh - 30px); overflow-y: auto; padding-right: 4px; }
+.kn-rail-title { font-weight: 700; color: var(--ink-light); font-size: 0.9em; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--divider); }
+.slide-card { border: 1px solid var(--card-border); border-radius: var(--radius);
+  background: var(--card-bg); padding: 8px; margin-bottom: 14px; }
+.slide-card-label { font-size: 0.78em; color: var(--ink-light); margin-bottom: 6px; }
+.slide-img { width: 100%; height: auto; border-radius: 4px; cursor: zoom-in; display: block;
+  border: 1px solid var(--divider); background: #fff; }
+.slide-text-only { font-size: 0.78em; line-height: 1.5; color: var(--ink-light);
+  padding: 8px 10px; background: #fff; border-radius: 4px; border: 1px solid var(--divider);
+  max-height: 200px; overflow-y: auto; }
+.slide-text { margin-top: 6px; font-size: 0.85em; }
+.slide-text summary { cursor: pointer; color: var(--accent); user-select: none; }
+.slide-text-body { margin-top: 6px; color: var(--ink-light); line-height: 1.6;
+  max-height: 220px; overflow-y: auto; padding: 6px 8px; background: #fff;
+  border-radius: 4px; border: 1px solid var(--divider); }
+/* heading-side page chips */
+.pg-chip { display: inline-block; font-size: 0.72em; font-weight: 600; color: var(--accent);
+  background: #eff4ff; border: 1px solid #cfe0ff; border-radius: 10px; padding: 0 7px;
+  margin-left: 6px; cursor: pointer; vertical-align: middle; }
+.pg-chip:hover { background: #dbe8ff; }
+.slide-card.flash { animation: slideflash 1.2s ease; }
+@keyframes slideflash { 0%,100%{box-shadow:none;} 30%{box-shadow:0 0 0 3px var(--accent);} }
+/* lightbox */
+#epa-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.82); display: none;
+  align-items: center; justify-content: center; z-index: 9999; cursor: zoom-out; }
+#epa-lightbox img { max-width: 94vw; max-height: 94vh; border-radius: 6px; }
+/* Tablet / narrow desktop: keep two columns but rebalance + tighten margins */
+@media (max-width: 1280px) {
+  body { width: 98vw; padding-left: 1vw; padding-right: 1vw; }
+  .kn-layout { gap: 24px; }
+  .kn-main { flex: 1 1 54%; }
+  .kn-rail { flex: 1 1 46%; }
+}
+/* Mobile: stack the rail below the notes */
+@media (max-width: 900px) {
+  body { width: 100%; padding-left: 12px; padding-right: 12px; }
+  /* align-items:stretch is critical — in a COLUMN flex, flex-start would size
+     children to max-content (overflowing the viewport). */
+  .kn-layout { flex-direction: column; align-items: stretch; gap: 16px; }
+  .kn-main { flex: none; width: 100%; }
+  .kn-rail { position: static; flex: none; max-width: 100%; width: 100%; min-width: 0; max-height: none; }
+}
+
+
+/* ── Combined page: top tab bar (清单 | 题目) ── */
+#epa-tabs { display: flex; gap: 0; justify-content: center; margin: 6px auto 22px;
+  max-width: 520px; border: 1px solid var(--divider); border-radius: 10px; overflow: hidden; }
+#epa-tabs .tab-btn { flex: 1; padding: 10px 18px; cursor: pointer; border: none;
+  background: var(--paper-dark); color: var(--ink-light); font-size: 1.02em; font-weight: 600;
+  font-family: inherit; transition: background .15s, color .15s; }
+#epa-tabs .tab-btn + .tab-btn { border-left: 1px solid var(--divider); }
+#epa-tabs .tab-btn.active { background: var(--accent); color: #fff; }
+#epa-tabs .tab-btn:not(.active):hover { background: #efe7d3; color: var(--ink); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+/* keep the test readable/centered even though the body is wide for the rail */
+#panel-test { max-width: 980px; margin: 0 auto; }
+@media print { #epa-tabs { display: none; } .tab-panel { display: block !important; } }
+
+
+.chapter-nav { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 8px; }
+.chapter-nav .nav-home { text-decoration: none; color: var(--accent); font-weight: 600; font-size: 0.95em; }
+.chapter-nav .nav-select { padding: 6px 12px; border: 1px solid var(--divider); border-radius: 6px;
+  background: var(--card-bg); font-size: 0.92em; font-family: inherit; color: var(--ink); cursor: pointer; max-width: 320px; }
+
+
+/* Collapsible H3 sections */
+.kn-collapse-toggle { display: inline-block; cursor: pointer; font-size: 0.85em; margin-left: 8px;
+  color: var(--accent); user-select: none; vertical-align: middle; }
+.kn-collapse-toggle:hover { color: var(--accent-hover); }
+.kn-collapse-body { overflow: hidden; transition: max-height 0.3s ease; }
+.kn-collapse-body.collapsed { max-height: 0 !important; }
+.kn-collapse-global { display: inline-block; margin: 0 4px; padding: 2px 10px; border: 1px solid var(--divider);
+  border-radius: 12px; font-size: 0.78em; cursor: pointer; background: var(--card-bg); color: var(--ink-light); }
+.kn-collapse-global:hover { background: var(--divider); }
+/* Dark mode */
+body.dark { --paper: #1a1a2e; --ink: #e0e0e0; --ink-light: #aaa; --card-bg: #222244;
+  --card-border: #3a3a5c; --divider: #3a3a5c; --paper-dark: #16162a; --accent: #64b5f6;
+  --tag-bg: #3d3520; --tag-text: #f0c060; background: var(--paper); color: var(--ink); }
+body.dark .kp { color: #ffd700; background: #3d3520; }
+body.dark blockquote { background: #2a1a1a; border-left-color: #ff6b6b; }
+body.dark .checkpoint { background: #1a2a1a; border-color: #4caf50; }
+body.dark th { background: #222244; }
+body.dark .slide-card { background: #222244; border-color: #3a3a5c; }
+body.dark .slide-text-body { background: #1a1a2e; }
+body.dark .pg-chip { background: #1a3a5c; border-color: #2a5a8c; }
+body.dark .chapter-nav .nav-select { background: #222244; color: #e0e0e0; border-color: #3a3a5c; }
+body.dark #epa-tabs .tab-btn { background: #222244; color: #aaa; }
+body.dark #epa-tabs .tab-btn:not(.active):hover { background: #2a2a4a; }
+body.dark .toc { background: #222244; }
+body.dark .tldr { background: #3d3520; }
+#dark-toggle { position: fixed; top: 12px; right: 16px; z-index: 9999; border: 1px solid var(--divider);
+  border-radius: 50%; width: 36px; height: 36px; font-size: 1.1em; cursor: pointer;
+  background: var(--card-bg); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+@media print { #dark-toggle { display: none; } }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<div class="chapter-nav no-print"><a href="index.html" class="nav-home">🏠 首页</a><select class="nav-select" onchange="if(this.value)window.location.href=this.value"><option value="第10章.html" selected>第10章</option><option value="第11章.html">第11章</option><option value="第12章.html">第12章</option><option value="第14章.html">第14章</option><option value="第15章.html">第15章</option><option value="第17章.html">第17章</option><option value="第8章.html">第8章</option><option value="第9章.html">第9章</option></select></div><h1>第10章</h1><div id="epa-tabs" class="no-print"><button class="tab-btn active" data-tab="kn">📖 知识清单</button><button class="tab-btn" data-tab="test">📝 章节测试</button></div><div id="panel-kn" class="tab-panel active"><div class="kn-layout"><div class="kn-main"><h1></h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s69235111">10.1 参数方程与曲线</a></li>
+  <li><a href="#s38058830">▼1. 什么是参数方程</a></li>
+  <li><a href="#s54532105">▼2. 消参数</a></li>
+  <li><a href="#s85416070">▼3. 参数曲线作图</a></li>
+<li><a href="#s56309825">10.2 参数曲线微积分</a></li>
+  <li><a href="#s24247025">▼1. 切线斜率</a></li>
+  <li><a href="#s79104652">▼2. 面积公式</a></li>
+  <li><a href="#s28855950">▼3. 弧长公式</a></li>
+  <li><a href="#s22111860">▼4. 二阶导数</a></li>
+<li><a href="#s12262850">10.3 极坐标</a></li>
+  <li><a href="#s41636738">▼1. 极坐标定义</a></li>
+  <li><a href="#s17050531">▼2. 直角坐标与极坐标互化</a></li>
+  <li><a href="#s23157227">▼3. 极坐标曲线作图</a></li>
+  <li><a href="#s58499358">▼4. 极坐标下的切线斜率</a></li>
+<li><a href="#s46420494">10.4 极坐标下的面积与弧长</a></li>
+  <li><a href="#s27750193">▼1. 极坐标面积公式</a></li>
+  <li><a href="#s20669407">▼2. 两曲线之间的面积</a></li>
+  <li><a href="#s35079823">▼3. 极坐标弧长公式</a></li>
+  <li><a href="#s52437405">▼4. 常见极坐标曲线的面积</a></li>
+<li><a href="#s35066680">综合自测</a></li>
+</ul>
+</div>
+<h1>第10章 参数方程与极坐标</h1>
+<p class="subtitle">Parametric Equations and Polar Coordinates ｜ 高等数学（下）知识清单</p>
+
+<!-- ============================================================ -->
+<!-- 10.1 参数方程与曲线 -->
+<!-- ============================================================ -->
+<h2 id="s69235111">10.1 参数方程与曲线</h2>
+
+<div class="hook">
+  <span class="tag hook">Hook</span>
+  你扔出一颗石子。石子的轨迹既不是 x 的函数也不是 y 的函数——但它的位置 (x,y) 都是时间 t 的函数。如何描述一整条轨迹，而不必写成 y=f(x)？
+</div>
+
+<div class="tldr">
+  <span class="tag tldr">TL;DR</span>
+  <span class="kp">参数方程 x=f(t), y=g(t)</span> 用一个共同的<span class="exp">参数 t</span>来分别给出点的横纵坐标。曲线是由 t 的变化"驱动"画出来的轨迹。要把它变回 y=f(x) 的形式，就做<span class="kp">消参数</span>。
+</div>
+
+<h3 id="s38058830"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>1. 什么是参数方程</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  曲线 C 的<span class="kp">参数方程</span>是一对函数：x = f(t)，y = g(t)，t 属于某个区间 I。t 每取一个值 (x,y) 就确定一个点；当 t 跑遍 I 时，(x,y) 的全体就是 C。参数 t 可以是时间、角度或任何辅助变量。
+</div>
+</div>
+<h3 id="s54532105"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>2. 消参数</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  <strong>策略一：直接解出 t。</strong>从 x=f(t) 中解出 t=h(x)，代入 y=g(h(x))。<br>
+  <strong>策略二：利用恒等式。</strong>例如 x=cos t, y=sin t 满足 x²+y²=1，不必显式解出 t。<br>
+  <strong>策略三：三角换元。</strong>形如 x=a sec t, y=b tan t 利用 1+tan² = sec² 消去。
+</div>
+</div>
+<h3 id="s85416070"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>3. 参数曲线作图</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  取关键 t 值（如 t=0, π/2, π 等）计算 (x,y)，标记方向（t 增大时的走向）。观察对称性：（x(t), y(t)）与（x(-t), y(-t)）的关系可判关于 x 轴 /  y 轴 / 原点对称。
+</div>
+
+<blockquote class="err">
+  易错：消参数时可能丢失方向信息。例如 x=t², y=t 消参得 y²=x，但原始曲线的 t ∈ [-1,1] 只对应两个半段抛物线的一部分，不是整支抛物线！
+</blockquote>
+
+<details class="self-test">
+  <summary></summary>
+  <div class="inner">
+    <p class="q">1. 曲线 x = t² - 1, y = t + 2，消去参数 t 得 y = ?（用 x 表示）</p>
+    <p class="a">t = y - 2，代入得 x = (y-2)² - 1 → y = 2 ± √(x+1)。注意原始 t 的范围决定取 + 还是 -。</p>
+    <p class="q">2. 参数曲线 x = 2cos t, y = 3sin t, t∈[0,2π) 是什么曲线？方向如何？</p>
+    <p class="a">椭圆 x²/4 + y²/9 = 1。t=0 时在 (2,0)，随 t 增大逆时针运动。</p>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- 10.2 参数曲线微积分 -->
+<!-- ============================================================ --></div>
+<h2 id="s56309825">10.2 参数曲线微积分</h2>
+
+<div class="hook">
+  <span class="tag hook">Hook</span>
+  参数曲线没有显式的 y=f(x)，那怎么求切线斜率？怎么做积分算面积和弧长？——答案是：把所有东西都写成 t 的表达式，用链式法则。
+</div>
+
+<div class="tldr">
+  <span class="tag tldr">TL;DR</span>
+  切线斜率 <span class="kp">dy/dx = (dy/dt) / (dx/dt)</span>（分母不为零时）。二阶导数继续对 x 求导：d²y/dx² = <span class="kp">(d/dt)[dy/dx] / (dx/dt)</span>。面积 A = <span class="kp">∫ y·(dx/dt) dt</span>。弧长 L = <span class="kp">∫ √[(dx/dt)² + (dy/dt)²] dt</span>。
+</div>
+
+<h3 id="s24247025"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>1. 切线斜率</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  设 x=f(t), y=g(t) 均可导且 dx/dt ≠ 0，则 <span class="kp">dy/dx = (dy/dt) ÷ (dx/dt) = g'(t)/f'(t)</span>。这就是参数形式的链式法则。
+</div>
+<div class="why">
+  <span class="tag why">Why</span>
+  把 y 看作 x 的函数 y=y(x)，而 x 又是 t 的函数，于是 dy/dt = dy/dx · dx/dt，解出 dy/dx 即得上式。
+</div>
+</div>
+<h3 id="s79104652"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>2. 面积公式</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  曲线 C: x=f(t), y=g(t), t∈[α,β] 与 x 轴之间所围面积（y≥0 时）：<br>
+  <span class="kp">A = ∫ y dx = ∫_α^β g(t) · f'(t) dt</span>。<br>
+  <span class="exp">关键：把 dx 换成 f'(t) dt，y 写成 g(t)，积分限换成 t 的起止值。</span>注意积分方向——若 t:α→β 对应 x 从左到右，则无需变号。
+</div>
+
+<blockquote class="err">
+  易错：用参数面积公式时，务必检查 dx/dt 的符号！若曲线上 x 随 t 增大而减小（dx/dt &lt; 0），直接用 ∫ y·x' dt 积分结果可能是负的——取绝对值或交换积分限。
+</blockquote>
+</div>
+<h3 id="s28855950"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>3. 弧长公式</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  参数曲线 C: x=f(t), y=g(t), t∈[α,β] 的弧长为：
+  <span class="kp">L = ∫_α^β √[(dx/dt)² + (dy/dt)²] dt</span>。<br>
+  <span class="exp">这个公式是"勾股定理的积分版"：一小段弧长 ds = √(dx²+dy²) = √[(x')²+(y')²] dt。</span>
+</div>
+</div>
+<h3 id="s22111860"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>4. 二阶导数</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  <span class="kp">d²y/dx² = (d/dt)[dy/dx] / (dx/dt)</span>。即先求一阶导数 dy/dx（它是 t 的函数），再对 t 求导，最后除以 dx/dt。
+</div>
+<blockquote class="err">
+  易错：二阶导数不是 d²y/dt² 除以 d²x/dt²！必须对 <em>dy/dx</em>（作为 t 的函数）再对 x 求导。
+</blockquote>
+
+<details class="self-test">
+  <summary></summary>
+  <div class="inner">
+    <p class="q">1. 曲线 x = t³, y = t²，在 t=1 处的切线斜率为？</p>
+    <p class="a">dy/dt=2t, dx/dt=3t²，dy/dx=2/(3t)。t=1 时 dy/dx=2/3。</p>
+    <p class="q">2. 求曲线 x = t - sin t, y = 1 - cos t (0≤t≤2π) 的弧长。</p>
+    <p class="a">dx/dt=1-cos t, dy/dt=sin t。被积表达式 = √[(1-cos t)²+(sin t)²] = √[2-2cos t] = 2|sin(t/2)|。0≤t≤2π 时 sin(t/2)≥0，L = ∫₀²π 2sin(t/2) dt = 8。</p>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- 10.3 极坐标基础 -->
+<!-- ============================================================ --></div>
+<h2 id="s12262850">10.3 极坐标</h2>
+
+<div class="hook">
+  <span class="tag hook">Hook</span>
+  笛卡尔坐标系用网格线来定位，但如果图形是放射状的——花、螺旋、心形——用"距离+角度"来描述要自然得多。这就是极坐标。
+</div>
+
+<div class="tldr">
+  <span class="tag tldr">TL;DR</span>
+  极坐标 (r,θ) 用<span class="kp">到原点的距离 r</span> 和<span class="kp">与极轴的夹角 θ</span> 来定位点。与直角坐标的转换：<span class="kp">x = r cos θ, y = r sin θ</span>；反过来 <span class="kp">r² = x² + y², tan θ = y/x</span>（注意 θ 所在的象限）。
+</div>
+
+<h3 id="s41636738"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>1. 极坐标定义</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  极坐标系由极点 O（原点）和极轴（正 x 轴）构成。点 P 由 (r, θ) 表示：<span class="kp">r</span> 是 P 到 O 的有向距离（可正可负），<span class="kp">θ</span> 是从极轴逆时针量起的角。<span class="exp">r 取负值时点位于 θ+π 方向上。</span>
+</div>
+</div>
+<h3 id="s17050531"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>2. 直角坐标与极坐标互化</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  <strong>极 → 直角：</strong>x = r cos θ, y = r sin θ。<br>
+  <strong>直角 → 极：</strong>r = √(x²+y²)，tan θ = y/x。确定 θ 必须<span class="kp">根据 (x,y) 所在象限</span>调整角度。例如 (-1,1) 在第二象限，θ = 3π/4 而非 arctan(-1)= -π/4。
+</div>
+
+<blockquote class="err">
+  易错：极坐标到一个点的表示不唯一。(r,θ) 与 (r, θ+2kπ) 及 (-r, θ+(2k+1)π) 表示同一点。这在解联立方程时要特别注意。
+</blockquote>
+</div>
+<h3 id="s23157227"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>3. 极坐标曲线作图</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  （1）检查对称性：关于极轴（θ→-θ 不变）、关于 θ=π/2（θ→π-θ 不变）、关于极点（r→-r 或 θ→θ+π 不变）。<br>
+  （2）做 r-θ 表，取关键角度（θ=kπ/6 或 kπ/4）。<br>
+  （3）连点成线，标注 θ 增大时的走向。
+</div>
+</div>
+<h3 id="s58499358"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>4. 极坐标下的切线斜率</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  将极坐标曲线 r=f(θ) 写为参数：x=r cos θ, y=r sin θ。则
+  <span class="kp">dy/dx = (dr/dθ·sin θ + r cos θ) / (dr/dθ·cos θ - r sin θ)</span>。
+  水平切线：分子=0；垂直切线：分母=0。
+</div>
+
+<details class="self-test">
+  <summary></summary>
+  <div class="inner">
+    <p class="q">1. 将极坐标方程 r = 2cos θ 化为直角坐标方程。</p>
+    <p class="a">r²=2r cos θ → x²+y²=2x → (x-1)²+y²=1。这是圆心在 (1,0)、半径为 1 的圆。</p>
+    <p class="q">2. 曲线 r=1+cos θ（心形线）关于什么对称？</p>
+    <p class="a">cos(-θ)=cos θ，故曲线关于极轴（x 轴）对称。</p>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- 10.4 极坐标下的面积与弧长 -->
+<!-- ============================================================ --></div>
+<h2 id="s46420494">10.4 极坐标下的面积与弧长<span class="pg-chip" data-page="10.1-2">页2</span></h2>
+
+<div class="hook">
+  <span class="tag hook">Hook</span>
+  极坐标曲线围出的区域不是矩形条，而是扇形条。把区域切成无数个窄窄的"扇形楔子"，每个楔子的面积是 ½r²dθ——这就是极坐标积分的核心思想。
+</div>
+
+<div class="tldr">
+  <span class="tag tldr">TL;DR</span>
+  极坐标面积 <span class="kp">A = ∫ ½ r² dθ = ½ ∫_α^β [f(θ)]² dθ</span>。极坐标弧长 <span class="kp">L = ∫_α^β √[r² + (dr/dθ)²] dθ</span>。
+</div>
+
+<h3 id="s27750193"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>1. 极坐标面积公式</h3><div class="kn-collapse-body">
+<div class="why">
+  <span class="tag why">Why</span>
+  圆的面积是 πr²。一个角度为 dθ 的扇形面积占整个圆的比例为 dθ/(2π)，故 <span class="kp">扇形微元面积 dA = ½ r² dθ</span>。对 θ 积分即得总面积。
+</div>
+</div>
+<h3 id="s20669407"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>2. 两曲线之间的面积</h3><div class="kn-collapse-body">
+<div class="how">
+  <span class="tag how">How</span>
+  设 r₁=f(θ) 和 r₂=g(θ) 交于 θ=α, β，且 f(θ)≥g(θ)≥0 在区间内，则区域面积<span class="exp">不是像直角坐标那样 ½∫(r₁²-r₂²)dθ，而是分别积分后相减：</span>
+  <span class="kp">A = ½ ∫_α^β [f(θ)² - g(θ)²] dθ</span>。
+</div>
+
+<blockquote class="err">
+  易错：两曲线之间的面积是 ½∫(r_外² - r_内²) dθ，不是 ½∫(r_外 - r_内)² dθ。后者对应的是 r_外 - r_内 作为一条新曲线 rdθ 所得面积，完全不是同一个量。
+</blockquote>
+</div>
+<h3 id="s35079823"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>3. 极坐标弧长公式</h3><div class="kn-collapse-body">
+<div class="what">
+  <span class="tag what">What</span>
+  极坐标曲线 r=f(θ), θ∈[α,β] 的弧长为：
+  <span class="kp">L = ∫_α^β √[r² + (dr/dθ)²] dθ</span>。
+</div>
+<div class="why">
+  <span class="tag why">Why</span>
+  将极坐标写为参数形式：x=r cos θ, y=r sin θ。dx/dθ = dr/dθ·cos θ - r sin θ，dy/dθ = dr/dθ·sin θ + r cos θ。计算 (dx/dθ)²+(dy/dθ)²，化简即得 r²+(dr/dθ)²。
+</div>
+</div>
+<h3 id="s52437405"><span class="kn-collapse-toggle" onclick="var b=this.parentElement.nextElementSibling;b.classList.toggle(\'collapsed\');this.textContent=b.classList.contains(\'collapsed\')?\'▶\':\'▼\'">▼</span>4. 常见极坐标曲线的面积</h3><div class="kn-collapse-body">
+<table style="width:100%; border-collapse:collapse; margin:14px 0; font-size:0.93em;">
+  <tr style="background:#f8fafc;"><th style="padding:8px; text-align:left; border-bottom:1px solid var(--border);">曲线</th><th style="padding:8px; text-align:left; border-bottom:1px solid var(--border);">方程</th><th style="padding:8px; text-align:left; border-bottom:1px solid var(--border);">一瓣面积</th></tr>
+  <tr><td style="padding:6px 8px;">圆</td><td style="padding:6px 8px;">r = a</td><td style="padding:6px 8px;">πa²（一周）</td></tr>
+  <tr><td style="padding:6px 8px;">心形线</td><td style="padding:6px 8px;">r = a(1+cos θ)</td><td style="padding:6px 8px;">3πa²/2</td></tr>
+  <tr><td style="padding:6px 8px;">三叶玫瑰线</td><td style="padding:6px 8px;">r = a cos(3θ)</td><td style="padding:6px 8px;">πa²/4（一瓣）</td></tr>
+  <tr><td style="padding:6px 8px;">双纽线</td><td style="padding:6px 8px;">r² = a² cos(2θ)</td><td style="padding:6px 8px;">a²/2（一瓣）</td></tr>
+</table>
+
+<div class="checkpoint">
+  <span class="tag checkpoint">Checkpoint</span>
+  本章最重要的两个公式——极坐标面积和弧长——一旦混淆将导致完全错误的答案。<strong>面积是 ½∫r²dθ</strong>（平方后在积分号内），<strong>弧长是 ∫√(r²+r'²)dθ</strong>（被积函数有根号）。牢记这一点。
+</div>
+
+<details class="self-test">
+  <summary></summary>
+  <div class="inner">
+    <p class="q">1. 求 r = 1 + cos θ（心形线）所围总面积。</p>
+    <p class="a">A = ½∫₀²π (1+cos θ)² dθ = ½∫(1+2cos θ+cos²θ)dθ。利用 cos²θ=(1+cos 2θ)/2，得 A = ½[θ+2sin θ+½θ+¼sin 2θ]₀²π = ½(3π) = 3π/2。</p>
+    <p class="q">2. 求 r = e^θ 从 θ=0 到 θ=2π 的弧长。</p>
+    <p class="a">r' = e^θ。L = ∫₀²π √(e²θ+e²θ) dθ = ∫₀²π √2·e^θ dθ = √2·(e²π-1)。</p>
+  </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- 综合自测 -->
+<!-- ============================================================ --></div>
+<h2 id="s35066680">综合自测</h2>
+<details class="self-test" open>
+  <summary></summary>
+  <div class="inner">
+    <p class="q">1. 把直角坐标方程 x³ = y² 改为参数方程形式。</p>
+    <p class="a">可令 x=t², y=t³，则 x³ = t⁶ = y²。或令 y=t, x=t^(2/3)。</p>
+    <p class="q">2. 参数曲线 x=√t, y=1-t (t≥0) 的切线何时水平？</p>
+    <p class="a">dy/dt=-1, dx/dt=1/(2√t)，dy/dx=-2√t。水平切线需 dy/dx=0 → t=0，此时点 (0,1)。</p>
+    <p class="q">3. 极坐标曲线 r=sin(2θ) 有几瓣？一瓣面积是多少？</p>
+    <p class="a">四叶玫瑰线，共 4 瓣。一瓣对应 θ∈[0,π/2]，A=½∫₀^{π/2} sin²(2θ) dθ = π/8。</p>
+  </div>
+</details>
+
+<p style="text-align:center; margin-top:40px; color:var(--muted); font-size:0.85em;">
+  —— 第10章知识清单结束 ——
+</p></div><aside class="kn-rail"><div class="kn-rail-title">📑 原始幻灯片对照</div><div class="slide-card" id="slide-p10.1-1" data-page="10.1-1"><div class="slide-card-label">10.1 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p001.jpg" alt="10.1 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">CH 10. Parametric Equations and Polar coordinates<br>10.1 Curves defined by parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-2" data-page="10.1-2"><div class="slide-card-label">10.1 · 第2页</div><img class="slide-img" width="710" height="582" src="slides/ch10_p002.jpg" alt="10.1 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-3" data-page="10.1-3"><div class="slide-card-label">10.1 · 第3页</div><img class="slide-img" width="900" height="122" src="slides/ch10_p003.jpg" alt="10.1 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-4" data-page="10.1-4"><div class="slide-card-label">10.1 · 第4页</div><img class="slide-img" width="900" height="122" src="slides/ch10_p003.jpg" alt="10.1 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-5" data-page="10.1-5"><div class="slide-card-label">10.1 · 第5页</div><img class="slide-img" width="740" height="667" src="slides/ch10_p005.jpg" alt="10.1 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-7" data-page="10.1-7"><div class="slide-card-label">10.1 · 第7页</div><img class="slide-img" width="900" height="125" src="slides/ch10_p006.jpg" alt="10.1 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-9" data-page="10.1-9"><div class="slide-card-label">10.1 · 第9页</div><img class="slide-img" width="900" height="57" src="slides/ch10_p007.jpg" alt="10.1 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations</div></details></div>
+<div class="slide-card" id="slide-p10.1-10" data-page="10.1-10"><div class="slide-card-label">10.1 · 第10页</div><img class="slide-img" width="854" height="749" src="slides/ch10_p008.jpg" alt="10.1 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations<br>https://www.wolframalpha.com/<br>x=sin(t), y=cos(t)</div></details></div>
+<div class="slide-card" id="slide-p10.1-11" data-page="10.1-11"><div class="slide-card-label">10.1 · 第11页</div><img class="slide-img" width="690" height="397" src="slides/ch10_p009.jpg" alt="10.1 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations<br>https://www.wolframalpha.com/<br>x=t^4-3t^2, y=t</div></details></div>
+<div class="slide-card" id="slide-p10.1-12" data-page="10.1-12"><div class="slide-card-label">10.1 · 第12页</div><img class="slide-img" width="826" height="637" src="slides/ch10_p010.jpg" alt="10.1 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric equations<br>https://www.wolframalpha.com/<br>x=sin(t)+0.5cos(5t)+0.25sin(13t),<br>y=cos(t)+0.5sin(5t)+0.25cos(13t),t=-5,5</div></details></div>
+<div class="slide-card" id="slide-p10.1-13" data-page="10.1-13"><div class="slide-card-label">10.1 · 第13页</div><img class="slide-img" width="900" height="336" src="slides/ch10_p011.jpg" alt="10.1 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cycloid (摆线)</div></details></div>
+<div class="slide-card" id="slide-p10.1-14" data-page="10.1-14"><div class="slide-card-label">10.1 · 第14页</div><img class="slide-img" width="900" height="900" src="slides/ch10_p012.jpg" alt="10.1 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">The cycloid (摆线)</div></details></div>
+<div class="slide-card" id="slide-p10.1-15" data-page="10.1-15"><div class="slide-card-label">10.1 · 第15页</div><img class="slide-img" width="720" height="727" src="slides/ch10_p013.jpg" alt="10.1 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Brochistochrone problem<br>https://www.youtube.com/watch?v=Cld0p3a43fU<br>The brachistochrone(最速降线问题<br>) problem: Find the curve along which a particle will slide in the shortest time (under the influence of gravity) from a point A to a lower point B not directly beneath A.<br>p.640</div></details></div>
+<div class="slide-card" id="slide-p10.1-17" data-page="10.1-17"><div class="slide-card-label">10.1 · 第17页</div><img class="slide-img" width="900" height="203" src="slides/ch10_p014.jpg" alt="10.1 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Conchoids of Nicomedes<br>蚌</div></details></div>
+<div class="slide-card" id="slide-p10.2-1" data-page="10.2-1"><div class="slide-card-label">10.2 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p001.jpg" alt="10.2 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">10.2 Calculus with parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-2" data-page="10.2-2"><div class="slide-card-label">10.2 · 第2页</div><img class="slide-img" width="900" height="440" src="slides/ch10_p016.jpg" alt="10.2 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-3" data-page="10.2-3"><div class="slide-card-label">10.2 · 第3页</div><img class="slide-img" width="900" height="361" src="slides/ch10_p017.jpg" alt="10.2 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-4" data-page="10.2-4"><div class="slide-card-label">10.2 · 第4页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p018.jpg" alt="10.2 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves<br>Chain rule</div></details></div>
+<div class="slide-card" id="slide-p10.2-5" data-page="10.2-5"><div class="slide-card-label">10.2 · 第5页</div><img class="slide-img" width="900" height="173" src="slides/ch10_p019.jpg" alt="10.2 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-7" data-page="10.2-7"><div class="slide-card-label">10.2 · 第7页</div><img class="slide-img" width="900" height="173" src="slides/ch10_p019.jpg" alt="10.2 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves<br>(b)</div></details></div>
+<div class="slide-card" id="slide-p10.2-9" data-page="10.2-9"><div class="slide-card-label">10.2 · 第9页</div><img class="slide-img" width="900" height="173" src="slides/ch10_p019.jpg" alt="10.2 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves<br>(d)</div></details></div>
+<div class="slide-card" id="slide-p10.2-10" data-page="10.2-10"><div class="slide-card-label">10.2 · 第10页</div><img class="slide-img" width="900" height="154" src="slides/ch10_p022.jpg" alt="10.2 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-11" data-page="10.2-11"><div class="slide-card-label">10.2 · 第11页</div><img class="slide-img" width="900" height="154" src="slides/ch10_p022.jpg" alt="10.2 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-12" data-page="10.2-12"><div class="slide-card-label">10.2 · 第12页</div><img class="slide-img" width="900" height="154" src="slides/ch10_p022.jpg" alt="10.2 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Parametric curves</div></details></div>
+<div class="slide-card" id="slide-p10.2-13" data-page="10.2-13"><div class="slide-card-label">10.2 · 第13页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p025.jpg" alt="10.2 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas</div></details></div>
+<div class="slide-card" id="slide-p10.2-14" data-page="10.2-14"><div class="slide-card-label">10.2 · 第14页</div><img class="slide-img" width="900" height="245" src="slides/ch10_p026.jpg" alt="10.2 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas</div></details></div>
+<div class="slide-card" id="slide-p10.2-15" data-page="10.2-15"><div class="slide-card-label">10.2 · 第15页</div><img class="slide-img" width="900" height="178" src="slides/ch10_p027.jpg" alt="10.2 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas</div></details></div>
+<div class="slide-card" id="slide-p10.2-17" data-page="10.2-17"><div class="slide-card-label">10.2 · 第17页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p028.jpg" alt="10.2 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length</div></details></div>
+<div class="slide-card" id="slide-p10.2-19" data-page="10.2-19"><div class="slide-card-label">10.2 · 第19页</div><img class="slide-img" width="900" height="283" src="slides/ch10_p029.jpg" alt="10.2 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length<br>circumference</div></details></div>
+<div class="slide-card" id="slide-p10.2-21" data-page="10.2-21"><div class="slide-card-label">10.2 · 第21页</div><img class="slide-img" width="900" height="90" src="slides/ch10_p030.jpg" alt="10.2 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length</div></details></div>
+<div class="slide-card" id="slide-p10.2-23" data-page="10.2-23"><div class="slide-card-label">10.2 · 第23页</div><img class="slide-img" width="847" height="773" src="slides/ch10_p031.jpg" alt="10.2 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p10.2-25" data-page="10.2-25"><div class="slide-card-label">10.2 · 第25页</div><img class="slide-img" width="900" height="55" src="slides/ch10_p032.jpg" alt="10.2 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Surface Area</div></details></div>
+<div class="slide-card" id="slide-p10.3-1" data-page="10.3-1"><div class="slide-card-label">10.3 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p001.jpg" alt="10.3 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">10.3 Polar coordinates<br>极坐标</div></details></div>
+<div class="slide-card" id="slide-p10.3-2" data-page="10.3-2"><div class="slide-card-label">10.3 · 第2页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p034.jpg" alt="10.3 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates<br>Cartesian coordinates<br>Polar coordinates<br>polar axis</div></details></div>
+<div class="slide-card" id="slide-p10.3-3" data-page="10.3-3"><div class="slide-card-label">10.3 · 第3页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p035.jpg" alt="10.3 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p10.3-4" data-page="10.3-4"><div class="slide-card-label">10.3 · 第4页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p018.jpg" alt="10.3 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p10.3-5" data-page="10.3-5"><div class="slide-card-label">10.3 · 第5页</div><img class="slide-img" width="900" height="670" src="slides/ch10_p037.jpg" alt="10.3 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p10.3-7" data-page="10.3-7"><div class="slide-card-label">10.3 · 第7页</div><img class="slide-img" width="900" height="83" src="slides/ch10_p038.jpg" alt="10.3 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates<br>(b)</div></details></div>
+<div class="slide-card" id="slide-p10.3-9" data-page="10.3-9"><div class="slide-card-label">10.3 · 第9页</div><img class="slide-img" width="900" height="83" src="slides/ch10_p038.jpg" alt="10.3 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates<br>(d)</div></details></div>
+<div class="slide-card" id="slide-p10.3-10" data-page="10.3-10"><div class="slide-card-label">10.3 · 第10页</div><img class="slide-img" width="900" height="133" src="slides/ch10_p040.jpg" alt="10.3 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p10.3-11" data-page="10.3-11"><div class="slide-card-label">10.3 · 第11页</div><img class="slide-img" width="900" height="780" src="slides/ch10_p041.jpg" alt="10.3 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Coordinate transformations</div></details></div>
+<div class="slide-card" id="slide-p10.3-12" data-page="10.3-12"><div class="slide-card-label">10.3 · 第12页</div><img class="slide-img" width="900" height="780" src="slides/ch10_p041.jpg" alt="10.3 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Coordinate transformations</div></details></div>
+<div class="slide-card" id="slide-p10.3-13" data-page="10.3-13"><div class="slide-card-label">10.3 · 第13页</div><img class="slide-img" width="900" height="395" src="slides/ch10_p043.jpg" alt="10.3 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Coordinate transformations</div></details></div>
+<div class="slide-card" id="slide-p10.3-14" data-page="10.3-14"><div class="slide-card-label">10.3 · 第14页</div><img class="slide-img" width="900" height="345" src="slides/ch10_p044.jpg" alt="10.3 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Coordinate transformations</div></details></div>
+<div class="slide-card" id="slide-p10.3-15" data-page="10.3-15"><div class="slide-card-label">10.3 · 第15页</div><img class="slide-img" width="900" height="840" src="slides/ch10_p045.jpg" alt="10.3 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves</div></details></div>
+<div class="slide-card" id="slide-p10.3-17" data-page="10.3-17"><div class="slide-card-label">10.3 · 第17页</div><img class="slide-img" width="900" height="182" src="slides/ch10_p046.jpg" alt="10.3 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves</div></details></div>
+<div class="slide-card" id="slide-p10.3-19" data-page="10.3-19"><div class="slide-card-label">10.3 · 第19页</div><img class="slide-img" width="900" height="81" src="slides/ch10_p047.jpg" alt="10.3 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves<br>Cardioid 心脏线</div></details></div>
+<div class="slide-card" id="slide-p10.3-21" data-page="10.3-21"><div class="slide-card-label">10.3 · 第21页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p048.jpg" alt="10.3 · 第21页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves<br>Cardioid 心脏线<br>https://zh.wikipedia.org/wiki/%E5%BF%83%E8%84%8F%E7%BA%BF</div></details></div>
+<div class="slide-card" id="slide-p10.3-23" data-page="10.3-23"><div class="slide-card-label">10.3 · 第23页</div><img class="slide-img" width="900" height="100" src="slides/ch10_p049.jpg" alt="10.3 · 第23页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves</div></details></div>
+<div class="slide-card" id="slide-p10.3-25" data-page="10.3-25"><div class="slide-card-label">10.3 · 第25页</div><img class="slide-img" width="900" height="490" src="slides/ch10_p050.jpg" alt="10.3 · 第25页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves</div></details></div>
+<div class="slide-card" id="slide-p10.3-28" data-page="10.3-28"><div class="slide-card-label">10.3 · 第28页</div><img class="slide-img" width="900" height="136" src="slides/ch10_p051.jpg" alt="10.3 · 第28页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves</div></details></div>
+<div class="slide-card" id="slide-p10.3-31" data-page="10.3-31"><div class="slide-card-label">10.3 · 第31页</div><img class="slide-img" width="900" height="136" src="slides/ch10_p051.jpg" alt="10.3 · 第31页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Polar curves<br>By L’Hospital’s rule</div></details></div>
+<div class="slide-card" id="slide-p10.4-1" data-page="10.4-1"><div class="slide-card-label">10.4 · 第1页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p001.jpg" alt="10.4 · 第1页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">10.4  Areas and lengths in polar coordinates</div></details></div>
+<div class="slide-card" id="slide-p10.4-2" data-page="10.4-2"><div class="slide-card-label">10.4 · 第2页</div><img class="slide-img" width="900" height="679" src="slides/ch10_p054.jpg" alt="10.4 · 第2页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-3" data-page="10.4-3"><div class="slide-card-label">10.4 · 第3页</div><img class="slide-img" width="900" height="913" src="slides/ch10_p055.jpg" alt="10.4 · 第3页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-4" data-page="10.4-4"><div class="slide-card-label">10.4 · 第4页</div><img class="slide-img" width="900" height="679" src="slides/ch10_p054.jpg" alt="10.4 · 第4页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-5" data-page="10.4-5"><div class="slide-card-label">10.4 · 第5页</div><img class="slide-img" width="900" height="680" src="slides/ch10_p057.jpg" alt="10.4 · 第5页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-7" data-page="10.4-7"><div class="slide-card-label">10.4 · 第7页</div><img class="slide-img" width="900" height="318" src="slides/ch10_p058.jpg" alt="10.4 · 第7页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-9" data-page="10.4-9"><div class="slide-card-label">10.4 · 第9页</div><img class="slide-img" width="900" height="73" src="slides/ch10_p059.jpg" alt="10.4 · 第9页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-10" data-page="10.4-10"><div class="slide-card-label">10.4 · 第10页</div><img class="slide-img" width="900" height="73" src="slides/ch10_p059.jpg" alt="10.4 · 第10页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-11" data-page="10.4-11"><div class="slide-card-label">10.4 · 第11页</div><img class="slide-img" width="900" height="73" src="slides/ch10_p059.jpg" alt="10.4 · 第11页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-12" data-page="10.4-12"><div class="slide-card-label">10.4 · 第12页</div><img class="slide-img" width="900" height="469" src="slides/ch10_p062.jpg" alt="10.4 · 第12页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.<br>为了找出所有可能的交点，建议画图来判断</div></details></div>
+<div class="slide-card" id="slide-p10.4-13" data-page="10.4-13"><div class="slide-card-label">10.4 · 第13页</div><img class="slide-img" width="900" height="627" src="slides/ch10_p063.jpg" alt="10.4 · 第13页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-14" data-page="10.4-14"><div class="slide-card-label">10.4 · 第14页</div><img class="slide-img" width="900" height="301" src="slides/ch10_p064.jpg" alt="10.4 · 第14页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Areas and lengths in polar coord.</div></details></div>
+<div class="slide-card" id="slide-p10.4-15" data-page="10.4-15"><div class="slide-card-label">10.4 · 第15页</div><img class="slide-img" width="900" height="675" src="slides/ch10_p065.jpg" alt="10.4 · 第15页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length in polar coordinates<br>Recall 10.2, parametric curve</div></details></div>
+<div class="slide-card" id="slide-p10.4-17" data-page="10.4-17"><div class="slide-card-label">10.4 · 第17页</div><img class="slide-img" width="900" height="224" src="slides/ch10_p066.jpg" alt="10.4 · 第17页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length of a polar curve</div></details></div>
+<div class="slide-card" id="slide-p10.4-19" data-page="10.4-19"><div class="slide-card-label">10.4 · 第19页</div><img class="slide-img" width="900" height="73" src="slides/ch10_p067.jpg" alt="10.4 · 第19页" onclick="window.__epaLightbox&&window.__epaLightbox(this.src)"><details class="slide-text"><summary>原文文字</summary><div class="slide-text-body">Arc length of a polar curve</div></details></div></aside></div></div><div id="panel-test" class="tab-panel"><h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">共 8 题</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div></div>
+
+<script>
+window.__epaLightbox = function(src){
+  var lb = document.getElementById('epa-lightbox');
+  if(!lb){ lb = document.createElement('div'); lb.id='epa-lightbox';
+    lb.innerHTML='<img>'; document.body.appendChild(lb);
+    lb.addEventListener('click', function(){ lb.style.display='none'; }); }
+  lb.querySelector('img').src = src; lb.style.display='flex';
+};
+document.addEventListener('click', function(e){
+  var chip = e.target.closest('.pg-chip'); if(!chip) return;
+  var pg = chip.getAttribute('data-page');
+  var card = document.getElementById('slide-p'+pg);
+  if(card){ card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); }
+});
+// Shrink any display formula too wide for its column so it stays fully visible.
+window.__epaFitFormulas = function __epaFitFormulas(){
+  var list = document.querySelectorAll('.kn-main mjx-container[display="true"]');
+  for(var i=0;i<list.length;i++){
+    var m = list[i], parent = m.parentElement; if(!parent) continue;
+    m.style.fontSize=''; // reset to measure natural width
+    var avail = parent.clientWidth, w = m.scrollWidth;
+    if(avail>0 && w>avail){ m.style.fontSize=(avail/w*0.97*100).toFixed(1)+'%'; }
+  }
+}
+function __epaScheduleFit(){
+  if(window.MathJax && MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(__epaFitFormulas);
+  } else { setTimeout(__epaFitFormulas, 900); }
+}
+if(document.readyState!=='loading'){ __epaScheduleFit(); }
+else { document.addEventListener('DOMContentLoaded', __epaScheduleFit); }
+var __epaFitT=null;
+window.addEventListener('resize', function(){ clearTimeout(__epaFitT); __epaFitT=setTimeout(__epaFitFormulas,200); });
+</script>
+<script>
+var Q = [{"kc_id": "10.1-01", "type": "choice", "points": 5, "cognitive_level": "understand", "difficulty": "basic", "question": "参数曲线 x = t², y = t - 1（t ∈ R）消去参数后对应的直角坐标方程为：", "options": ["x = (y + 1)²", "y² = x - 1", "x = y² + 2y + 1", "y = √x - 1"], "answer": 2, "explanation": "由 y = t - 1 得 t = y + 1。代入 x = t² 得 x = (y + 1)² = y² + 2y + 1。选项 A 也对（展开前）但规范答案选展开形式 C。选项 B 混淆了消参方向。选项 D 丢失了 y &lt; -1 的半支，且少 ± 号。"}, {"kc_id": "10.2-01", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "已知参数曲线 x = t - ln(1 + t), y = t²（t ≥ 0），求 t = 1 处的切线斜率。", "options": [], "answer": -1, "explanation": "【解】dx/dt = 1 - 1/(1+t) = t/(1+t)，dy/dt = 2t。故 dy/dx = 2t ÷ [t/(1+t)] = 2(1+t)。t=1 时 dy/dx = 4。\n【评分】求导各 2 分，相除 2 分，代入 2 分。常见错误：dx/dt 求导漏了复合函数部分，得 1 - 1/t。"}, {"kc_id": "10.2-02", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "求参数曲线 x = cos³t, y = sin³t（0 ≤ t ≤ π/2）的弧长。", "options": [], "answer": -1, "explanation": "【解】dx/dt = -3cos²t·sin t，dy/dt = 3sin²t·cos t。\n(dx/dt)²+(dy/dt)² = 9cos⁴t·sin²t + 9sin⁴t·cos²t = 9cos²t·sin²t(cos²t+sin²t) = 9cos²t·sin²t = (9/4)sin²(2t)。\nL = ∫₀^{π/2} (3/2)|sin(2t)| dt = (3/2)∫₀^{π/2} sin(2t) dt = (3/2)[-½cos(2t)]₀^{π/2} = (3/2)(½+½) = 3/2。\n【评分】求导各 1 分，平方和化简 2 分，开根 1 分，定积分 3 分，代入限值 1 分。"}, {"kc_id": "10.2-03", "type": "tf", "points": 3, "cognitive_level": "understand", "difficulty": "basic", "question": "参数曲线 x = f(t), y = g(t) 的二阶导数 d²y/dx² 等于 d²y/dt² 除以 d²x/dt²。", "options": [], "answer": 0, "explanation": "错误。正确的二阶导数公式为 d²y/dx² = (d/dt)[dy/dx] ÷ (dx/dt)。即先对 dy/dx（作为 t 的函数）再对 t 求导，再除以 dx/dt。直接的「二阶除以二阶」完全错误。"}, {"kc_id": "10.3-01", "type": "choice", "points": 5, "cognitive_level": "apply", "difficulty": "basic", "question": "点 (-√3, 1) 的一种极坐标表示为：", "options": ["(2, 5π/6)", "(2, π/6)", "(2, 7π/6)", "(2, 11π/6)"], "answer": 0, "explanation": "r = √(3+1) = 2。该点在第二象限（x&lt;0, y&gt;0）。tan θ = -1/√3，参考角为 π/6。第二象限的角为 π - π/6 = 5π/6。选项 B 是第一象限角，选项 C/D 是第三、四象限角。"}, {"kc_id": "10.3-02", "type": "calc", "points": 8, "cognitive_level": "apply", "difficulty": "medium", "question": "求极坐标曲线 r = 2 + sin θ 在 θ = π/2 处的切线斜率。", "options": [], "answer": -1, "explanation": "【解】参数化：x = r cos θ = (2+sin θ)cos θ, y = r sin θ = (2+sin θ)sin θ。\ndr/dθ = cos θ。\ndx/dθ = cos θ·cos θ + (2+sin θ)(-sin θ) = cos²θ - 2sin θ - sin²θ = cos(2θ) - 2sin θ。\ndy/dθ = cos θ·sin θ + (2+sin θ)cos θ = cos θ(sin θ + 2 + sin θ) = 2cos θ(1 + sin θ)。\nθ=π/2 时：dx/dθ = cos π - 2sin(π/2) = -1 - 2 = -3；dy/dθ = 2cos(π/2)·(1+sin(π/2)) = 0。\n故 dy/dx = 0/(-3) = 0。切线水平。\n【评分】参数化 2 分，求 dx/dθ 和 dy/dθ 各 2 分，代入 1 分，求斜率 1 分。"}, {"kc_id": "10.4-01", "type": "calc", "points": 10, "cognitive_level": "apply", "difficulty": "hard", "question": "求心形线 r = 1 + cos θ 所围图形的总面积。", "options": [], "answer": -1, "explanation": "【解】A = ½∫₀²π (1+cos θ)² dθ = ½∫₀²π (1 + 2cos θ + cos²θ) dθ。\n由对称性，也等于 ∫₀^π (1+cos θ)² dθ（利用对称，减少一半积分区间）。\n= ½∫₀²π [1 + 2cos θ + (1+cos 2θ)/2] dθ\n= ½∫₀²π (3/2 + 2cos θ + ½cos 2θ) dθ\n= ½[ (3/2)θ + 2sin θ + (1/4)sin 2θ ]₀²π\n= ½(3π) = 3π/2。\n【评分】面积公式 2 分，展开被积函数 2 分，cos²θ 降幂 2 分，逐项积分 2 分，代入上下限 1 分，最终结果 1 分。常见错误：忘记系数 1/2，得到 3π。"}, {"kc_id": "10.4-02", "type": "calc", "points": 8, "cognitive_level": "analyze", "difficulty": "hard", "question": "求曲线 r = 2cos θ 与 r = 1 所围公共部分的面积。", "options": [], "answer": -1, "explanation": "【解】联立 2cos θ = 1 → cos θ = 1/2 → θ = ±π/3。\n由对称性，总面积 = 2 × [½∫₀^{π/3} 1² dθ + ½∫_{π/3}^{π/2} (2cos θ)² dθ]。\n第一块（扇形）：½∫₀^{π/3} dθ = π/6。\n第二块（圆 r=2cos θ 的一部分）：½∫_{π/3}^{π/2} 4cos²θ dθ = ∫_{π/3}^{π/2} (1+cos 2θ) dθ = [θ+½sin 2θ]_{π/3}^{π/2} = π/2 - (π/3 + ½·√3/2) = π/6 - √3/4。\n总面积 = 2(π/6 + π/6 - √3/4) = 2(π/3 - √3/4) = 2π/3 - √3/2。\n【评分】求交点 2 分，分割积分区间 2 分，每个部分各 2 分。常见错误：直接用扇形面积公式却写错了积分限。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+function tfAnswerIndex(ans) {
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', 'vrai', 'vero', 'san', 'pravda'];
+  var falsy = ['1', 'f', 'false', 'faux', 'falso', 'nepravda'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return -1;
+}
+
+function fillBlankCount(text) {
+  return (text.match(/(_{2,})/g) || []).length;
+}
+
+function fillBlankAnswers(answer, count) {
+  if (Array.isArray(answer)) return answer;
+  if (count <= 1) return [answer];
+  var arr = [];
+  for (var i = 0; i < count; i++) arr.push(answer);
+  return arr;
+}
+
+function roundScore(score) {
+  var r = Math.round(score * 10) / 10;
+  return r === Math.floor(r) ? Math.floor(r) : r.toFixed(1);
+}
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('questions-container not found'); return; }
+
+  var order = LABELS.section_order || [];
+  Q.forEach(function(q, i) { q._i = i; });
+  Q.sort(function(a, b) {
+    var oa = order.indexOf(a.type);
+    if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type);
+    if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + (LABELS.points_suffix || '分') + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + (q.question || q.stem || '') + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + (LABELS.true_label || '正确') + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + (LABELS.false_label || '错误') + '</label>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + (LABELS.placeholder || '请输入答案') + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + (LABELS.pitfall_prefix || '⚠ ') + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function(err) { console.error(err); });
+  }
+}
+
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var k = 0;
+  var html = ('' + (q.question || q.stem)).replace(/(_{2,})/g, function() {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') { build(); }
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i], qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+    result.style.display = 'block';
+    if (q.type === 'choice' || q.type === 'tf') { score += gradeSingle(q, qid, card, badge, correctEl); }
+    else if (q.type === 'multi') { score += gradeMulti(q, qid, card, badge, correctEl); }
+    else if (q.type === 'fill') { score += gradeFill(q, qid, card, badge, correctEl); }
+    else { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = (LABELS.reference_label || '参考'); }
+  }
+  var sb = document.getElementById('score-box');
+  if (sb) { sb.style.display = 'block'; document.getElementById('score-num').textContent = roundScore(score); sb.scrollIntoView({behavior:'smooth'}); }
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].readOnly = true;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  if (ansIdx < 0) { card.classList.add('correct'); badge.className = 'badge badge-ref'; badge.textContent = '参考'; return 0; }
+  if (radio && parseInt(radio.value) === ansIdx) {
+    card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); return q.points || 0;
+  }
+  card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误');
+  correctEl.textContent = ' ' + (LABELS.correct_answer_label || '正确答案') + ': ' + String.fromCharCode(65 + ansIdx);
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var boxes = document.querySelectorAll('input[name="' + qid + '"]');
+  var ansIdxs = q.answer;
+  if (!Array.isArray(ansIdxs)) { try { ansIdxs = JSON.parse(ansIdxs); } catch(e) { ansIdxs = [ansIdxs]; } }
+  var hit = 0, total = ansIdxs.length;
+  for (var k = 0; k < boxes.length; k++) {
+    var checked = boxes[k].checked;
+    var isAns = ansIdxs.indexOf(k) !== -1;
+    if (checked === isAns) hit++;
+  }
+  var earned = (hit === boxes.length) ? (q.points || 0) : Math.round((q.points || 0) * hit / boxes.length);
+  if (hit === boxes.length) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+  else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+  else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+  return earned;
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question || q.stem || '');
+  var answers = fillBlankAnswers(q.answer, Math.max(nBlanks, 1));
+  var hit = 0;
+  if (nBlanks > 0) {
+    for (var b = 0; b < nBlanks; b++) {
+      var inp = document.getElementById('fill-' + qid + '-' + b);
+      if (!inp) continue;
+      var expect = answers[b] || answers[answers.length - 1] || '';
+      var expList = Array.isArray(expect) ? expect : [expect];
+      var val = inp.value.trim().replace(/\s+/g, '');
+      if (expList.some(function(e) { return ('' + e).replace(/\s+/g, '') === val; })) hit++;
+    }
+    var n = nBlanks;
+    if (hit === n) { card.classList.add('correct'); badge.className = 'badge badge-ok'; badge.textContent = (LABELS.correct_label || '正确'); }
+    else if (hit > 0) { card.classList.add('partial'); badge.className = 'badge badge-partial'; badge.textContent = (LABELS.partial_label || '部分正确'); }
+    else { card.classList.add('wrong'); badge.className = 'badge badge-no'; badge.textContent = (LABELS.wrong_label || '错误'); }
+    return Math.round((q.points || 0) * hit / n * 10) / 10;
+  }
+  return 0;
+}
+
+// ─── Timer ──────────────────────────────────────────────────────────
+window.__epaStartTime = Date.now();
+function __epaElapsed(){ var s=Math.floor((Date.now()-window.__epaStartTime)/1000),m=Math.floor(s/60); return (m>0?m+'分':'')+(s%60)+'秒'; }
+(function(){ var d=document.createElement('div'); d.id='epa-timer'; d.style.cssText='text-align:center;color:var(--ink-light);font-size:0.85em;margin:4px 0 12px'; d.textContent='用时: '+__epaElapsed(); setInterval(function(){ d.textContent='用时: '+__epaElapsed(); },30000); var t=document.getElementById('epa-tabs'); if(t)t.insertAdjacentElement('afterend',d); })();
+
+// ─── Wrong-book ─────────────────────────────────────────────────────
+window.__epaSaveWrong = function(){
+  var ids=[]; for(var i=0;i<Q.length;i++){ var c=document.getElementById('card-q'+i); if(c&&(c.classList.contains('wrong')||c.classList.contains('partial'))) ids.push(Q[i].id||i); }
+  try{ var k='epa-wrong-'+document.title, ex=JSON.parse(localStorage.getItem(k)||'[]'); ids.forEach(function(id){if(ex.indexOf(id)===-1)ex.push(id);}); localStorage.setItem(k,JSON.stringify(ex)); alert('已保存 '+ids.length+' 道错题'); }catch(e){alert('保存失败');}
+};
+
+// ─── Score detail ────────────────────────────────────────────────────
+window.__epaDetail = function(){
+  var h='<div style=\"max-width:700px;margin:20px auto\"><h3>成绩单</h3><table style=\"width:100%;font-size:0.9em\"><tr><th>#</th><th>知识点</th><th>题型</th><th>得分</th><th>状态</th></tr>';
+  for(var i=0;i<Q.length;i++){ var q=Q[i],c=document.getElementById('card-q'+i),st='未批改'; if(c&&c.classList.contains('correct'))st='OK'; else if(c&&c.classList.contains('wrong'))st='X'; else if(c&&c.classList.contains('partial'))st='~'; h+='<tr><td>'+(i+1)+'</td><td>'+(q.kc_id||'-')+'</td><td>'+q.type+'</td><td>'+(st==='OK'?q.points:st==='~'?Math.floor(q.points/2):st==='X'?0:'-')+'/'+q.points+'</td><td>'+st+'</td></tr>'; }
+  h+='</table></div>'; var o=document.getElementById('epa-detail'); if(o)o.remove(); var d=document.createElement('div'); d.id='epa-detail'; d.innerHTML=h; document.getElementById('panel-test').appendChild(d);
+};
+
+// ─── Shuffle ──────────────────────────────────────────────────────────
+window.__epaShuffle = function(){
+  var cont=document.getElementById('questions-container'); if(!cont)return;
+  var cards=Array.from(cont.querySelectorAll('.q-card'));
+  for(var i=cards.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); cont.insertBefore(cards[j],cards[i]); }
+};
+
+// ─── Toolbar inject ──────────────────────────────────────────────────
+(function(){
+  var to=setInterval(function(){
+    var cont=document.getElementById('questions-container'); if(!cont)return;
+    clearInterval(to);
+    var bar=document.createElement('div'); bar.className='no-print';
+    bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px';
+    bar.innerHTML='<button onclick=\"__epaSaveWrong()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">保存错题</button>'
+      +'<button onclick=\"__epaDetail()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">成绩单</button>'
+      +'<button onclick=\"__epaShuffle()\" style=\"padding:4px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--card-bg);cursor:pointer;font-size:0.82em\">乱序题目</button>';
+    cont.insertBefore(bar, cont.firstChild);
+  }, 300);
+})();
+
+</script>
+<script>
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('#epa-tabs .tab-btn'); if(!btn) return;
+  var tab = btn.getAttribute('data-tab');
+  document.querySelectorAll('#epa-tabs .tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + tab); });
+  // The test panel is display:none on load, so build()'s MathJax typeset ran
+  // on hidden content (collapsing formula question cards to 0 height). Re-run
+  // build() the first time the panel is visible so it renders + typesets at the
+  // real size. Guarded so user answers aren't wiped on later switches.
+  if(tab === 'test' && !window.__epaTestBuilt){
+    window.__epaTestBuilt = true;
+    if(typeof build === 'function'){ try { build(); } catch(err){} }
+  }
+  if(window.__epaFitFormulas) setTimeout(window.__epaFitFormulas, 50);
+  window.scrollTo(0, 0);
+});
+</script>
+
+<script>
+(function(){
+  var btn = document.createElement('button');
+  btn.id = 'dark-toggle';
+  btn.textContent = '🌙';
+  btn.title = '切换暗色模式';
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    try { localStorage.setItem('epa-dark', document.body.classList.contains('dark') ? '1' : '0'); } catch(e){}
+  });
+  document.body.appendChild(btn);
+  if(localStorage.getItem('epa-dark') === '1') { document.body.classList.add('dark'); btn.textContent = '☀️'; }
+})();
+</script>
+
+</body>
+</html>
