@@ -1,0 +1,7 @@
+*.py
+*.pyc
+.pptx
+.DS_Store
+Thumbs.db
+.epa_work/
+EPA/
