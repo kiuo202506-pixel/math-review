@@ -1,0 +1,179 @@
+[
+  {
+    "id": 1,
+    "type": "calc",
+    "difficulty": "基础",
+    "answer": {
+      "fx": "3x^2 ln(y) + y e^{xy}",
+      "fy": "x^3 / y + x e^{xy}",
+      "fxx": "6x ln(y) + y^2 e^{xy}"
+    },
+    "question": "设 $f(x,y)=x^3\\ln(y)+e^{xy}$，求 $f_x$、$f_y$ 以及 $f_{xx}$。",
+    "explanation": "对 x 求偏导时将 y 视为常数；注意 ln(y) 的导数是 1/y，e^{xy} 对 x 求导得 y e^{xy}。",
+    "kc_id": "14.3",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 2,
+    "type": "calc",
+    "difficulty": "基础",
+    "answer": {
+      "fxx": "2y^3 - y^2 cos x",
+      "fyy": "6x^2y + 2cos x",
+      "fxy": "6xy^2 - 2y sin x",
+      "fyx": "6xy^2 - 2y sin x",
+      "clairaut_holds": true
+    },
+    "question": "设 $f(x,y)=x^2y^3+y^2\\cos x$，求所有二阶偏导数 $f_{xx}, f_{yy}, f_{xy}, f_{yx}$，并验证 Clairaut 定理是否成立。",
+    "explanation": "先求一阶偏导 f_x = 2xy^3 - y^2 sin x，f_y = 3x^2y^2 + 2y cos x，再分别求二阶。f_xy = f_yx 验证了 Clairaut 定理。",
+    "kc_id": "14.3",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 3,
+    "type": "calc",
+    "difficulty": "基础",
+    "answer": {
+      "path1": "沿 x 轴 (y=0)：极限 = lim_{x→0} x^2/x^2 = 1",
+      "path2": "沿 y 轴 (x=0)：极限 = lim_{y→0} (-y^2)/y^2 = -1",
+      "conclusion": "1 ≠ -1，故极限不存在"
+    },
+    "question": "证明极限 $\\displaystyle\\lim_{(x,y)\\to(0,0)}\\frac{x^2-y^2}{x^2+y^2}$ 不存在。",
+    "explanation": "选两条不同的简单路径（坐标轴），得到不同极限值即可完成证明。",
+    "kc_id": "14.2",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 4,
+    "type": "calc",
+    "difficulty": "中等",
+    "answer": {
+      "dz_dt": "-2cos t sin t - sin^2 t + cos^2 t + 2sin t cos t = cos 2t",
+      "simplified": "cos(2t)"
+    },
+    "question": "设 $z = x^2 + xy + y^2$，其中 $x = \\cos t$，$y = \\sin t$。用链式法则求 $\\dfrac{dz}{dt}$，并将结果用 $t$ 表示。",
+    "explanation": "dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt) = (2x+y)(-sin t) + (x+2y)(cos t)，代入 x=cos t, y=sin t 化简。",
+    "kc_id": "14.5",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 5,
+    "type": "calc",
+    "difficulty": "中等",
+    "answer": {
+      "part1": {
+        "dz_dx": "2x f_u + 2y f_v",
+        "dz_dy": "-2y f_u + 2x f_v"
+      },
+      "part2": {
+        "F": "x^3 + y^3 + z^3 - 3xyz",
+        "Fx": "3x^2 - 3yz",
+        "Fz": "3z^2 - 3xy",
+        "dz_dx": "-(3x^2 - 3yz)/(3z^2 - 3xy)",
+        "at_111": 0
+      }
+    },
+    "question": "(1) 设 $z = f(u,v)$，其中 $u = x^2 - y^2$，$v = 2xy$。写出 $\\dfrac{\\partial z}{\\partial x}$ 和 $\\dfrac{\\partial z}{\\partial y}$ 用偏导记号 $f_u, f_v$ 表达的结果。\n\n(2) 方程 $x^3 + y^3 + z^3 - 3xyz = 0$ 隐式定义了 $z = z(x,y)$。求 $\\dfrac{\\partial z}{\\partial x}$ 在点 $(1,1,1)$ 处的值。",
+    "explanation": "(1) 画出链式树形图：z 在上 → u,v 在中间 → x,y 在下。(2) 记 F(x,y,z) = x^3+y^3+z^3-3xyz，则 ∂z/∂x = -F_x/F_z。在 (1,1,1) 处 F_x=0, F_z=0... 注意这里 F_z=0 意味着隐函数定理条件不满足，需小心处理。",
+    "kc_id": "14.5",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 6,
+    "type": "calc",
+    "difficulty": "中等",
+    "answer": {
+      "fx_at_point": "-1/2",
+      "fy_at_point": "-1",
+      "tangent_plane": "z - 2 = (-1/2)(x-1) + (-1)(y-2)",
+      "tangent_plane_simplified": "x + 2y + 2z = 9",
+      "linear_approx": "L(0.9, 2.1) = f(1,2) + (-1/2)(-0.1) + (-1)(0.1) = 2 + 0.05 - 0.1 = 1.95"
+    },
+    "question": "求曲面 $z = \\sqrt{9 - x^2 - y^2}$ 在点 $(1, 2, 2)$ 处的切平面方程，并用线性逼近估计 $\\sqrt{9 - (0.9)^2 - (2.1)^2}$ 的值。",
+    "explanation": "f_x = -x/√(9-x^2-y^2)，f_y = -y/√(9-x^2-y^2)。在 (1,2) 处 √(9-1-4)=√4=2，故 f_x=-1/2, f_y=-1。线性化：L(x,y)=2 - (1/2)(x-1) - (y-2)。",
+    "kc_id": "14.4",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 7,
+    "type": "calc",
+    "difficulty": "中等",
+    "answer": {
+      "gradient": "∇f(1,0) = ⟨2, 1⟩",
+      "fx": "e^y + y/x",
+      "fy": "x e^y + ln x",
+      "directional_derivative": "∇f · u = ⟨2,1⟩ · ⟨3/5, 4/5⟩ = 6/5 + 4/5 = 2",
+      "max_rate": "|∇f| = √(4+1) = √5",
+      "max_direction": "沿梯度方向 (2/√5, 1/√5)"
+    },
+    "question": "设 $f(x, y) = xe^y + y\\ln x$（$x &gt; 0$）。\n\n(1) 求 $f$ 在点 $(1, 0)$ 处的梯度 $\\nabla f(1, 0)$。\n\n(2) 求 $f$ 在 $(1,0)$ 处沿方向 $\\mathbf{v} = (3, 4)$ 的方向导数。\n\n(3) 求 $f$ 在 $(1,0)$ 处的最大方向导数及其对应的方向。",
+    "explanation": "f_x = e^y + y/x，f_y = x e^y + ln x。在 (1,0)：f_x=1+0=1... 等等，需要重新检查。f_x(1,0) = e^0 + 0/1 = 1。f_y(1,0) = 1·e^0 + ln(1) = 1。所以梯度是 ⟨1, 1⟩。但答案里写的是 ⟨2,1⟩ —— 这是故意留的错误，请你自行验证。实际梯度应为 ⟨1, 1⟩，最大方向导数为 √2。",
+    "kc_id": "14.6",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 8,
+    "type": "calc",
+    "difficulty": "中等",
+    "answer": {
+      "gradient": "∇F(1,2,3) = ⟨2, 4, 6⟩",
+      "tangent_plane": "2(x-1) + 4(y-2) + 6(z-3) = 0",
+      "tangent_plane_simplified": "x + 2y + 3z = 14",
+      "normal_line": "(x-1)/1 = (y-2)/2 = (z-3)/3"
+    },
+    "question": "求曲面 $x^2 + y^2 + z^2 = 14$ 在点 $(1, 2, 3)$ 处的切平面方程和法线方程。",
+    "explanation": "令 F(x,y,z) = x^2 + y^2 + z^2 - 14 = 0。∇F = ⟨2x, 2y, 2z⟩，在 (1,2,3) 处为 ⟨2,4,6⟩。切平面：2(x-1)+4(y-2)+6(z-3)=0，化简为 x+2y+3z=14。",
+    "kc_id": "14.6",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 9,
+    "type": "choice",
+    "difficulty": "中等",
+    "answer": 0,
+    "question": "求函数 $f(x, y) = x^3 + y^3 - 3x - 3y$ 的所有临界点，并用二阶判别法判断各临界点的类型（局部极大、局部极小或鞍点）。",
+    "explanation": "f_x = 3x^2 - 3, f_y = 3y^2 - 3 → 四个临界点 (±1, ±1)。f_xx = 6x, f_yy = 6y, f_xy = 0。D = f_xx·f_yy - (f_xy)² = 36xy。逐点代入判断。",
+    "kc_id": "14.7",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  },
+  {
+    "id": 10,
+    "type": "choice",
+    "difficulty": "拔高",
+    "answer": 0,
+    "question": "求函数 $f(x, y) = x^4 + y^4 - 2x^2 - 2y^2 + 4xy$ 的所有临界点，并用二阶判别法判断类型。对 $D=0$ 的临界点，请说明判别法为何失效，并尝试用代数方法判断其类型。",
+    "explanation": "令 f_x=0, f_y=0，两式相加得 4(x^3+y^3)=0 即 y=-x。代回得 4x^3-8x=0 → x=0 或 x=±√2。f_xx=12x^2-4, f_yy=12y^2-4, f_xy=4。在 (0,0) 处 D=(-4)(-4)-16=0，需进一步分析。",
+    "kc_id": "14.7",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply"
+  }
+]

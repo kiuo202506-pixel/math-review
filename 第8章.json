@@ -1,0 +1,130 @@
+[
+  {
+    "kc_id": "kc8.1",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求曲线 $y = \\ln(\\sec x)$ 从 $x=0$ 到 $x=\\pi/4$ 的弧长。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：y' = tan x, 1+(y')² = 1+tan²x = sec²x, √(1+(y')²) = |sec x|。在 [0,π/4] 上 sec x &gt; 0, 故 L = ∫_0^(π/4) sec x dx = ln|sec x + tan x||_0^(π/4) = ln(√2+1) - ln(1) = ln(√2+1)。&lt;br&gt;&lt;strong&gt;评分要点</strong&gt;：求导 2 分，化简被积函数 2 分，积分 2 分，代入上下限 2 分。",
+    "pitfall": "常见错误：忘记 1+tan²x=sec²x 这个恒等式，被积函数无法化简。",
+    "options": []
+  },
+  {
+    "kc_id": "kc8.1",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "以下哪个公式正确表达了曲线 $y=f(x)$ 从 $a$ 到 $b$ 的弧长？",
+    "options": [
+      "$\\int_a^b \\sqrt{1+f'(x)}\\,dx$",
+      "$\\int_a^b \\sqrt{1+[f'(x)]^2}\\,dx$",
+      "$\\int_a^b (1+[f'(x)]^2)\\,dx$",
+      "$\\int_a^b \\sqrt{[f'(x)]^2-1}\\,dx$"
+    ],
+    "answer": 1,
+    "explanation": "弧长公式为 L = ∫ √[1+(dy/dx)²] dx。A 漏了平方，C 漏了根号，D 的减号是错误的（弧长元素 ≥ dx 所以被积函数 ≥1）。",
+    "pitfall": "弧长公式与旋转曲面面积公式易混淆——旋转面积多乘了 2πy。"
+  },
+  {
+    "kc_id": "kc8.2",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求曲线 $y = x^3$（$0 \\le x \\le 1$）绕 $x$ 轴旋转所得曲面的面积。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：y'=3x², 1+(y')²=1+9x⁴, √(1+(y')²)=√(1+9x⁴)。S = ∫_0^1 2πy√(1+(y')²) dx = 2π∫_0^1 x³√(1+9x⁴) dx。令 u=1+9x⁴, du=36x³dx, x³dx=du/36。S = 2π·(1/36)∫_1^10 √u du = (π/18)·(2/3)(10^(3/2)-1) = (π/27)(10^(3/2)-1)。&lt;br&gt;&lt;strong&gt;评分要点</strong&gt;：公式正确 2 分，化简 2 分，换元 2 分，积分+代入 2 分。",
+    "pitfall": "绕 x 轴时半径是 y 不是 x——若写成 2πx 就全错。另一个常见错误：忘记 ds = √(1+(y')²)dx 中的根号。",
+    "options": []
+  },
+  {
+    "kc_id": "kc8.2",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "曲线 $y = f(x) \\ge 0$ 绕 $y$ 轴旋转所得曲面积公式是？",
+    "options": [
+      "$\\int 2\\pi x\\sqrt{1+[f'(x)]^2}\\,dx$",
+      "$\\int 2\\pi y\\sqrt{1+[f'(x)]^2}\\,dx$",
+      "$\\int \\pi [f(x)]^2\\,dx$",
+      "$\\int 2\\pi f(x)\\,dx$"
+    ],
+    "answer": 0,
+    "explanation": "绕 y 轴旋转时，每小段到 y 轴的距离是 x（而不是 y），故半径 = x，面积 = 2πx·ds。B 是绕 x 轴的公式（半径用 y）。C 是旋转体体积（圆盘法），D 没有 ds 因子。",
+    "pitfall": "绕 x 轴和绕 y 轴的公式区别仅在于「半径」：绕 x→半径=y，绕 y→半径=x。"
+  },
+  {
+    "kc_id": "kc8.3",
+    "type": "calc",
+    "points": 10,
+    "cognitive_level": "apply",
+    "difficulty": "hard",
+    "question": "一个梯形水坝顶宽 40m、底宽 20m、高 30m。水面距坝顶 4m。水的密度 $\\rho = 1000\\,\\text{kg/m}^3$，$g = 9.8\\,\\text{m/s}^2$。求水对坝的静水总压力。（设积分表达式并代入数值即可）",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：取 y 轴向下，原点在水面（坝顶上方 4m 处）。水深 d(y)=y，水压 p=ρgy=9800y。梯形坝宽度 w(y) 从坝顶宽 40m 线性变化到坝底宽 20m：斜率 = (20-40)/30 = -2/3，w(y) = 40 - (2/3)(y-4)（当 y≥4 时）。坝顶对应 y=4，坝底对应 y=34。F = ∫_4^34 9800y·[40-(2/3)(y-4)] dy。&lt;br&gt;&lt;strong&gt;评分要点</strong&gt;：坐标系 2 分，深度表达式 2 分，宽度函数 3 分，积分表达式 3 分。",
+    "pitfall": "坐标系选择是关键——y 轴向下则 y 本身就是深度；若取 y 轴向上，深度 = (水面 y 坐标) - y。第二个易错点：宽度函数随 y 的变化需要正确写线性关系。",
+    "options": []
+  },
+  {
+    "kc_id": "kc8.3",
+    "type": "tf",
+    "points": 2,
+    "cognitive_level": "remember",
+    "difficulty": "basic",
+    "question": "均匀密度平面区域绕 x 轴的力矩公式为 $M_x = \\int \\frac{1}{2}[f(x)]^2\\,dx$。",
+    "options": [],
+    "answer": 0,
+    "explanation": "正确。微元是一个竖直条，其「平均 y 坐标」为 f(x)/2，微元质量 ∝ f(x)dx，力矩 = (f(x)/2)·(f(x)dx) = ½[f(x)]²dx。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc8.4",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "understand",
+    "difficulty": "medium",
+    "question": "一个由 $y=\\sin x$、$y=0$、$0\\le x\\le\\pi$ 围成的均质区域，其形心的 $\\bar{x}$ 坐标是？",
+    "options": [
+      "$\\pi$",
+      "$\\pi/2$",
+      "$\\pi/4$",
+      "$0$"
+    ],
+    "answer": 1,
+    "explanation": "此区域关于 x=π/2 对称，故形心的 x 坐标恰好为对称轴 x=π/2。可验证：x̄ = (1/A)·∫_0^π x sin x dx，分部积分后等于 π/2。",
+    "pitfall": "不要凭直觉选 0——虽然 sin x 在 (0,π) 上对称于 π/2，但区域在 x 方向的分布并不是均匀的：越靠近 π/2 处 y 越大，权重越大，最终形心仍在 π/2。"
+  },
+  {
+    "kc_id": "kc8.4",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求由 $y = x^2$ 和 $y = 4$ 围成区域的形心坐标。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：区域由 y=x²（下）和 y=4（上）围成，-2≤x≤2。面积 A = ∫_(-2)^2 (4-x²)dx = 16-(16/3) = 32/3。x̄ = 0（偶函数区域对称于 y 轴）。ȳ = (1/A)∫_(-2)^2 ½[(4)²-(x²)²]dx = (3/32)∫_0^2 (16-x⁴)dx = (3/32)(32-32/5) = 12/5。形心 (0, 12/5)。&lt;br&gt;&lt;strong&gt;评分要点</strong&gt;：求面积 2 分，利用对称性得 x̄=0 得 2 分，ȳ 公式正确 2 分，计算 2 分。",
+    "pitfall": "ȳ 的公式是 ½[f(x)]² 不是 f(x)——若写成 ∫y²dx 则漏了 1/2 因子。",
+    "options": []
+  },
+  {
+    "kc_id": "kc8.4",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "understand",
+    "difficulty": "medium",
+    "question": "Pappus 定理中，平面区域 R 绕直线 L 旋转所得体积 $V = 2\\pi r A$，其中 $r$ 是？",
+    "options": [
+      "R 的形心到 L 的距离",
+      "R 中离 L 最远的点到 L 的距离",
+      "R 中离 L 最近的点到 L 的距离",
+      "R 面积的一半"
+    ],
+    "answer": 0,
+    "explanation": "Pappus 定理：V = 2π·(形心到转轴距离)·(区域面积)。r 恰好是形心到转轴的距离，不是最远/最近距离。",
+    "pitfall": "易混淆：有的学生记成了「重心走过的路程」——实际上是形心走过的路程 = 2πr。"
+  }
+]

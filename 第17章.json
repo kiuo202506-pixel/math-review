@@ -1,0 +1,290 @@
+[
+  {
+    "id": "ch17-q01",
+    "type": "calc",
+    "difficulty": "基础",
+    "scoring_rubric": "特征方程正确 2分；因式分解/求根正确 3分；通解形式正确（含两独立解）5分。若只写一个解扣 3分；若未标注任意常数各扣 1分。",
+    "question": "求微分方程 y'' − y' − 6y = 0 的通解。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "写出特征方程",
+          "detail": "r² − r − 6 = 0",
+          "score_weight": 0.2
+        },
+        {
+          "step": 2,
+          "content": "求解特征方程",
+          "detail": "(r − 3)(r + 2) = 0 ⇒ r₁ = 3, r₂ = −2。Δ = 1 + 24 = 25 > 0，属相异实根情形（Case 1）。",
+          "score_weight": 0.3
+        },
+        {
+          "step": 3,
+          "content": "写出通解",
+          "detail": "y = c₁e^(3x) + c₂e^(−2x)，其中 c₁, c₂ 为任意常数。",
+          "score_weight": 0.5
+        }
+      ],
+      "final_answer": "y = c₁e^(3x) + c₂e^(−2x)"
+    },
+    "kc_id": "Case 1 — 相异实根",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q02",
+    "type": "calc",
+    "difficulty": "基础",
+    "scoring_rubric": "特征方程正确 2分；识别重根 3分；通解正确含 xe^(rx) 项 5分。若遗漏 x 因子（写为两个 e^(−3x) 之和）扣 4分。",
+    "question": "求微分方程 y'' + 6y' + 9y = 0 的通解。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "写出特征方程",
+          "detail": "r² + 6r + 9 = 0",
+          "score_weight": 0.2
+        },
+        {
+          "step": 2,
+          "content": "求根并判断情形",
+          "detail": "(r + 3)² = 0 ⇒ r = −3（二重根）。Δ = 36 − 36 = 0，属重根情形（Case 2）。",
+          "score_weight": 0.3
+        },
+        {
+          "step": 3,
+          "content": "写出通解",
+          "detail": "重根时通解为 y = c₁e^(−3x) + c₂ x e^(−3x)。注意第二个解必须含 x 因子以保证与 e^(−3x) 线性无关。",
+          "score_weight": 0.5
+        }
+      ],
+      "final_answer": "y = c₁e^(−3x) + c₂ x e^(−3x) = (c₁ + c₂x)e^(−3x)"
+    },
+    "kc_id": "Case 2 — 重根",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q03",
+    "type": "calc",
+    "difficulty": "基础",
+    "scoring_rubric": "特征方程正确 1.5分；判别 Δ<0 并正确提取 α,β 3.5分；通解形式正确（e^(αx) 括号内 cos+sin）5分。若漏 e^(2x) 因子扣 3分；若 sin/cos 的系数 β 写错扣 2分。",
+    "question": "求微分方程 y'' − 4y' + 13y = 0 的通解。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "写出特征方程",
+          "detail": "r² − 4r + 13 = 0",
+          "score_weight": 0.15
+        },
+        {
+          "step": 2,
+          "content": "求根并判断情形",
+          "detail": "Δ = 16 − 52 = −36 < 0，属共轭复根情形（Case 3）。用求根公式：r = [4 ± √(−36)] / 2 = [4 ± 6i] / 2 = 2 ± 3i。故 α = 2, β = 3。",
+          "score_weight": 0.35
+        },
+        {
+          "step": 3,
+          "content": "写出通解",
+          "detail": "通解为 y = e^(αx)(c₁cos βx + c₂sin βx) = e^(2x)(c₁cos 3x + c₂sin 3x)。注意 e^(2x) 因子不可遗漏。",
+          "score_weight": 0.5
+        }
+      ],
+      "final_answer": "y = e^(2x)(c₁cos 3x + c₂sin 3x)"
+    },
+    "kc_id": "Case 3 — 共轭复根",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q04",
+    "type": "calc",
+    "difficulty": "中等",
+    "scoring_rubric": "通解正确 3分；求导正确 1.5分；代入初值列方程正确 2分；解方程组正确 2分；最终特解 1.5分。若未求导直接代 y'(0) 扣 3分。",
+    "question": "求解初值问题：y'' + y' − 2y = 0, y(0) = 4, y'(0) = 1。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "求通解",
+          "detail": "特征方程：r² + r − 2 = 0 ⇒ (r+2)(r−1) = 0 ⇒ r₁ = −2, r₂ = 1。Δ = 1+8 = 9 > 0，相异实根。通解：y = c₁e^(−2x) + c₂e^x。",
+          "score_weight": 0.3
+        },
+        {
+          "step": 2,
+          "content": "求导",
+          "detail": "y' = −2c₁e^(−2x) + c₂e^x。",
+          "score_weight": 0.15
+        },
+        {
+          "step": 3,
+          "content": "代入初值条件",
+          "detail": "y(0) = c₁ + c₂ = 4 ①<br>y'(0) = −2c₁ + c₂ = 1 ②",
+          "score_weight": 0.2
+        },
+        {
+          "step": 4,
+          "content": "解方程组",
+          "detail": "② − ①：−3c₁ = −3 ⇒ c₁ = 1。代回 ①：1 + c₂ = 4 ⇒ c₂ = 3。",
+          "score_weight": 0.2
+        },
+        {
+          "step": 5,
+          "content": "写出特解",
+          "detail": "y = e^(−2x) + 3e^x",
+          "score_weight": 0.15
+        }
+      ],
+      "final_answer": "y = e^(−2x) + 3e^x"
+    },
+    "kc_id": "初值问题 — Case 1",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q05",
+    "type": "calc",
+    "difficulty": "中等",
+    "scoring_rubric": "通解正确 3分；求导正确 1.5分；正确代入 y(0) 得 c₁=0（2分）；正确代入 y'(0) 得 c₂=3（2分）；最终特解 1.5分。",
+    "question": "求解初值问题：y'' + 4y = 0, y(0) = 0, y'(0) = 6。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "求通解",
+          "detail": "特征方程：r² + 4 = 0 ⇒ r = ±2i。α = 0, β = 2（纯虚根，Case 3 的特例）。通解：y = c₁cos 2x + c₂sin 2x（e^(0·x) = 1）。",
+          "score_weight": 0.3
+        },
+        {
+          "step": 2,
+          "content": "求导",
+          "detail": "y' = −2c₁sin 2x + 2c₂cos 2x",
+          "score_weight": 0.15
+        },
+        {
+          "step": 3,
+          "content": "代入初值条件",
+          "detail": "y(0) = c₁ = 0 ①<br>y'(0) = 2c₂ = 6 ⇒ c₂ = 3 ②",
+          "score_weight": 0.25
+        },
+        {
+          "step": 4,
+          "content": "写出特解",
+          "detail": "y = 3 sin 2x",
+          "score_weight": 0.3
+        }
+      ],
+      "final_answer": "y = 3 sin 2x"
+    },
+    "kc_id": "初值问题 — Case 3",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q06",
+    "type": "calc",
+    "difficulty": "中等偏难",
+    "scoring_rubric": "通解含 x 因子正确 2.5分；求导使用乘积法则正确 2.5分（此处错则全扣 2.5分）；代入 y(0) 正确 2分；代入 y'(0) 正确 2分；最终特解 1分。",
+    "question": "求解初值问题：y'' + 2y' + y = 0, y(0) = 2, y'(0) = −1。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "求通解",
+          "detail": "特征方程：r² + 2r + 1 = 0 ⇒ (r+1)² = 0 ⇒ r = −1（二重根，Case 2）。通解：y = c₁e^(−x) + c₂ x e^(−x)。",
+          "score_weight": 0.25
+        },
+        {
+          "step": 2,
+          "content": "求导（注意乘积法则）",
+          "detail": "y' = −c₁e^(−x) + c₂e^(−x) − c₂x e^(−x) = −c₁e^(−x) + c₂(1−x)e^(−x)。<br>（乘积法则：(x e^(−x))' = 1·e^(−x) + x·(−e^(−x)) = (1−x)e^(−x)）",
+          "score_weight": 0.25
+        },
+        {
+          "step": 3,
+          "content": "代入初值条件",
+          "detail": "y(0) = c₁ = 2 ①<br>y'(0) = −c₁ + c₂(1−0) = −2 + c₂ = −1 ⇒ c₂ = 1 ②",
+          "score_weight": 0.25
+        },
+        {
+          "step": 4,
+          "content": "写出特解",
+          "detail": "y = 2e^(−x) + x e^(−x) = (2 + x)e^(−x)",
+          "score_weight": 0.25
+        }
+      ],
+      "final_answer": "y = (2 + x)e^(−x)"
+    },
+    "kc_id": "初值问题 — Case 2（重根）",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  },
+  {
+    "id": "ch17-q07",
+    "type": "calc",
+    "difficulty": "中等偏难",
+    "scoring_rubric": "分情况讨论框架正确 1分；λ<0 分析正确 2.5分；λ=0 分析正确 1.5分；λ>0 写出正弦通解 2分；由边界条件导出 sin(μπ)=0 得 μ=n 2分；最终 λₙ=n² 及 yₙ=sin(nx) 1分。若漏掉 λ=0 情况扣 1.5分；若 n 从 0 开始扣 0.5分（n=0 给出平凡解）。",
+    "question": "考虑边值问题 y'' + λy = 0, y(0) = 0, y(π) = 0。\n(1) 证明 λ ≤ 0 时只有平凡解 y ≡ 0。\n(2) 求所有使非平凡解存在的正特征值 λₙ 及对应的特征函数。",
+    "explanation": {
+      "steps": [
+        {
+          "step": 1,
+          "content": "分情况讨论 λ 的符号",
+          "detail": "特征方程 r² + λ = 0 ⇒ r = ±√(−λ)。需按 λ < 0, λ = 0, λ > 0 三种情况分别分析。",
+          "score_weight": 0.1
+        },
+        {
+          "step": 2,
+          "content": "λ < 0 情形",
+          "detail": "设 λ = −k² (k>0)，则 r = ±k。通解：y = c₁e^(kx) + c₂e^(−kx)。<br>y(0) = c₁ + c₂ = 0 ⇒ c₂ = −c₁。<br>y(π) = c₁e^(kπ) + c₂e^(−kπ) = c₁(e^(kπ) − e^(−kπ)) = 0。<br>因 e^(kπ) − e^(−kπ) ≠ 0，故 c₁ = 0 ⇒ c₂ = 0，仅平凡解。",
+          "score_weight": 0.25
+        },
+        {
+          "step": 3,
+          "content": "λ = 0 情形",
+          "detail": "方程 y'' = 0 ⇒ y = c₁ + c₂x。<br>y(0) = c₁ = 0。<br>y(π) = c₁ + c₂π = c₂π = 0 ⇒ c₂ = 0，仅平凡解。",
+          "score_weight": 0.15
+        },
+        {
+          "step": 4,
+          "content": "λ > 0 情形（求特征值）",
+          "detail": "设 λ = μ² (μ>0)，则 r = ±iμ。通解：y = c₁cos μx + c₂sin μx。<br>y(0) = c₁ = 0。<br>y(π) = c₂sin μπ = 0。<br>要非平凡解（c₂ ≠ 0），须 sin μπ = 0 ⇒ μπ = nπ ⇒ μ = n（n = 1,2,3,…）。",
+          "score_weight": 0.35
+        },
+        {
+          "step": 5,
+          "content": "写出特征值与特征函数",
+          "detail": "特征值：λₙ = n²（n = 1,2,3,…）<br>特征函数：yₙ(x) = sin(nx)（可差一个常数因子）",
+          "score_weight": 0.15
+        }
+      ],
+      "final_answer": "(1) λ ≤ 0 时只有 y ≡ 0（见步骤2、3）。\n(2) λₙ = n², yₙ(x) = sin(nx), n = 1,2,3,…"
+    },
+    "kc_id": "特征值问题",
+    "options": [],
+    "pitfall": "",
+    "points": 5,
+    "cognitive_level": "apply",
+    "answer": -1
+  }
+]

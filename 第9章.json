@@ -1,0 +1,113 @@
+[
+  {
+    "kc_id": "kc9.1",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "以下哪个是二阶微分方程？",
+    "options": [
+      "$y' = x^2y$",
+      "$(y')^2 + y = x$",
+      "$y'' + 3y' + 2y = 0$",
+      "$ydy = xdx$"
+    ],
+    "answer": 2,
+    "explanation": "阶 = 最高阶导数的阶。A 只有 y'（一阶），B 虽有 (y')² 但最高导数仍为一阶，C 中有 y''（二阶），D 无导数标记。",
+    "pitfall": "注意(y')² 不是二阶——它是「一阶导数的平方」，阶由导数的阶决定，不是由幂次决定。"
+  },
+  {
+    "kc_id": "kc9.5",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "用积分因子法求解：$y' + \\frac{1}{x}y = 1$，$y(4) = 5$。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：P(x)=1/x, Q(x)=1。I=e^(∫1/x dx)=e^(ln|x|)=|x|。在 x&gt;0 时 I=x。乘 x：(xy)'=x。积分：xy=x²/2+C。y=x/2+C/x。y(4)=5 → 2+C/4=5 → C=12。y=x/2+12/x。&lt;br&gt;&lt;strong&gt;评分</strong&gt;：化标准形1分，I 2分，写出(xy)' 2分，积分 1分，定 C 2分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.5",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "understand",
+    "difficulty": "medium",
+    "question": "求解 $y' + P(x)y = Q(x)$ 时，积分因子是 $I(x) =$ ？",
+    "options": [
+      "$e^{\\int Q(x)dx}$",
+      "$e^{\\int P(x)dx}$",
+      "$\\int e^{P(x)}dx$",
+      "$e^{P(x)}$"
+    ],
+    "answer": 1,
+    "explanation": "积分因子为 I = e^(∫Pdx)，其中 P 是 y 的系数（标准形 y'+Py=Q）。A 错用 Q 代 P。C 多了一层积分。D 漏了积分——需要先积 P 再代指数。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.3",
+    "type": "calc",
+    "points": 6,
+    "cognitive_level": "apply",
+    "difficulty": "basic",
+    "question": "解 $\\frac{dy}{dx} = x\\sqrt{y}$。",
+    "answer": -1,
+    "explanation": "可分离：∫ dy/√y = ∫ x dx → 2√y = x²/2 + C → y = (x²/4 + C)²。&lt;br&gt;&lt;strong&gt;评分</strong&gt;：分离变量 2 分，积分 2 分，解出 y 2 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.3",
+    "type": "tf",
+    "points": 2,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "方程 $y' = x + y$ 是可分方程。",
+    "options": [],
+    "answer": 1,
+    "explanation": "错误。x+y 不能分解为 g(x)·h(y) 的形式。这是一个一阶线性方程（可用积分因子法求解）。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.7",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求解$y' + xy = x$, $y(0) = 4$。",
+    "answer": -1,
+    "explanation": "标准形已就绪（y' 系数为 1）。P(x)=x, Q(x)=x。I=e^(∫x dx)=e^(x²/2)。(e^(x²/2)·y)' = x·e^(x²/2)。右积分 = e^(x²/2) + C。y = 1 + Ce^(-x²/2)。y(0)=4 → C=3。y=1+3e^(-x²/2)。&lt;br&gt;&lt;strong&gt;评分</strong&gt;：I 正确 3 分，乘 I 后识别导数 2 分，积分 2 分，定 C 1 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.7",
+    "type": "choice",
+    "points": 4,
+    "cognitive_level": "apply",
+    "difficulty": "hard",
+    "question": "方程 $y' - (\\cot x)y = \\csc x$ 的积分因子是？",
+    "options": [
+      "$\\sin x$",
+      "$\\csc x$",
+      "$-\\ln|\\sin x|$",
+      "$\\sec x$"
+    ],
+    "answer": 1,
+    "explanation": "P(x) = -cot x, ∫P dx = ∫-cot x dx = -ln|sin x|。I = e^(-ln|sin x|) = 1/|sin x| = |csc x|。取 I = csc x (sin x &gt; 0 时)。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "kc9.2",
+    "type": "tf",
+    "points": 2,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "Logistic 微分方程 $dP/dt = kP(1-P/K)$ 中，$K$ 被称为承载力（carrying capacity），代表环境能支撑的最大种群规模。",
+    "options": [],
+    "answer": 0,
+    "explanation": "正确。当 P=K 时 dP/dt=0，人口达到稳定。这是 Logistic 模型与指数增长模型的核心区别。",
+    "pitfall": ""
+  }
+]

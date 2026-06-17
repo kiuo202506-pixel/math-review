@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "kc_id": "kc11.6",
+    "type": "tf",
+    "points": 2,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "若级数 $\\sum a_n$ 收敛，则必有 $\\lim_{n\\to\\infty}a_n=0$。",
+    "options": [],
+    "answer": 0,
+    "explanation": "收敛级数的通项必须趋于零，这是级数收敛的必要条件。其逆否命题即为发散判别法：若通项不趋于零，则级数必发散。",
+    "pitfall": "此题反过来不成立：通项趋于零不代表级数收敛（反例：调和级数 Σ1/n）。"
+  },
+  {
+    "id": 2,
+    "kc_id": "kc11.6",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "basic",
+    "question": "级数 $\\displaystyle\\sum_{n=1}^{\\infty}\\frac{n}{2n+1}$ 是否收敛？",
+    "options": [
+      "发散，因为通项极限为 1/2 ≠ 0",
+      "收敛于 1/2",
+      "发散，因为它是调和级数",
+      "收敛，由比较审敛法"
+    ],
+    "answer": 0,
+    "explanation": "lim(n→∞) n/(2n+1) = 1/2 ≠ 0，由发散判别法知级数发散。选错 B 的学生混淆了通项极限与级数和；选 C/D 的学生未先检查必要条件。",
+    "pitfall": ""
+  },
+  {
+    "id": 3,
+    "kc_id": "kc11.5",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "basic",
+    "question": "级数 $\\displaystyle\\sum_{n=0}^{\\infty}5\\cdot\\left(\\frac{2}{3}\\right)^n$ 的和是？",
+    "options": [
+      "15",
+      "10",
+      "5/3",
+      "5"
+    ],
+    "answer": 0,
+    "explanation": "这是几何级数：a=5, r=2/3, |r|&lt;1，和 S = a/(1-r) = 5/(1-2/3) = 15。",
+    "pitfall": ""
+  },
+  {
+    "id": 4,
+    "kc_id": "kc11.7",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "p-级数 $\\displaystyle\\sum_{n=1}^{\\infty}\\frac{1}{n^p}$ 的敛散条件是？",
+    "options": [
+      "p>1 收敛，p≤1 发散",
+      "p≥1 收敛，p<1 发散",
+      "p<1 收敛，p≥1 发散",
+      "对所有 p 都收敛"
+    ],
+    "answer": 0,
+    "explanation": "p-级数：p&gt;1 时收敛，p≤1 时发散。这是积分审敛法最重要的推论。p=1 即为调和级数（发散）。",
+    "pitfall": ""
+  },
+  {
+    "id": 5,
+    "kc_id": "kc11.7",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "用积分审敛法判断 $\\displaystyle\\sum_{n=2}^{\\infty}\\frac{1}{n(\\ln n)^2}$ 的敛散性。",
+    "options": [
+      "收敛，因 ∫dx/[x(ln x)²] 收敛",
+      "发散，因 ∫dx/[x(ln x)²] 发散",
+      "收敛，因它是 p-级数",
+      "发散，因通项不趋于零"
+    ],
+    "answer": 0,
+    "explanation": "f(x)=1/[x(ln x)²] 正、连续、递减。令 u=ln x, 积分 ∫dx/[x(ln x)²] = ∫du/u² = -1/u + C, 从 2 到 ∞ 收敛于 1/ln 2。由积分审敛法知级数收敛。",
+    "pitfall": ""
+  },
+  {
+    "id": 6,
+    "kc_id": "kc11.8",
+    "type": "calc",
+    "points": 6,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "用极限比较审敛法判断 $\\displaystyle\\sum_{n=1}^{\\infty}\\frac{3n^2+2}{n^4+5n+1}$ 的敛散性。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：a_n ~ 3n²/n⁴ = 3/n²。取 b_n = 1/n²。lim a_n/b_n = lim ((3n²+2)/(n⁴+5n+1))·n² = lim (3n⁴+2n²)/(n⁴+5n+1) = 3 &gt; 0。因 Σ1/n² 收敛(p=2&gt;1)，由极限比较法知原级数收敛。&lt;strong&gt;评分</strong&gt;：找到合适比较对象 2 分，求极限 2 分，判断 2 分。",
+    "pitfall": "常见错误：只看到分子 n² 就选比较对象为 1/n²，但忘记验证极限存在且为正有限值。",
+    "options": []
+  },
+  {
+    "id": 7,
+    "kc_id": "kc11.9",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "用直接比较审敛法判断 $\\displaystyle\\sum_{n=1}^{\\infty}\\frac{\\sin^2 n}{n^3}$ 的敛散性。",
+    "options": [
+      "收敛，因 ≤ 1/n³ 且 p-级数收敛",
+      "发散，因含三角函数",
+      "收敛，由交错级数审敛法",
+      "发散，因 lim a_n ≠ 0"
+    ],
+    "answer": 0,
+    "explanation": "0 ≤ sin²n/n³ ≤ 1/n³，因 Σ1/n³ 收敛(p=3&gt;1)，由直接比较审敛法知原级数收敛。B 错：三角函数可以不收敛是因为振荡，但只要上界压制就能收。C 错：这个级数不是交错级数（sin²n ≥ 0）。",
+    "pitfall": ""
+  },
+  {
+    "id": 8,
+    "kc_id": "kc11.10",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "交错级数 $\\displaystyle\\sum_{n=1}^{\\infty}(-1)^{n-1}\\frac{1}{\\sqrt{n}}$ 是？",
+    "options": [
+      "条件收敛",
+      "绝对收敛",
+      "发散",
+      "绝对收敛且条件收敛"
+    ],
+    "answer": 0,
+    "explanation": "交错级数部分：b_n=1/√n 递减且→0，由Leibniz审敛法知收敛。绝对收敛？Σ|a_n|=Σ1/√n 是 p=1/2&lt;1 的 p-级数，发散。故为条件收敛。",
+    "pitfall": ""
+  },
+  {
+    "id": 9,
+    "kc_id": "kc11.5",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求裂项级数 $\\displaystyle\\sum_{n=1}^{\\infty}\\frac{2}{n(n+2)}$ 的和。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：部分分式：2/[n(n+2)] = 1/n - 1/(n+2)。前 N 项部分和：S_N = (1-1/3)+(1/2-1/4)+(1/3-1/5)+...+(1/N-1/(N+2))。对角线消去，余 S_N = 1+1/2-1/(N+1)-1/(N+2)。令 N→∞ 得 S=3/2。&lt;strong&gt;评分</strong&gt;：部分分式分解 3 分，写出前几项发现规律 2 分，部分和公式 2 分，求极限 1 分。",
+    "pitfall": "常见错误：忘记裂项时每个分母对应两个部分分式中的两个（A/n + B/(n+2)），解系数时 A=B=1。",
+    "options": []
+  },
+  {
+    "id": 10,
+    "kc_id": "kc11.10",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "hard",
+    "question": "已知 $\\sum_{n=1}^{\\infty} 1/n^3$ 收敛。若用前 10 项部分和近似级数的和，用积分审敛法估计最大误差。",
+    "answer": -1,
+    "explanation": "&lt;strong&gt;解</strong&gt;：对 f(x)=1/x³（正、连续、递减），余项 R_10 ≤ ∫_10^∞ dx/x³ = [-1/(2x²)]_10^∞ = 1/200 = 0.005。所以误差 ≤ 0.005。&lt;strong&gt;评分</strong&gt;：写余项公式 2 分，计算积分 3 分，代入上下限 2 分，结论 1 分。",
+    "options": [],
+    "pitfall": ""
+  }
+]

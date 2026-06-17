@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "kc_id": "kc12.3",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "已知 a = &lt;2, -3, 1&gt;, b = &lt;-1, 2, 4&gt;。求 (1) a·b；(2) a 与 b 的夹角（精确到 0.1°）；(3) b 在 a 上的标量投影。",
+    "answer": -1,
+    "explanation": "(1) a·b = 2(-1)+(-3)(2)+1(4) = -4。(2) |a|=√14, |b|=√21, cosθ = -4/√294 ≈ -0.2333, θ ≈ 103.5°。(3) comp_a b = (a·b)/|a| = -4/√14 ≈ -1.069。评分：点积 2 分，模 1 分，夹角 3 分，投影 2 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "id": 2,
+    "kc_id": "kc12.4",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "已知 a = &lt;1, 2, -1&gt;, b = &lt;3, 0, 2&gt;。求 (1) a×b；(2) 验证结果与 a 和 b 都正交；(3) 以 a, b 为邻边的平行四边形面积。",
+    "answer": -1,
+    "explanation": "(1) a×b = |i j k; 1 2 -1; 3 0 2| = &lt;4, -5, -6&gt;。(2) (a×b)·a = 4-10+6 = 0, (a×b)·b = 12+0-12 = 0。(3) 面积 = |a×b| = √77。评分：叉积 4 分，正交验证 2 分，面积 2 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "id": 3,
+    "kc_id": "kc12.5",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "过点 (3,-1,2) 且方向向量为 v=&lt;2,1,-4&gt; 的直线的对称方程为？",
+    "options": [
+      "(x-3)/2 = (y+1)/1 = (z-2)/(-4)",
+      "(x-3)/2 = (y-1)/1 = (z+2)/(-4)",
+      "(x+3)/2 = (y-1)/1 = (z+2)/(-4)",
+      "2(x-3) + (y+1) - 4(z-2) = 0"
+    ],
+    "answer": 0,
+    "explanation": "对称式：(x-x0)/a = (y-y0)/b = (z-z0)/c。B 符号错（y+1 写成 y-1），C 分子符号反，D 是平面方程不是直线方程。",
+    "pitfall": ""
+  },
+  {
+    "id": 4,
+    "kc_id": "kc12.6",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求通过三点 A(1,2,3)、B(3,-1,2)、C(0,4,1) 的平面方程。",
+    "answer": -1,
+    "explanation": "AB = &lt;2,-3,-1&gt;, AC = &lt;-1,2,-2&gt;。法向量 n = AB×AC = &lt;8,5,1&gt;。点法式：8(x-1)+5(y-2)+1(z-3)=0 → 8x+5y+z = 21。评分：求两方向向量 2 分，叉积得法向量 3 分，点法式 2 分，化简 1 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "id": 5,
+    "kc_id": "kc12.6",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "平面 x+2y-2z=5 和 2x-y+3z=1 的位置关系是？",
+    "options": [
+      "相交（夹角不为 0 也不为 90°）",
+      "平行",
+      "垂直",
+      "重合"
+    ],
+    "answer": 0,
+    "explanation": "n1=&lt;1,2,-2&gt;, n2=&lt;2,-1,3&gt;。n1·n2=2-2-6=-6≠0，不垂直。n1 与 n2 不成比例，不平行。故两平面相交于一条线。",
+    "pitfall": ""
+  },
+  {
+    "id": 6,
+    "kc_id": "kc12.7",
+    "type": "calc",
+    "points": 6,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求点 P(2,-1,3) 到平面 3x+4y-12z=7 的距离。",
+    "answer": -1,
+    "explanation": "d = |3(2)+4(-1)-12(3)-7| / √(9+16+144) = |6-4-36-7|/13 = 41/13。评分：公式 2 分，代入 2 分，计算 2 分。",
+    "options": [],
+    "pitfall": ""
+  },
+  {
+    "id": 7,
+    "kc_id": "kc12.5",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "直线 L1: x=1+t, y=-2+3t, z=4-t 和 L2: x=2s, y=3+s, z=-3+4s 的关系是？",
+    "options": [
+      "异面（skew）",
+      "平行",
+      "相交",
+      "垂直"
+    ],
+    "answer": 0,
+    "explanation": "v1=&lt;1,3,-1&gt;, v2=&lt;2,1,4&gt;，不成比例 → 不平行。(r₂-r₁)·(v₁×v₂)=-8≠0，不共面 → 异面（skew）。选项A正确。",
+    "pitfall": ""
+  },
+  {
+    "id": 8,
+    "kc_id": "kc12.4",
+    "type": "choice",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "以 a=&lt;3,-1,2&gt; 和 b=&lt;1,2,-4&gt; 为邻边的三角形面积是？",
+    "options": [
+      "√245 / 2",
+      "√245",
+      "|a×b| / 2",
+      "A 和 C 都对"
+    ],
+    "answer": 3,
+    "explanation": "|a×b| = √245。平行四边形面积 = |a×b| = √245，三角形面积 = |a×b|/2 = √245/2。A 是数值，C 是公式，两者都正确。",
+    "pitfall": ""
+  }
+]

@@ -1,0 +1,108 @@
+[
+  {
+    "kc_id": "10.1-01",
+    "type": "choice",
+    "points": 5,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "参数曲线 x = t², y = t - 1（t ∈ R）消去参数后对应的直角坐标方程为：",
+    "options": [
+      "x = (y + 1)²",
+      "y² = x - 1",
+      "x = y² + 2y + 1",
+      "y = √x - 1"
+    ],
+    "answer": 2,
+    "explanation": "由 y = t - 1 得 t = y + 1。代入 x = t² 得 x = (y + 1)² = y² + 2y + 1。选项 A 也对（展开前）但规范答案选展开形式 C。选项 B 混淆了消参方向。选项 D 丢失了 y &lt; -1 的半支，且少 ± 号。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.2-01",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "已知参数曲线 x = t - ln(1 + t), y = t²（t ≥ 0），求 t = 1 处的切线斜率。",
+    "options": [],
+    "answer": -1,
+    "explanation": "【解】dx/dt = 1 - 1/(1+t) = t/(1+t)，dy/dt = 2t。故 dy/dx = 2t ÷ [t/(1+t)] = 2(1+t)。t=1 时 dy/dx = 4。\n【评分】求导各 2 分，相除 2 分，代入 2 分。常见错误：dx/dt 求导漏了复合函数部分，得 1 - 1/t。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.2-02",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求参数曲线 x = cos³t, y = sin³t（0 ≤ t ≤ π/2）的弧长。",
+    "options": [],
+    "answer": -1,
+    "explanation": "【解】dx/dt = -3cos²t·sin t，dy/dt = 3sin²t·cos t。\n(dx/dt)²+(dy/dt)² = 9cos⁴t·sin²t + 9sin⁴t·cos²t = 9cos²t·sin²t(cos²t+sin²t) = 9cos²t·sin²t = (9/4)sin²(2t)。\nL = ∫₀^{π/2} (3/2)|sin(2t)| dt = (3/2)∫₀^{π/2} sin(2t) dt = (3/2)[-½cos(2t)]₀^{π/2} = (3/2)(½+½) = 3/2。\n【评分】求导各 1 分，平方和化简 2 分，开根 1 分，定积分 3 分，代入限值 1 分。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.2-03",
+    "type": "tf",
+    "points": 3,
+    "cognitive_level": "understand",
+    "difficulty": "basic",
+    "question": "参数曲线 x = f(t), y = g(t) 的二阶导数 d²y/dx² 等于 d²y/dt² 除以 d²x/dt²。",
+    "options": [],
+    "answer": 0,
+    "explanation": "错误。正确的二阶导数公式为 d²y/dx² = (d/dt)[dy/dx] ÷ (dx/dt)。即先对 dy/dx（作为 t 的函数）再对 t 求导，再除以 dx/dt。直接的「二阶除以二阶」完全错误。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.3-01",
+    "type": "choice",
+    "points": 5,
+    "cognitive_level": "apply",
+    "difficulty": "basic",
+    "question": "点 (-√3, 1) 的一种极坐标表示为：",
+    "options": [
+      "(2, 5π/6)",
+      "(2, π/6)",
+      "(2, 7π/6)",
+      "(2, 11π/6)"
+    ],
+    "answer": 0,
+    "explanation": "r = √(3+1) = 2。该点在第二象限（x&lt;0, y&gt;0）。tan θ = -1/√3，参考角为 π/6。第二象限的角为 π - π/6 = 5π/6。选项 B 是第一象限角，选项 C/D 是第三、四象限角。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.3-02",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "apply",
+    "difficulty": "medium",
+    "question": "求极坐标曲线 r = 2 + sin θ 在 θ = π/2 处的切线斜率。",
+    "options": [],
+    "answer": -1,
+    "explanation": "【解】参数化：x = r cos θ = (2+sin θ)cos θ, y = r sin θ = (2+sin θ)sin θ。\ndr/dθ = cos θ。\ndx/dθ = cos θ·cos θ + (2+sin θ)(-sin θ) = cos²θ - 2sin θ - sin²θ = cos(2θ) - 2sin θ。\ndy/dθ = cos θ·sin θ + (2+sin θ)cos θ = cos θ(sin θ + 2 + sin θ) = 2cos θ(1 + sin θ)。\nθ=π/2 时：dx/dθ = cos π - 2sin(π/2) = -1 - 2 = -3；dy/dθ = 2cos(π/2)·(1+sin(π/2)) = 0。\n故 dy/dx = 0/(-3) = 0。切线水平。\n【评分】参数化 2 分，求 dx/dθ 和 dy/dθ 各 2 分，代入 1 分，求斜率 1 分。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.4-01",
+    "type": "calc",
+    "points": 10,
+    "cognitive_level": "apply",
+    "difficulty": "hard",
+    "question": "求心形线 r = 1 + cos θ 所围图形的总面积。",
+    "options": [],
+    "answer": -1,
+    "explanation": "【解】A = ½∫₀²π (1+cos θ)² dθ = ½∫₀²π (1 + 2cos θ + cos²θ) dθ。\n由对称性，也等于 ∫₀^π (1+cos θ)² dθ（利用对称，减少一半积分区间）。\n= ½∫₀²π [1 + 2cos θ + (1+cos 2θ)/2] dθ\n= ½∫₀²π (3/2 + 2cos θ + ½cos 2θ) dθ\n= ½[ (3/2)θ + 2sin θ + (1/4)sin 2θ ]₀²π\n= ½(3π) = 3π/2。\n【评分】面积公式 2 分，展开被积函数 2 分，cos²θ 降幂 2 分，逐项积分 2 分，代入上下限 1 分，最终结果 1 分。常见错误：忘记系数 1/2，得到 3π。",
+    "pitfall": ""
+  },
+  {
+    "kc_id": "10.4-02",
+    "type": "calc",
+    "points": 8,
+    "cognitive_level": "analyze",
+    "difficulty": "hard",
+    "question": "求曲线 r = 2cos θ 与 r = 1 所围公共部分的面积。",
+    "options": [],
+    "answer": -1,
+    "explanation": "【解】联立 2cos θ = 1 → cos θ = 1/2 → θ = ±π/3。\n由对称性，总面积 = 2 × [½∫₀^{π/3} 1² dθ + ½∫_{π/3}^{π/2} (2cos θ)² dθ]。\n第一块（扇形）：½∫₀^{π/3} dθ = π/6。\n第二块（圆 r=2cos θ 的一部分）：½∫_{π/3}^{π/2} 4cos²θ dθ = ∫_{π/3}^{π/2} (1+cos 2θ) dθ = [θ+½sin 2θ]_{π/3}^{π/2} = π/2 - (π/3 + ½·√3/2) = π/6 - √3/4。\n总面积 = 2(π/6 + π/6 - √3/4) = 2(π/3 - √3/4) = 2π/3 - √3/2。\n【评分】求交点 2 分，分割积分区间 2 分，每个部分各 2 分。常见错误：直接用扇形面积公式却写错了积分限。",
+    "pitfall": ""
+  }
+]
